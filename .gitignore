@@ -1,0 +1,11 @@
+out/
+.repo/
+*.img
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.bin
+.DS_Store
+__pycache__/
+*.pyc
