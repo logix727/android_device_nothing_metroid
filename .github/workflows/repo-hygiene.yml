@@ -1,0 +1,34 @@
+name: Repo Hygiene
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+jobs:
+  basic-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure required docs exist
+        run: |
+          test -f README.md
+          test -f CONTRIBUTING.md
+          test -f SECURITY.md
+
+      - name: Block large generated artifacts in git
+        run: |
+          forbidden='\.(img|zip|7z|bin|tar|tar\.gz)$'
+          if git ls-files | grep -E "$forbidden"; then
+            echo "Generated artifacts must not be tracked."
+            exit 1
+          fi
+
+      - name: Basic markdown heading check
+        run: |
+          if ! grep -q '^# ' README.md; then
+            echo "README.md must start with a level-1 heading."
+            exit 1
+          fi

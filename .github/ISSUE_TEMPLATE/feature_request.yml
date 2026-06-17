@@ -1,0 +1,24 @@
+name: Feature request
+description: Propose an improvement for this device tree
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What you want to add or change
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why this is useful and expected impact
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
+      description: Risks, alternatives, implementation ideas

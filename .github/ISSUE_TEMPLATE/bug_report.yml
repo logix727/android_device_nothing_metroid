@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible bug in this device tree
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please include enough detail to reproduce the issue.
+  - type: input
+    id: branch
+    attributes:
+      label: Branch or commit
+      description: Branch name or commit hash where the issue happens
+      placeholder: main / abc1234
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem description
+      description: What happened vs what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Exact steps and commands
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Attach build/recovery logs if available
