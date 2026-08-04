@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="security_settings_face_enroll_education_message">Hold your phone at eye level in a well-lit place. Keep your face inside the circle and follow the on-screen prompts.</string>
+    <string name="security_settings_face_enroll_education_message_accessibility" product="default">Hold your phone at eye level in a well-lit place. Keep your face inside the circle while setup completes.</string>
+
+    <string name="security_settings_face_enroll_introduction_info_title">Keep in mind</string>
+    <string name="security_settings_face_enroll_introduction_info_glasses">Glasses may affect recognition. Enroll with the look you use most.</string>
+    <string name="security_settings_face_enroll_introduction_info_looking" product="default">Someone who looks like you may be able to unlock your phone.</string>
+    <string name="security_settings_face_enroll_introduction_info_gaze" product="default">Face Unlock may unlock your phone when you look at it, even if you did not intend to.</string>
+    <string name="security_settings_face_enroll_introduction_info_less_secure" product="default">Face Unlock is less secure than a strong pattern, PIN, or password.</string>
+
+    <string name="security_settings_face_enroll_introduction_how_title">How it works</string>
+    <string name="security_settings_face_enroll_introduction_how_message" product="default">Face Unlock uses the front camera to recognize your face.</string>
+    <string name="security_settings_face_enroll_introduction_control_title">You\'re in control</string>
+    <string name="security_settings_face_enroll_introduction_control_message" product="default">You can remove your face data or turn off Face Unlock at any time in Settings.</string>
+
+    <string name="security_settings_face_enroll_introduction_accessibility_diversity">Use this setup if you cannot complete the standard enrollment movements.</string>
+    <string name="security_settings_face_enroll_introduction_accessibility_vision">Use this setup if you need an alternative to the standard visual guidance.</string>
+</resources>

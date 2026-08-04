@@ -2,18 +2,20 @@
 
 ## Blockers
 
-- Face enrollment: Settings now passes its preview surface to the HAL instead of
-  competing with it for front camera 1. A runtime APK test proved sole HAL camera
-  ownership and exposed the next failure: missing graphics-allocator client
-  policy. The stock-matching policy fix compiles; OTA validation remains.
+- Face enrollment and authentication pass on the installed candidate with no HAL
+  death or biometric error. Settings passes its preview surface to the HAL and
+  the stock-matching graphics-allocator policy is active. The base Settings face
+  guidance strings were empty; metroid now supplies the missing safety and setup
+  text. The text overlay is focused-build validated but not yet in an OTA.
 - Camera: mode changes now reselect logical camera 4 for SAT capture and physical
   camera 0 for UHD/60 fps, and high-bandwidth modes can no longer jump to an
   unsupported physical lens. Focused build and device tests pass for photo/video
   routing, finalized FHD60, FHD30 SAT zoom while recording, and UHD30. FHD60 and
   UHD use main-camera digital zoom by design; broader app testing remains.
 - Haptics: the stock HAL was denied its AW86927 RichTap node, calibration proc
-  files and SFDC properties. Device-scoped labels and grants compile into the
-  vendor image; strength/effect parity still needs OTA testing against stock.
+  files and SFDC properties. Device-scoped labels and grants are active on the
+  installed candidate; calibration completes and perceived output is stronger.
+  Full effect parity against stock remains.
 
 ## Community coverage
 
