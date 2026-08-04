@@ -2,12 +2,18 @@
 
 ## Blockers
 
-- Face enrollment: reproduce from the capture screen with clean Face HAL,
-  camera-provider, AVC and tombstone logs.
-- Camera: validate UHD30 after Tuna profile selection and collect remaining
-  lens/zoom edge cases from testers.
-- Haptics: compare stock Nothing OS and Lineage effect IDs, amplitudes and driver
-  gain/calibration; the stock service still feels weak.
+- Face enrollment: Settings now passes its preview surface to the HAL instead of
+  competing with it for front camera 1. A runtime APK test proved sole HAL camera
+  ownership and exposed the next failure: missing graphics-allocator client
+  policy. The stock-matching policy fix compiles; OTA validation remains.
+- Camera: mode changes now reselect logical camera 4 for SAT capture and physical
+  camera 0 for UHD/60 fps, and high-bandwidth modes can no longer jump to an
+  unsupported physical lens. Focused build and device tests pass for photo/video
+  routing, finalized FHD60, FHD30 SAT zoom while recording, and UHD30. FHD60 and
+  UHD use main-camera digital zoom by design; broader app testing remains.
+- Haptics: the stock HAL was denied its AW86927 RichTap node, calibration proc
+  files and SFDC properties. Device-scoped labels and grants compile into the
+  vendor image; strength/effect parity still needs OTA testing against stock.
 
 ## Community coverage
 

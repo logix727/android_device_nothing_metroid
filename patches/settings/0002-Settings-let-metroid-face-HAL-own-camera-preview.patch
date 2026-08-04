@@ -1,0 +1,193 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Metroid Maintainer <noreply@localhost>
+Date: Tue, 4 Aug 2026 14:15:00 -0400
+Subject: [PATCH] Settings: let metroid face HAL own camera preview
+
+Metroid has one front camera shared by Settings and Nothing's face HAL. The
+standard Settings enrollment flow opens that camera for preview while passing
+a null preview surface to the HAL. The HAL then repeatedly loses its own camera
+open to Settings' higher-priority client.
+
+Keep Settings' TextureView but, on metroid, pass its Surface through the
+existing FaceManager enrollment API and let the HAL own the Camera2 session.
+Wait for the surface before starting enrollment so the HAL never receives a
+null or stale preview target. Other devices retain the existing Settings-owned
+preview path.
+---
+ .../biometrics/face/FaceEnrollEnrolling.java       |  7 +++++
+ .../biometrics/face/FaceEnrollPreviewFragment.java | 35 +++++++++++++++++++---
+ .../biometrics/face/FaceEnrollSidecar.java         | 29 ++++++++++++++++--
+ 3 files changed, 65 insertions(+), 6 deletions(-)
+
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollEnrolling.java b/src/com/android/settings/biometrics/face/FaceEnrollEnrolling.java
+index d520cd6..9077947 100644
+--- a/src/com/android/settings/biometrics/face/FaceEnrollEnrolling.java
++++ b/src/com/android/settings/biometrics/face/FaceEnrollEnrolling.java
+@@ -26,6 +26,7 @@ import android.content.Intent;
+ import android.os.Bundle;
+ import android.text.TextUtils;
+ import android.util.Log;
++import android.view.Surface;
+ import android.view.View;
+ import android.view.animation.AnimationUtils;
+ import android.view.animation.Interpolator;
+@@ -155,6 +156,12 @@ public class FaceEnrollEnrolling extends BiometricsEnrollEnrolling {
+         mPreviewFragment.setListener(mListener);
+     }
+ 
++    void onPreviewSurfaceAvailable(Surface previewSurface) {
++        if (mSidecar instanceof FaceEnrollSidecar) {
++            ((FaceEnrollSidecar) mSidecar).setPreviewSurface(previewSurface);
++        }
++    }
++
+     @Override
+     protected Intent getFinishIntent() {
+         return new Intent(this, FaceEnrollFinish.class);
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollPreviewFragment.java b/src/com/android/settings/biometrics/face/FaceEnrollPreviewFragment.java
+index 853ca7c..7c4207e 100644
+--- a/src/com/android/settings/biometrics/face/FaceEnrollPreviewFragment.java
++++ b/src/com/android/settings/biometrics/face/FaceEnrollPreviewFragment.java
+@@ -27,6 +27,7 @@ import android.hardware.camera2.CameraDevice;
+ import android.hardware.camera2.CameraManager;
+ import android.hardware.camera2.CaptureRequest;
+ import android.hardware.camera2.params.StreamConfigurationMap;
++import android.os.Build;
+ import android.os.Bundle;
+ import android.os.Handler;
+ import android.os.Looper;
+@@ -64,6 +65,7 @@ public class FaceEnrollPreviewFragment extends InstrumentedPreferenceFragment
+     private CameraCaptureSession mCaptureSession;
+     private CaptureRequest mPreviewRequest;
+     private Size mPreviewSize;
++    private Surface mPreviewSurface;
+     private ParticleCollection.Listener mListener;
+ 
+     // View used to contain the circular cutout and enrollment animation drawable
+@@ -90,18 +92,20 @@ public class FaceEnrollPreviewFragment extends InstrumentedPreferenceFragment
+         @Override
+         public void onSurfaceTextureAvailable(
+                 SurfaceTexture surfaceTexture, int width, int height) {
+-            openCamera(width, height);
++            startPreview(surfaceTexture, width, height);
+         }
+ 
+         @Override
+         public void onSurfaceTextureSizeChanged(
+                 SurfaceTexture surfaceTexture, int width, int height) {
+-            // Shouldn't be called, but do this for completeness.
+-            configureTransform(width, height);
++            if (!"metroid".equals(Build.DEVICE)) {
++                configureTransform(width, height);
++            }
+         }
+ 
+         @Override
+         public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
++            releasePreviewSurface();
+             return true;
+         }
+ 
+@@ -208,7 +212,10 @@ public class FaceEnrollPreviewFragment extends InstrumentedPreferenceFragment
+         // a camera and start preview from here (otherwise, we wait until the surface is ready in
+         // the SurfaceTextureListener).
+         if (mTextureView.isAvailable()) {
+-            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
++            startPreview(
++                    mTextureView.getSurfaceTexture(),
++                    mTextureView.getWidth(),
++                    mTextureView.getHeight());
+         } else {
+             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+         }
+@@ -218,6 +225,7 @@ public class FaceEnrollPreviewFragment extends InstrumentedPreferenceFragment
+     public void onPause() {
+         super.onPause();
+         closeCamera();
++        releasePreviewSurface();
+     }
+ 
+     @Override
+@@ -281,6 +289,25 @@ public class FaceEnrollPreviewFragment extends InstrumentedPreferenceFragment
+         }
+     }
+ 
++    private void startPreview(SurfaceTexture surfaceTexture, int width, int height) {
++        if (!"metroid".equals(Build.DEVICE)) {
++            openCamera(width, height);
++            return;
++        }
++
++        releasePreviewSurface();
++        surfaceTexture.setDefaultBufferSize(width, height);
++        mPreviewSurface = new Surface(surfaceTexture);
++        ((FaceEnrollEnrolling) requireActivity()).onPreviewSurfaceAvailable(mPreviewSurface);
++    }
++
++    private void releasePreviewSurface() {
++        if (mPreviewSurface != null) {
++            mPreviewSurface.release();
++            mPreviewSurface = null;
++        }
++    }
++
+     /**
+      * Chooses the optimal resolution for the camera to open.
+      */
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollSidecar.java b/src/com/android/settings/biometrics/face/FaceEnrollSidecar.java
+index b7ba1b5..e0d3dac 100644
+--- a/src/com/android/settings/biometrics/face/FaceEnrollSidecar.java
++++ b/src/com/android/settings/biometrics/face/FaceEnrollSidecar.java
+@@ -20,6 +20,10 @@ import android.app.Activity;
+ import android.app.settings.SettingsEnums;
+ import android.content.Intent;
+ import android.hardware.face.FaceManager;
++import android.os.Build;
++import android.view.Surface;
++
++import androidx.annotation.Nullable;
+ 
+ import com.android.settings.biometrics.BiometricEnrollSidecar;
+ 
+@@ -35,6 +39,8 @@ public class FaceEnrollSidecar extends BiometricEnrollSidecar {
+     private FaceUpdater mFaceUpdater;
+ 
+     private Intent mIntent;
++    private Surface mPreviewSurface;
++    private boolean mEnrollmentPending;
+ 
+     public FaceEnrollSidecar(int[] disabledFeatures, Intent intent) {
+         mDisabledFeatures = Arrays.copyOf(disabledFeatures, disabledFeatures.length);
+@@ -49,9 +55,28 @@ public class FaceEnrollSidecar extends BiometricEnrollSidecar {
+ 
+     @Override
+     public void startEnrollment() {
++        if ("metroid".equals(Build.DEVICE) && mPreviewSurface == null) {
++            mEnrollmentPending = true;
++            return;
++        }
++
+         super.startEnrollment();
+-        mFaceUpdater.enroll(mUserId, mToken, mEnrollmentCancel,
+-                mEnrollmentCallback, mDisabledFeatures, mIntent);
++        if ("metroid".equals(Build.DEVICE)) {
++            mFaceUpdater.enroll(mUserId, mToken, mEnrollmentCancel,
++                    mEnrollmentCallback, mDisabledFeatures, mPreviewSurface,
++                    false /* debugConsent */, mIntent);
++        } else {
++            mFaceUpdater.enroll(mUserId, mToken, mEnrollmentCancel,
++                    mEnrollmentCallback, mDisabledFeatures, mIntent);
++        }
++    }
++
++    public void setPreviewSurface(@Nullable Surface previewSurface) {
++        mPreviewSurface = previewSurface;
++        if (mEnrollmentPending && previewSurface != null) {
++            mEnrollmentPending = false;
++            startEnrollment();
++        }
+     }
+ 
+     private FaceManager.EnrollmentCallback mEnrollmentCallback
+-- 
+2.43.0

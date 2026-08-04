@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Metroid Maintainer <noreply@localhost>
+Date: Tue, 4 Aug 2026 09:45:00 -0400
+Subject: [PATCH] Aperture: enforce metroid high-bandwidth camera routing
+
+Metroid uses logical camera 4 for normal SAT capture and physical camera 0
+for UHD and 60 fps video. Mode changes currently retain the active camera
+whenever it supports the destination mode, bypassing that routing policy.
+
+Always run rear-camera mode changes through the metroid selector so photo and
+QR return to logical camera 4 while UHD and 60 fps video select camera 0.
+
+Once physical camera 0 is selected, Aperture exposes the other physical rear
+cameras as lens buttons. Selecting one bypasses the routing policy and can
+request UHD or 60 fps from an unsupported camera. Keep the lens selector pinned
+to camera 0 for those modes; digital zoom remains available through gestures.
+
+Other devices, the front camera and ordinary metroid video keep the existing
+behavior.
+---
+ .../lineageos/aperture/viewmodels/CameraViewModel.kt    | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt b/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
+index 7da112d..1986ccc 100644
+--- a/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
++++ b/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
+@@ -262,11 +262,19 @@ class CameraViewModel(application: Application) : ApertureViewModel(application)
+      */
+     val lenses = combine(
+         cameraRepository.cameras,
+-        camera,
+-        cameraMode,
+-    ) { cameras, camera, cameraMode ->
++        cameraConfiguration,
++    ) { cameras, cameraConfiguration ->
++        val camera = cameraConfiguration.camera
++        val restrictMetroidVideoLenses = Build.DEVICE == "metroid" &&
++                camera.cameraFacing == CameraFacing.BACK &&
++                cameraConfiguration is CameraConfiguration.Video &&
++                (cameraConfiguration.videoQuality == Quality.UHD ||
++                        cameraConfiguration.videoFrameRate == FrameRate.FPS_60)
++
+         camera to cameras.filter {
+-            it.cameraFacing == camera.cameraFacing && it.supportsCameraMode(cameraMode)
++            (!restrictMetroidVideoLenses || it == camera) &&
++                    it.cameraFacing == camera.cameraFacing &&
++                    it.supportsCameraMode(cameraConfiguration.cameraMode)
+         }
+     }
+         .flowOn(Dispatchers.IO)
+@@ -1279,7 +1287,8 @@ class CameraViewModel(application: Application) : ApertureViewModel(application)
+             }
+ 
+             val camera = cameraConfiguration.camera.takeIf {
+-                it.supportsCameraMode(cameraMode)
++                (Build.DEVICE != "metroid" || it.cameraFacing != CameraFacing.BACK) &&
++                        it.supportsCameraMode(cameraMode)
+             } ?: getSuitableCamera(
+                 cameraMode,
+                 cameraConfiguration.camera.cameraFacing,
+-- 
+2.43.0
