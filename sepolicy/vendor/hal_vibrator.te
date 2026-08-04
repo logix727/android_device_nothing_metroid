@@ -2,3 +2,9 @@ allow hal_vibrator_default mnt_vendor_file:dir search;
 allow hal_vibrator_default mnt_vendor_file:file { getattr open read write };
 allow hal_vibrator_default sysfs:dir { open read };
 allow hal_vibrator_default sysfs:file { getattr open read write };
+
+allow hal_vibrator_default vendor_metroid_haptic_device:chr_file rw_file_perms;
+allow hal_vibrator_default vendor_metroid_proc_haptic:file rw_file_perms;
+
+get_prop(hal_vibrator_default, vendor_metroid_haptic_calibration_prop)
+set_prop(hal_vibrator_default, vendor_metroid_sfdc_prop)

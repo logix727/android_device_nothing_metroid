@@ -35,6 +35,10 @@
 # GNSS
 /(odm|vendor|vendor/odm|system/vendor/odm)/bin/hw/android\.hardware\.gnss.*-service-qti u:object_r:vendor_hal_gnss_qti_exec:s0
 
+# Haptics
+/dev/aw86927_haptic u:object_r:vendor_metroid_haptic_device:s0
+/dev/ics_sfdc u:object_r:vendor_metroid_haptic_device:s0
+
 # QRTR
 /(vendor|system/vendor)/bin/qrtr-lookup u:object_r:vendor_qrtr_exec:s0
 

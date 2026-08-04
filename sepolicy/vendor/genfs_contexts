@@ -9,6 +9,11 @@ genfscon sysfs /devices/platform/soc/soc:spf_core_platform/soc:spf_core_platform
 # Info 
 genfscon sysfs /kernel/hardware_info_to_dump/hardw_info u:object_r:vendor_sysfs_hardwareinfo:s0
 
+# Haptics
+genfscon proc /haptic/f0 u:object_r:vendor_metroid_proc_haptic:s0
+genfscon proc /haptic/gpp u:object_r:vendor_metroid_proc_haptic:s0
+genfscon proc /haptic/lra_resistance u:object_r:vendor_metroid_proc_haptic:s0
+
 # Memory
 
 # Wakeup (Nothing specific charging and fingerprint wakeup nodes)

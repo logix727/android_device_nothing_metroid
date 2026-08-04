@@ -12,6 +12,9 @@ type minidump_data_file, data_file_type, file_type;
 # Info
 type vendor_sysfs_hardwareinfo, fs_type, sysfs_type;
 
+# Haptics
+type vendor_metroid_proc_haptic, fs_type, proc_type;
+
 # Memory
 
 # Sensor
