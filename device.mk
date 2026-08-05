@@ -262,6 +262,7 @@ PRODUCT_COPY_FILES += \
 # same fragment -> fsgen packaging conflict; the standalone-fragment fix was proven ineffective
 # anyway (see metroid-mapper-vintf-fix-attempt-20260706).
 PRODUCT_PACKAGES += camera_aon.metroid.xml
+PRODUCT_PACKAGES += android.hardware.secure_element.metroid.xml
 PRODUCT_PACKAGES += hal_batch1.metroid.xml hal_batch2.metroid.xml hal_batch3.metroid.xml camera_provider.metroid.xml qms.metroid.xml mwqem.metroid.xml audio_bluetooth.metroid.xml bluetooth_audio_provider.metroid.xml media_c2.metroid.xml perf2.metroid.xml
 # batch 4 (2026-07-10, live-verified): radio HALs + qspa VINTF declarations.
 # clearkey dropped 2026-07-29: AOSP's own clearkey service already installs this exact fragment
