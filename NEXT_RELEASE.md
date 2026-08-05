@@ -22,7 +22,9 @@
 - NFC: restore the stock CPLC helper domain and property labels, and remove the
   forced completion value that masked clean-state bootstrap failure. A property-
   clean boot regenerates all values before HAL startup; toggle and credit-card
-  polling pass. Payment/HCE remains untested.
+  polling pass. Android advertises HCE/HCE-F, host routing is enabled, and the
+  routing table is active. An actual payment transaction still needs a wallet
+  app and reader/terminal.
 - UICC secure element: declare stock ROW `SIM1` and `SIM2` instances served by
   qcrild. Both services register on the installed candidate; physical-SIM OMAPI
   testing remains. JPN-only `eSE1` is intentionally not declared.
@@ -41,14 +43,20 @@
 - No-SIM regression testing passes speaker playback, microphone capture, Bluetooth
   stack restart, USB gadget reset/ADB at 480 Mbps, sensors, haptic effects,
   five-minute forced Doze with Wi-Fi retained, and a two-minute CPU thermal load.
-  Accessory audio, unplugged suspend/drain, wireless charging, and real GNSS fix
-  remain hardware/environment dependent.
+  Unplugged auto-suspend also passes with no framework wake lock or display/power
+  suspend blocker held. The 34-minute window began at 100%, so it does not provide
+  a useful long-duration percentage-drain figure.
+- GNSS: open-source GPSTest receives raw measurements and continuous GPS locations;
+  the indoor test fixed on five satellites with about 53-second mean TTFF.
+- Wireless charging: battery history records an actual `plug=wireless` charging
+  transition. USB and wireless power supplies report independently.
 
 ## Community coverage
 
 - Calls, SMS, mobile data, IMS, emergency UI, dual SIM and handover.
-- Bluetooth LE Audio, USB-C audio, NFC HCE/secure element, wireless charging.
-- Suspend drain, thermal throttling, HDR/video playback, camera third-party apps.
+- Bluetooth LE Audio, USB-C audio, NFC payment/secure-element applets.
+- Long-duration suspend drain, thermal throttling, HDR/video playback, camera
+  third-party apps.
 
 ## Release gate
 

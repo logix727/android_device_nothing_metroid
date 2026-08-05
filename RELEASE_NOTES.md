@@ -27,6 +27,11 @@ SHA-256:
   across app launch, UI, camera and CPU-load operations without AVCs or crashes.
 - OpenWrt Wi-Fi 7 MLD testing passes 6 GHz/320 MHz EHT association, sustained
   TCP transport, screen-off retention and PNO reassociation.
+- Open-source GPSTest receives raw GNSS measurements and continuous GPS fixes;
+  an indoor run fixed on five satellites.
+- Unplugged auto-suspend releases framework wake locks and display/power suspend
+  blockers. Battery history also confirms a real wireless-charging transition.
+- NFC advertises HCE/HCE-F with host routing and an active routing table.
 
 ### Known issues / tester focus
 
@@ -35,8 +40,11 @@ SHA-256:
 - Physical-SIM calls, SMS, data, IMS, emergency UI and UICC OMAPI require testing.
 - Saved-network PNO reconnection needs an available configured AP; PNO startup
   itself is verified.
-- NFC payment/HCE and secure-element applets are not verified. ST21 logs `-107`
-  transport errors during transitions despite successful initialization/tag use.
+- NFC payment and secure-element applets are not transaction-tested. ST21 logs
+  `-107` transport errors during transitions despite successful initialization,
+  tag use, and HCE capability checks.
+- Long-duration unplugged percentage drain is not quantified; the focused
+  suspend window began at 100% and was too short for a meaningful percentage.
 - Factory-reset Setup Wizard/FBE/default-state validation has not been run.
 - Unlocked bootloader means no Widevine L1, strong Play Integrity or HDCP trust.
 
