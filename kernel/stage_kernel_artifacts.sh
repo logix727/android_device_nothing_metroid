@@ -7,8 +7,9 @@
 # device tree: 313 .ko, dtbo.img, vendor_boot.img, init_boot.img. None of it was reproducible.
 # This script regenerates all of it from the Nothing GPL kernel source instead.
 #
-# Coverage as of 2026-07-28: 306 of the 313 shipped vendor_dlkm modules build from source.
-# The other 7 have no published source — see prebuilt-modules/README.md.
+# Coverage as of 2026-07-28: 311 of the 313 shipped vendor_dlkm modules build from source.
+# The other two must be extracted locally from the user's stock firmware; see
+# prebuilt-modules/README.md.
 #
 # The GKI Image itself stays a prebuilt: it is a genuine Google GKI
 # (6.6.102-android15-8-gab8eb70a71b8-ab14350911-4k, kleaf@build-host), which the LineageOS
@@ -26,7 +27,7 @@
 #   cd kernelws
 #   build/kernel/kleaf/bazel.sh build --noenable_bzlmod --keep_going \
 #       --//vendor/qcom/opensource/camera-kernel:project_name=sun \
-#       --target_pattern_file=<...>/vendor_mod_targets.txt
+#       --target_pattern_file=<lineage>/device/nothing/metroid/kernel/vendor-module-targets.txt
 #
 # The camera project_name flag is not optional: without it camera.ko fails to compile with
 # "redefinition of 'qcom_scm_camera_qos'", because CONFIG_SPECTRA_SECURE_CAMNOC_REG_UPDATE is
@@ -48,12 +49,14 @@ VENDOR_DLKM_META="$HERE/vendor_dlkm-meta"
 # Names that live in system_dlkm — modules.dep must point at /system/lib/modules for these.
 SYSTEM_DLKM_LIST="$OUT/system_dlkm_names.txt"
 
-# Source not published by Nothing — carried as pinned prebuilts. See prebuilt-modules/README.md.
-# Only the two ST NFC drivers, as of 2026-07-28. This list was five entries longer until the build
-# was pointed at the correct kernel tree: aw882xx_dlkm, nothing_performance, nothing_rdump,
-# rpmb_state and spmi-pmic-err-debug are all present in upstream/kernel_nothingoss_b16 and now
-# build from source.
+# Source not published by Nothing. These modules are not redistributed by this
+# repository; extract them from a user-owned stock image before staging.
 UNPUBLISHED="stm_nfc_i2c stm_st54se_gpio"
+LOCAL_PREBUILTS="$HERE/local-prebuilt-modules"
+declare -A LOCAL_PREBUILT_SHA256=(
+    [stm_nfc_i2c.ko]=5f6ec24ab7a464169463f10d56e42d09e5f4cc360b5e7ec8261a515ad895f742
+    [stm_st54se_gpio.ko]=334c9afd91859276bbdefae30f671a0b515d6656ccbded6121da4e7f587c741a
+)
 
 [[ -x "$STRIP" ]] || { echo "!! llvm-strip not found at $STRIP" >&2; exit 1; }
 [[ -d "$KWS/bazel-bin" ]] || { echo "!! no bazel-bin in $KWS — build the kernel first" >&2; exit 1; }
@@ -84,7 +87,19 @@ for n in "${!KO[@]}"; do
     "$STRIP" --strip-debug "${KO[$n]}" -o "$OUT/all/$n"
 done
 for base in $UNPUBLISHED; do
-    cp -a "$HERE/prebuilt-modules/$base.ko" "$OUT/all/$base.ko"
+    module="$base.ko"
+    local_module="$LOCAL_PREBUILTS/$module"
+    [[ -f "$local_module" ]] || {
+        echo "!! missing local stock module: $local_module" >&2
+        echo "   run kernel/extract-unpublished-modules.sh first" >&2
+        exit 1
+    }
+    actual_sha256="$(sha256sum "$local_module" | cut -d' ' -f1)"
+    [[ "$actual_sha256" == "${LOCAL_PREBUILT_SHA256[$module]}" ]] || {
+        echo "!! local stock module hash mismatch: $module" >&2
+        exit 1
+    }
+    cp -a "$local_module" "$OUT/all/$module"
 done
 
 stage_set() {  # <module name list> <dest dir> <label>
@@ -95,7 +110,7 @@ stage_set() {  # <module name list> <dest dir> <label>
         [[ -n "$n" ]] || continue
         base="${n%.ko}"
         if [[ " $UNPUBLISHED " == *" $base "* ]]; then
-            cp -a "$HERE/prebuilt-modules/$n" "$dst/$n"
+            cp -a "$LOCAL_PREBUILTS/$n" "$dst/$n"
             pinned=$((pinned + 1))
         elif [[ -n "${KO[$n]:-}" ]]; then
             # --strip-debug, not --strip-all: .modinfo and __versions must survive or the

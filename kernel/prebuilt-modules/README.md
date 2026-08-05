@@ -1,45 +1,28 @@
-# Prebuilt kernel modules — source not published
+# Locally extracted kernel modules
 
-Every other module in `vendor_dlkm` is built from source by `stage_kernel_artifacts.sh`
-(306 of 313 as of 2026-07-28). These seven are not, because **Nothing has not released their
-source**. They are GPL kernel modules, so this is a gap on the vendor's side, not a choice.
+Two GPL modules loaded by the stock `vendor_dlkm` image do not currently have
+matching published source:
 
-Verified 2026-07-28 by content grep across `msm-kernel/`, all 37 `vendor/qcom/opensource/*`
-packages and the stock `dump_a16` image, trying both `-` and `_` spellings: only the compiled
-`.ko` exists anywhere.
-
-| module | what it is |
-|---|---|
-| `aw882xx_dlkm.ko` | Awinic AW882xx smart audio amplifier codec |
-| `stm_nfc_i2c.ko` | ST NFC controller (ST's Android driver, not mainline `st-nci`) |
-| `stm_st54se_gpio.ko` | ST ST54 secure element GPIO |
-| `nothing_performance.ko` | Nothing's performance/boost driver |
-| `nothing_rdump.ko` | Nothing's raw-dump driver (the `nothing,lba_addr` DT node belongs to it) |
-| `rpmb_state.ko` | RPMB state |
-| `spmi-pmic-err-debug.ko` | SPMI PMIC error debug |
-
-## Which copy is pinned, and why it matters
-
-Four of these ship in **both** the stock `vendor_boot` ramdisk and `vendor_dlkm` — as *different
-builds*: `6.6.102` in the ramdisk, `6.6.87` in `vendor_dlkm`. Pin the **6.6.102** copies:
-
-| module | pinned from | vermagic |
+| Module | Purpose | Expected SHA-256 |
 |---|---|---|
-| `nothing_performance` | stock vendor_boot ramdisk | `6.6.102-android15-8-maybe-dirty-4k` |
-| `nothing_rdump` | stock vendor_boot ramdisk | `6.6.102-android15-8-maybe-dirty-4k` |
-| `rpmb_state` | stock vendor_boot ramdisk | `6.6.102-android15-8-maybe-dirty-4k` |
-| `spmi-pmic-err-debug` | stock vendor_boot ramdisk | `6.6.102-android15-8-maybe-dirty-4k` |
-| `aw882xx_dlkm` | stock `vendor_dlkm` | `6.6.87-android15-8-maybe-dirty-4k` |
-| `stm_nfc_i2c` | stock `vendor_dlkm` | `6.6.87-android15-8-maybe-dirty-4k` |
-| `stm_st54se_gpio` | stock `vendor_dlkm` | `6.6.87-android15-8-maybe-dirty-4k` |
+| `stm_nfc_i2c.ko` | ST NFC controller | `5f6ec24ab7a464169463f10d56e42d09e5f4cc360b5e7ec8261a515ad895f742` |
+| `stm_st54se_gpio.ko` | ST54 secure-element GPIO | `334c9afd91859276bbdefae30f671a0b515d6656ccbded6121da4e7f587c741a` |
 
-The last three are `vendor_dlkm`-only, and `6.6.87` is fine there: second-stage module loading is
-lenient about vermagic, which is why stock ships them that way. **First-stage is not** — a ramdisk
-module whose vermagic does not exactly match the running GKI is rejected, and enough rejections
-mean nothing mounts and the device hangs on the logo. Taking the `vendor_dlkm` copies of the first
-four is exactly that mistake; see `metroid-vermagic-first-stage` in memory.
+Both expected files came from the `vendor_dlkm` partition of Nothing OS
+`Metroid_B4.0-250917-1218` and report the stock 6.6.87 Android 15 KMI. This public
+repository does not redistribute those binaries. Extract them from your own
+copy of that documented stock image:
 
-All pinned from stock Nothing OS `Metroid_B4.0-250917-1218`.
+```bash
+kernel/extract-unpublished-modules.sh /path/to/extracted/vendor_dlkm
+```
 
-If Nothing ever publishes these, delete this directory and drop the names from
-`UNPUBLISHED` in `stage_kernel_artifacts.sh`.
+The script verifies both hashes and writes them to the ignored
+`kernel/local-prebuilt-modules/` directory consumed by
+`stage_kernel_artifacts.sh`.
+
+Redistributors remain responsible for satisfying all applicable license and
+corresponding-source obligations. Local extraction is for private build and test
+use; it does not by itself authorize public OTA redistribution. If matching
+source is published, build these modules from source and remove the
+local-extraction path.

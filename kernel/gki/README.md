@@ -1,8 +1,9 @@
 # Pinned Google GKI
 
-This is the only prebuilt kernel content in the tree. Everything else — all 306 buildable
-`vendor_dlkm` modules, the base DTB and `dtbo.img` — is generated from the Nothing GPL kernel
-source by `../stage_kernel_artifacts.sh`.
+This directory contains the redistributed Google GKI artifacts. The 311 buildable
+`vendor_dlkm` modules, base DTB, and `dtbo.img` are generated from the published
+Nothing kernel source by `../stage_kernel_artifacts.sh`. Two additional stock NFC
+modules must be extracted locally and are not redistributed by this repository.
 
 The LineageOS charter permits this explicitly:
 
@@ -16,6 +17,24 @@ The LineageOS charter permits this explicitly:
 |---|---|
 | `Image` | `6.6.102-android15-8-gab8eb70a71b8-ab14350911-4k`, built by `kleaf@build-host` 2025-10-29. Google GKI build `ab14350911`. Shipped by Nothing on Nothing OS `Metroid_B4.0-250917-1218`. |
 | `system_dlkm/` | 96 GKI modules from Google GKI build `ab13768703`, vermagic `6.6.87-android15-8-gc2569c3b141c-ab13768703-4k`. Also as shipped by Nothing. |
+
+Exact public corresponding-source records:
+
+| Artifact set | Android CI build | Immutable `kernel/common` source | Build configuration |
+|---|---|---|---|
+| `Image` | [`14350911/kernel_aarch64`](https://ci.android.com/builds/submitted/14350911/kernel_aarch64/latest) | [`ab8eb70a71b8906e3ceac53d2b10f027f8774bcb`](https://android.googlesource.com/kernel/common/+/ab8eb70a71b8906e3ceac53d2b10f027f8774bcb) | [`build.config.gki.aarch64`](https://android.googlesource.com/kernel/common/+/ab8eb70a71b8906e3ceac53d2b10f027f8774bcb/build.config.gki.aarch64) |
+| `system_dlkm` | [`13768703/kernel_aarch64`](https://ci.android.com/builds/submitted/13768703/kernel_aarch64/latest) | [`c2569c3b141cb39a6c2bca63c62697589fe86dc4`](https://android.googlesource.com/kernel/common/+/c2569c3b141cb39a6c2bca63c62697589fe86dc4) | [`build.config.gki.aarch64`](https://android.googlesource.com/kernel/common/+/c2569c3b141cb39a6c2bca63c62697589fe86dc4/build.config.gki.aarch64) |
+
+Both source revisions specify Clang `r510928` in `build.config.constants`.
+
+`Image` SHA-256:
+`a56ce8776a134b6ebf5bf0cfc67aabd56fabc41a961790dc16ee4770733770bc`.
+The sorted SHA-256 inventory of `Image`, `system_dlkm/*.ko`, and
+`system_dlkm/modules.*` hashes to
+`6e520a008b0ca8b9e6eca7a13962f87d18d31a6135b05d9a1e2337a5619813d7`.
+
+These identifiers document the exact checked-in set; they do not replace any
+license or corresponding-source obligations.
 
 Note the `Image` and `system_dlkm` come from *different* Google GKI builds (6.6.102 vs 6.6.87).
 That is how the device shipped, and it works because GKI enforces the KMI generation
