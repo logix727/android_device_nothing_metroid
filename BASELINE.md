@@ -5,9 +5,9 @@
 - Version: `23.0-20260805-UNOFFICIAL-metroid`
 - Build date UTC: `1785935162`
 - OTA: `lineage-23.0-20260805-UNOFFICIAL-metroid.zip`
-- SHA-256: `33ccd784a7ccffb6dff927470afec941887ea2d1d21d91d84930e6f7485457a7`
-- Verified snapshot: `releases/candidate_20260805_091946_pno-nfc-uicc`
-- Installed slot when recorded: `b`
+- SHA-256: `d052d13c16f008f8ea80118f598f8fa7cefdcad6b1d6ef82590e63c7ec324c3c`
+- Verified snapshot: `releases/candidate_20260805_115538_perf-walt`
+- Installed slot when recorded: `a`
 - SELinux: Enforcing
 - Data: encrypted
 
@@ -15,7 +15,7 @@
 
 | Project | Revision |
 |---|---|
-| `device/nothing/metroid` | `dcf47297ad5da49e97a48b806c2b8e9d42337a05` |
+| `device/nothing/metroid` | `3fe548be50b214c98f43352ae269399a4c435b88` |
 | `vendor/nothing/metroid` (private) | `7421cd2836304941c64ac56c6daad5517a9d1c8e` |
 | `kernel/nothing/sm8735` | `a604aa895f0b89b8d5e632c17f6046942fff6461` |
 | `bootable/recovery` | `42ea725381c1b67fb2cee6b5f7d87a7d39d3f3fa` |

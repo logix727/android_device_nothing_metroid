@@ -27,8 +27,9 @@
   qcrild. Both services register on the installed candidate; physical-SIM OMAPI
   testing remains. JPN-only `eSE1` is intentionally not declared.
 - Performance: restore the stock perf HAL's access to `/proc/sys/walt` after the
-  device tree relabeled those controls. SELinux and vendor-image builds pass;
-  runtime AVC and perf-lock validation require the next OTA.
+  device tree relabeled those controls. The installed candidate passes two boots,
+  cold app launches, UI gestures, camera startup and CPU load with readable WALT
+  controls, no perf AVC, and both perf/QHDC services alive.
 - Wi-Fi 7: OpenWrt MLD testing passes WPA3-SAE H2E, GCMP-256, 6 GHz/320 MHz
   EHT association, about 839 Mbps down and 660 Mbps up over TCP, five-minute
   screen-off retention, and screen-off PNO reassociation in about 5.6 seconds.

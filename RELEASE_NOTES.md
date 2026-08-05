@@ -7,7 +7,7 @@ build.
 
 SHA-256:
 
-`33ccd784a7ccffb6dff927470afec941887ea2d1d21d91d84930e6f7485457a7`
+`d052d13c16f008f8ea80118f598f8fa7cefdcad6b1d6ef82590e63c7ec324c3c`
 
 ### Verified
 
@@ -23,6 +23,10 @@ SHA-256:
   remains intentionally absent.
 - Face enrollment/authentication, camera routing/zoom, fingerprint, haptics and
   core audio/camera/biometric HAL regression checks pass.
+- Perf HAL access to device-labeled WALT controls is restored and runtime-tested
+  across app launch, UI, camera and CPU-load operations without AVCs or crashes.
+- OpenWrt Wi-Fi 7 MLD testing passes 6 GHz/320 MHz EHT association, sustained
+  TCP transport, screen-off retention and PNO reassociation.
 
 ### Known issues / tester focus
 
