@@ -1,76 +1,112 @@
-# LineageOS 23 device tree — Nothing Phone (3) `metroid`
+# LineageOS 23 device tree for Nothing Phone (3) (`metroid`)
 
-Unofficial early build of LineageOS 23 (Android 16) for the Nothing Phone (3) —
-codename `metroid`, Qualcomm **SM8735**.
+Unofficial LineageOS 23 (Android 16) bring-up for the Nothing Phone (3), codename
+`metroid`, based on Qualcomm SM8735.
 
-**Status: alpha / active testing.** The 2026-08-04 release-key Virtual A/B OTA
-was recovery-sideloaded and booted on the target slot. See
-[`release/20260804-test1.md`](release/20260804-test1.md) for tested behavior and
-known issues. The installed source lock is recorded in [`BASELINE.md`](BASELINE.md).
+## Status
 
-## Current release gate
+**Alpha development. Not release-ready.**
 
-| Gate | State |
-|---|---|
-| Full LineageOS `bacon` build and VINTF check | PASS |
-| Payload images match target-files | PASS |
-| Complete release-key AVB graph, root flags `0` | PASS |
-| Matching Lineage Recovery sideload transfer | PASS |
-| Post-install target-slot boot | PASS |
-| Core hardware/service sweep | PASS with disclosed gaps |
-| Public tester source | READY |
+There is currently no supported public OTA or recovery bootstrap download. Do
+not follow old mirrors, mix artifacts, or treat this repository as an official
+LineageOS release. The latest accepted build is a maintainer-local candidate;
+its source and artifact lock is not yet completely public or reproducible.
 
-The installed tester baseline reaches the LineageOS UI with display, touch,
-ADB, Enforcing SELinux, file-based encryption, and a stable `system_server`.
+Current runtime blockers include cellular IMS/eSIM integration, Power HAL
+registration, framework thermal mapping, launch/security metadata, and release
+record consistency. See [`BUGS.md`](BUGS.md) for the evidence-ranked backlog.
 
-## What this repo is
-The **device tree** (`device/nothing/metroid`), required framework/recovery
-patches, recovery-installer source, and prebuilt kernel/DTB/module artifacts used
-by the current port. It does **not** contain proprietary
-vendor blobs, release private keys, modem firmware, or bootloader firmware.
+## Repository scope
+
+This repository contains:
+
+- the public device configuration;
+- source patches temporarily carried for other Android projects;
+- recovery-installer source;
+- documented Google GKI artifacts permitted for GKI devices.
+
+It does not contain Android userspace vendor blobs, private signing/AVB keys,
+modem firmware, or bootloader firmware. Proprietary Android files must be
+extracted from firmware owned by the builder.
+
+Two stock GPL NFC kernel modules currently lack matching published source. They
+are intentionally not redistributed here. Builders must extract the exact
+documented files from their own stock image; see
+[`kernel/prebuilt-modules/README.md`](kernel/prebuilt-modules/README.md).
 
 ## Building
+
+This is currently a reconstruction recipe, not a complete reproducible source
+manifest.
+
 1. Set up a LineageOS 23 source tree.
-2. Copy [`manifest/metroid.xml`](manifest/metroid.xml) into
-  `.repo/local_manifests/`, then sync.
-3. Extract proprietary blobs from your own B4.1 stock dump:
-  `./device/nothing/metroid/extract-files.py /path/to/stock/dump`.
-4. Apply the required source patches in `patches/series.conf`; see
-   [`patches/README.md`](patches/README.md).
+2. Copy [`manifest/metroid.xml`](manifest/metroid.xml) to
+   `.repo/local_manifests/` and sync.
+3. Extract proprietary userspace files from your own documented B4.1 stock dump:
+
    ```bash
-   # Example; apply every ordered entry from patches/series.conf.
-   git -C frameworks/base am \
-     ../../device/nothing/metroid/patches/frameworks_base/*.patch
+   ./device/nothing/metroid/extract-files.py /path/to/stock/dump
    ```
-5. Build:
+
+4. Extract the two locally required NFC modules as documented in
+   `kernel/prebuilt-modules/README.md`.
+5. Apply every ordered patch in `patches/series.conf`; see
+   [`patches/README.md`](patches/README.md).
+6. Build the kernel workspace and stage the generated device inputs:
+
+   ```bash
+   cd /path/to/kernelws
+   build/kernel/kleaf/bazel.sh build --noenable_bzlmod \
+     --//vendor/qcom/opensource/camera-kernel:project_name=sun \
+     --target_pattern_file=/path/to/lineage/device/nothing/metroid/kernel/vendor-module-targets.txt
+   cd /path/to/lineage
+   device/nothing/metroid/kernel/stage_kernel_artifacts.sh /path/to/kernelws
+   ```
+
+7. Build Android:
+
    ```bash
    source build/envsetup.sh
    lunch lineage_metroid-bp2a-userdebug
-  m bacon
+   m bacon
    ```
 
-See [`BASELINE.md`](BASELINE.md) for exact source revisions.
+The maintainer-local tested revisions are recorded in [`BASELINE.md`](BASELINE.md),
+but that file is not a substitute for a complete public manifest lock.
 
-## Flashing landmines (read before flashing)
-- Use [`INSTALL.md`](INSTALL.md) and the matched recovery bootstrap bundle. Do
-  not manually force the full OTA target slot; Update Engine selects it.
-- **Never** disable verity/verification on the **root** vbmeta.
-- vendor must be **ext4**; vendor_boot page_size **0x1000**; make `vbmeta_vendor`
-  coherently from the images.
-- `fastboot boot` hangs — always flash + reboot.
+The local manifest and `lineage.dependencies` use the maintainer kernel fork
+while this bring-up remains unofficial. An official submission must use
+LineageOS-hosted dependencies and the active release branch conventions.
 
-## Known issues
-- Face unlock enrollment is not working.
-- Camera zoom/lens behavior and UHD/4K need wider testing.
-- Haptics remain weaker than Nothing OS despite loading the stock stack.
-- Cellular calls/SMS/data/IMS/emergency calling need physical-SIM testing.
-- **Slow first boot (~5-7 min)** — runtime is imageless (odsign/boot-level key);
-  fixable with `WITH_DEXPREOPT`; subsequent boots are normal speed.
-- Minor cosmetic HAL noise: `memtrack`, `lights`, `power.stats` log
-  registration failures — not user-visible.
+## Safety
+
+- No public build is presently endorsed for installation.
+- Never disable AVB verification or set root vbmeta disable flags.
+- Never mix recovery, boot, AVB, or OTA artifacts from different builds.
+- Do not manually force an A/B OTA target slot.
+- Keep a complete stock restore path before testing any future release.
+
+## Reporting bugs
+
+This fork uses GitHub issue templates for maintainer testing. Official LineageOS
+devices use the central LineageOS tracker. Reports here must include the exact build hash,
+firmware baseline, clean reproduction steps, and sanitized logs. Remove account,
+network, location, radio/subscriber, and device identifiers before uploading.
+Unsupported kernels, root modules, and add-ons must be removed before reporting.
+
+## Licensing and provenance
+
+Original contributions are licensed as described in [`LICENSE`](LICENSE).
+Third-party and stock-derived material retains its original license and is
+documented in [`NOTICE`](NOTICE). No license grant in this repository overrides
+third-party terms or corresponding-source obligations.
 
 ## Credits
-LineageOS, Qualcomm CAF, reference trees **onyx** (Xiaomi 15 / SM8750) and
-**pong** (Nothing Phone 2), and Nothing for the kernel source.
 
-*Unofficial. No warranty. You are responsible for your device.*
+LineageOS, AOSP, Qualcomm CAF, Nothing, and reference-device maintainers.
+
+Upstream contributions must follow the LineageOS charter and Gerrit process:
+https://github.com/LineageOS/charter and
+https://wiki.lineageos.org/how-to/submitting-patches/.
+
+Unofficial. No warranty. You are responsible for your device.

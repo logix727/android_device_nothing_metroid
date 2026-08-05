@@ -1,5 +1,5 @@
 From 863eb159ab7d8bc64da6c2e20c1b34b31e6be65e Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:12 -0400
 Subject: [PATCH] primary-hal: Make optional audio services non-mandatory
 
@@ -26,4 +26,3 @@ index cdbb603..46c8954 100644
      <library name = "asr" libraryName="libqasr.so"
 -- 
 2.43.0
-

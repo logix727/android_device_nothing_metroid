@@ -1,5 +1,5 @@
 From e3d66ba62335ee9ac95ea183d0b1ebf6e611734c Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:10:20 -0400
 Subject: [PATCH] Aperture: support metroid camera topology
 
@@ -235,4 +235,3 @@ index 323283f..7da112d 100644
  
 -- 
 2.43.0
-

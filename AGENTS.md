@@ -8,7 +8,7 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 - Build: `23.0-20260805-UNOFFICIAL-metroid`
 - OTA SHA-256:
   `d052d13c16f008f8ea80118f598f8fa7cefdcad6b1d6ef82590e63c7ec324c3c`
-- Artifact: `../../../../releases/candidate_20260805_115538_perf-walt/`
+- Artifact: maintainer-private audited candidate; not a public release.
 - Last recorded state: slot A, boot complete, SELinux Enforcing, encrypted data.
 - Never describe a newer source change as working until it is built, audited,
   installed, and tested.
@@ -111,9 +111,10 @@ Before sideloading or publishing:
 
 ## Current priorities
 
-1. Face enrollment.
-2. Camera UHD/zoom edge cases from community testing.
-3. Haptic strength/effect parity with Nothing OS.
-4. Cellular/IMS/emergency behavior with physical SIMs.
+1. Radio VINTF, IMS, and eSIM integration.
+2. Power HAL and framework thermal policy.
+3. Release reproducibility, metadata, and public artifact consistency.
+4. Camera stabilization/routing and haptic parity.
+5. Physical-SIM and accessory acceptance.
 
 Do not start from archived plans or handoffs; they describe superseded states.

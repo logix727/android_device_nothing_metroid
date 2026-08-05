@@ -1,5 +1,5 @@
 From bf83ccd8fc5ce4584355eac82f63ab2670b2c844 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:03 -0400
 Subject: [PATCH] audio_bluetooth_hw: Add session include dependencies
 
@@ -25,4 +25,3 @@ index 1b8e850..71587e8 100644
          "libbase",
 -- 
 2.43.0
-

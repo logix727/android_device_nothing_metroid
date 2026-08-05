@@ -1,5 +1,5 @@
 From 92ec4bbb70f37b709027a42a410964bab18fe010 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:37:28 -0400
 Subject: [PATCH] releasetools: tolerate duplicate target-files entries
 
@@ -26,4 +26,3 @@ index 736d355468..8c76cd1176 100755
  
 -- 
 2.43.0
-

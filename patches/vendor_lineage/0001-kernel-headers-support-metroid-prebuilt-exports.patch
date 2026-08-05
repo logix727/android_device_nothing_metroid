@@ -1,5 +1,5 @@
 From 5581464971cc5af7e2bcc8119626b73712f78c70 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:37:28 -0400
 Subject: [PATCH] kernel headers: support metroid prebuilt exports
 
@@ -47,4 +47,3 @@ index a36954b..72ad285 100644
  }
 -- 
 2.43.0
-

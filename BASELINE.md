@@ -1,4 +1,7 @@
-# Installed tester baseline
+# Maintainer-local installed baseline
+
+This records private maintainer acceptance evidence. It is not a public release
+or a complete reproducible source lock.
 
 ## Build
 
@@ -6,7 +9,7 @@
 - Build date UTC: `1785935162`
 - OTA: `lineage-23.0-20260805-UNOFFICIAL-metroid.zip`
 - SHA-256: `d052d13c16f008f8ea80118f598f8fa7cefdcad6b1d6ef82590e63c7ec324c3c`
-- Verified snapshot: `releases/candidate_20260805_115538_perf-walt`
+- Verified snapshot: retained privately by the maintainer
 - Installed slot when recorded: `a`
 - SELinux: Enforcing
 - Data: encrypted
@@ -16,7 +19,7 @@
 | Project | Revision |
 |---|---|
 | `device/nothing/metroid` | `3fe548be50b214c98f43352ae269399a4c435b88` |
-| `vendor/nothing/metroid` (private) | `7421cd2836304941c64ac56c6daad5517a9d1c8e` |
+| `vendor/nothing/metroid` | private extraction revision retained by maintainer |
 | `kernel/nothing/sm8735` | `a604aa895f0b89b8d5e632c17f6046942fff6461` |
 | `bootable/recovery` | `42ea725381c1b67fb2cee6b5f7d87a7d39d3f3fa` |
 | `build/make` | `92ec4bbb70f37b709027a42a410964bab18fe010` |
@@ -36,5 +39,5 @@
 | `vendor/lineage` | `5581464971cc5af7e2bcc8119626b73712f78c70` |
 | `vendor/qcom/opensource/vibrator` | `a1b22e719f0e1e7f2986860601a94b66f36ac2f5` |
 
-These revisions are the starting point for the next release branch. Update this
-file only after a new audited OTA is installed and accepted.
+These revisions are the starting point for maintainer work, not a complete public
+manifest. Update this file only after a new audited OTA is installed and accepted.

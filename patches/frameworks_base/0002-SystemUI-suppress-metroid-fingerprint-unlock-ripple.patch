@@ -1,5 +1,5 @@
 From 5e6ecd7d50e65ac38edf22245b929af61e5a9c0b Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:10:20 -0400
 Subject: [PATCH] SystemUI: suppress metroid fingerprint unlock ripple
 
@@ -65,4 +65,3 @@ index 87e9784dd..55752b6a1 100644
                  }
 -- 
 2.43.0
-

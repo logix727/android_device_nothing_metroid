@@ -1,8 +1,8 @@
 # Required source patches
 
-The 2026-08-04 tester release was built with topic commits outside this device
-repository. Until the corresponding `logix727` forks exist, apply the checked-in
-mail patches after syncing LineageOS 23:
+Maintainer candidates use topic commits outside this device repository. Until
+the corresponding maintained forks exist, apply the checked-in mail patches
+after syncing LineageOS 23:
 
 ```bash
 git -C frameworks/base am \
@@ -37,5 +37,5 @@ series in order to clean upstream checkouts, or use the matching maintainer
 forks once published.
 
 The vendor tree is proprietary and must not be published. Populate it from your
-own stock dump with `extract-files.py`; private vendor revisions are recorded in
-`BASELINE.md` only for local reproducibility.
+own stock dump with `extract-files.py`. Private extraction revisions remain in
+the maintainer workspace and are not part of the public source lock.

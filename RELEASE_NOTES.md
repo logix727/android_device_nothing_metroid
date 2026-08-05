@@ -1,9 +1,9 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
-## 2026-08-05 tester build
+## 2026-08-05 maintainer-local candidate
 
-This is an **unofficial prerelease for testers**, not an official LineageOS
-build.
+This build was installed and tested privately by the maintainer. It was not
+published as a supported download and is not a reproducible public release.
 
 SHA-256:
 
@@ -14,15 +14,17 @@ SHA-256:
 - Install-clean Virtual A/B recovery sideload, target-slot activation, three
   boots, encrypted userdata retention, Enforcing SELinux and one system_server
   start per boot.
-- Payload equivalence for all 16 partitions, AVB, signing, VINTF and partition
-  audits.
+- Payload equivalence for all 16 partitions, AVB, signing, declared VINTF, and
+  partition audits. Runtime testing later found undeclared vendor services and a
+  missing post-OTA care-map verification pass; see `BUGS.md`.
 - Wi-Fi hardware PNO starts while disconnected with zero framework failures.
 - NFC clean-state CPLC bootstrap regenerates all derived properties before the
   NFC HAL starts; NFC disable/enable and credit-card polling work.
 - ROW UICC secure-element `SIM1` and `SIM2` services register; JPN-only `eSE1`
   remains intentionally absent.
-- Face enrollment/authentication, camera routing/zoom, fingerprint, haptics and
-  core audio/camera/biometric HAL regression checks pass.
+- Face enrollment/authentication and selected camera/audio/biometric regression
+  checks pass. Fingerprint fresh-enrollment acceptance remains incomplete, and
+  standard Android haptic effects remain degraded.
 - Perf HAL access to device-labeled WALT controls is restored and runtime-tested
   across app launch, UI, camera and CPU-load operations without AVCs or crashes.
 - OpenWrt Wi-Fi 7 MLD testing passes 6 GHz/320 MHz EHT association, sustained
@@ -38,8 +40,10 @@ SHA-256:
 - eSIM is unavailable because no LPA/EuiccService is installed; default eUICC
   card discovery also remains unverified.
 - Physical-SIM calls, SMS, data, IMS, emergency UI and UICC OMAPI require testing.
-- Saved-network PNO reconnection needs an available configured AP; PNO startup
-  itself is verified.
+- Screen-off PNO reassociation passed against the tested AP; broader saved-network
+  and controlled-roaming coverage remains untested.
+- Cellular IMS/eSIM, Power HAL registration, framework skin thermal reporting,
+  launch API metadata, and security-patch metadata remain release blockers.
 - NFC payment and secure-element applets are not transaction-tested. ST21 logs
   `-107` transport errors during transitions despite successful initialization,
   tag use, and HCE capability checks.

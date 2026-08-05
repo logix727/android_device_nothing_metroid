@@ -1,80 +1,36 @@
-# Installation
+# Installation status
 
-These instructions are for the Nothing Phone (3), codename `metroid`.
+There is currently no supported public LineageOS 23 OTA or recovery bootstrap
+bundle for Nothing Phone (3) (`metroid`). These instructions intentionally do not
+provide flashing commands until a complete matched release is published.
 
-## Requirements
+## Release requirements
 
-- Unlocked bootloader.
-- Current Google platform-tools (`adb` and `fastboot`).
-- Nothing OS B4.1 (`Metroid_B4.1-260414-1846`) firmware baseline.
-- A complete stock restore package and a tested recovery procedure.
-- The full OTA ZIP and recovery bootstrap bundle from the same release.
+A future installable release must provide, from one audited build:
 
-The ROM does not redistribute modem or bootloader firmware. Back up all data.
-Unlocking and the required factory reset erase internal storage.
+- the full A/B OTA ZIP and SHA-256;
+- a recovery bootstrap bundle and checksums;
+- source tag and complete public manifest lock;
+- firmware baseline and rollback requirements;
+- verified clean-install and update instructions;
+- explicit working, broken, and untested behavior.
 
-## Safety rules
+Never use an OTA with recovery, boot, DTBO, or AVB images from another build.
+Never disable AVB verification or manually force the OTA target slot.
 
-- Never use `--disable-verity`, `--disable-verification`, or root vbmeta flags.
-- Never mix recovery, vbmeta, boot, or ROM artifacts from different releases.
-- `fastboot boot` hangs on this device; use the matched bootstrap scripts.
-- Do not manually choose the OTA target slot. Android Update Engine does that.
-- Stop on the first failed command. Do not repeatedly flash random partitions.
+## Before testing a future release
 
-## Clean install from stock
+- Unlocking and factory reset erase internal storage.
+- Keep a complete stock restore package and tested recovery procedure.
+- Back up all data.
+- Verify every downloaded hash against the signed release record.
+- Stop at the first failed command instead of flashing unrelated partitions.
 
-1. Verify the downloaded hashes against the release checksums.
-2. Extract the recovery bootstrap bundle.
-3. Reboot the phone to the bootloader:
-
-   ```bash
-   adb reboot bootloader
-   ```
-
-4. Confirm the serial with `fastboot devices`, then run the script from the
-   extracted bundle:
-
-   ```text
-   Windows: flash-lineage-recovery.bat
-   Linux:   ./flash-lineage-recovery.sh
-   ```
-
-   Type `metroid` at the confirmation prompt. The script flashes the matched
-   boot and AVB chain to both slots, clears `misc`, and reboots to Lineage
-   Recovery. It does not flash `super` and does not disable AVB.
-
-5. In Lineage Recovery select **Factory reset**, then **Format data / factory
-   reset**.
-6. Return to the main menu and select **Apply update**, then **Apply from ADB**.
-7. On the computer run:
-
-   ```bash
-   adb sideload lineage-23.0-20260804-UNOFFICIAL-metroid.zip
-   ```
-
-   The host progress can stop near 47% while the device continues verifying and
-   installing the A/B payload. Wait for recovery to report success. Do not
-   disconnect the cable during verification or postinstall.
-
-8. Decline optional add-ons for the first boot, then select **Reboot system
-   now**. First boot can take several minutes.
-
-## Update from an earlier matching-key build
-
-1. Reboot to Lineage Recovery.
-2. Select **Apply update**, then **Apply from ADB**.
-3. Run `adb sideload <new-full-OTA.zip>`.
-4. Reboot after recovery reports success. Do not factory reset unless the
-   release notes require it.
+Historical instructions under `release/` are retained only as development
+records and are not current installation guidance.
 
 ## Bug reports
 
-Include the exact ZIP SHA-256, firmware version, clean or upgrade install,
-reproduction steps, and logs:
-
-```bash
-adb logcat -b all -d > logcat.txt
-adb shell dmesg > dmesg.txt
-```
-
-Reproduce without an unlisted kernel, root module, or add-on before reporting.
+Use the repository issue template. Include the exact OTA SHA-256, firmware,
+install type, reproduction steps, and sanitized logs. Never publish credentials,
+subscriber identifiers, network details, precise location, or private keys.

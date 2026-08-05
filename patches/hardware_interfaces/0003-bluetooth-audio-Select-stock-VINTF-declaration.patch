@@ -1,5 +1,5 @@
 From 9218ce5c94032ca225102175614d5f8b09bf39d9 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:03 -0400
 Subject: [PATCH 3/3] bluetooth: audio: Select stock VINTF declaration
 
@@ -26,4 +26,3 @@ index af6bf86d..3ae4a0aa 100644
      ],
 -- 
 2.43.0
-

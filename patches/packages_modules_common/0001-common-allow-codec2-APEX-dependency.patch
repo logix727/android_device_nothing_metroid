@@ -1,5 +1,5 @@
 From 9c5eaa20534c698e89cde75490225ee73ed7ff4a Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:04 -0400
 Subject: [PATCH] Add Codec2 plugin headers to allowed dependencies
 
@@ -22,4 +22,3 @@ index 3d944da..328b478 100644
  libcodec2_soft_aacenc(minSdkVersion:29)
 -- 
 2.43.0
-

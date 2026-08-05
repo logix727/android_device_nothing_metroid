@@ -12,7 +12,10 @@ device or accepted-image evidence and a deterministic source/configuration cause
 A latent issue has a deterministic defect but no retained user-visible failure.
 A test gap is not a bug claim.
 
-Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
+Detailed runtime evidence is retained privately because raw device logs contain
+sensitive identifiers. Source paths are relative to `lineage/`. Any proprietary
+component mentioned below must be user-extracted or have explicit redistribution
+permission; it must never be committed to this public repository.
 
 ## P0: release and core-function blockers
 
@@ -22,7 +25,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: IMS, IWLAN, eSIM/LPA, QTI call-audio control, vendor radio
   configuration, SAP, and advanced UICC/data paths cannot register.
-- Runtime: `diagnostics/ota_20260805_perf_walt/second-boot-dmesg.txt:6310-6377`
+- Evidence: two-boot traces show servicemanager rejecting the listed QTI
+  interfaces because they are absent from the device VINTF manifest.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/qcrilNrd.rc:5-46`
 - Cause: `device.mk:264-271` installs only selected AOSP radio fragments; the
   exact stock standalone declarations for the served QTI interfaces are absent.
@@ -39,8 +43,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
-- Runtime: `diagnostics/final_bug_audit_20260805/radio-private.txt:55-56` and
-  `diagnostics/final_bug_audit_20260805/logcat-private.txt:1295-1317`
+- Evidence: the installed package/service audit finds no IMS implementation;
+  `ImsResolver` reports no carrier or device MMTEL service.
 - Source: `packages/services/Telephony/res/values/config.xml:237-241`
 - Cause: no compatible `org.codeaurora.ims` package is installed and the default
   MMTEL package is not selected by a metroid Telephony overlay.
@@ -55,7 +59,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: eSIM discovery, download, activation, deletion, and settings do not
   work even though applications see the eUICC hardware feature.
-- Runtime: `diagnostics/final_bug_audit_20260805/radio-private.txt:26-30,56`
+- Evidence: `EuiccManager` is disabled, no `EuiccService` package is installed,
+  and no eUICC binder service is present.
 - Source: `proprietary-files.txt:6`
 - Cause: no valid `EuiccService`/LPA is installed and qcrild LPA interfaces are
   rejected by MTR-001.
@@ -70,7 +75,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: framework and SurfaceFlinger lack the device power-mode, boost, and
   ADPF implementation.
-- Runtime: `diagnostics/final_bug_audit_20260805/power-thermal-private.txt:8-14`
+- Evidence: `android.hardware.power.IPower/default` is absent and framework
+  performance-hint diagnostics report ADPF unsupported.
 - Source: `device.mk:264-271`
 - Cause: the stock-equivalent `android.hardware.power.IPower/default` declaration
   is not installed, although the vendor power process runs.
@@ -86,7 +92,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Impact: framework thermal status, headroom, display mitigation, and scheduler
   consumers are blind to enclosure temperature. Kernel and proprietary thermal
   protection still operate, so this is not total thermal-protection loss.
-- Runtime: `diagnostics/final_bug_audit_20260805/power-thermal-private.txt:25-115`
+- Evidence: framework thermal diagnostics expose no skin temperature and return
+  `NaN` headroom while other device temperatures remain available.
 - Source: `hardware/qcom-caf/thermal/thermalConfig.cpp:2487-2501`
 - Cause: tuna maps skin to nonexistent `sys-therm-3`; the kernel exposes Nothing
   shell sensors instead.
@@ -101,7 +108,7 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed configuration defect
 - Impact: compatibility, VSR, permission, and security behavior can be selected
   for an Android 16-launch device instead of the stock Android 15 launch level.
-- Runtime: `diagnostics/final_bug_audit_20260805/security-metadata.txt:1-3`
+- Evidence: installed properties report first/board API level 36.
 - Source: `lineage_metroid.mk:25`
 - Cause: `PRODUCT_SHIPPING_API_LEVEL := 36`; stock evidence records API 35 and
   board API `202404`.
@@ -115,7 +122,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: the August build reports platform SPL `2026-02-01`, while vendor and
   boot SPL values are blank. Stock baseline evidence is newer.
-- Runtime: `diagnostics/final_bug_audit_20260805/security-metadata.txt:4-6`
+- Evidence: installed properties report platform SPL `2026-02-01`; vendor and
+  boot-image SPL properties are blank.
 - Source: `vendor/lineage/release/flag_values/bp2a/RELEASE_PLATFORM_SECURITY_PATCH.textproto:1-4`
 - Fix direction: integrate available fixes and declare honest platform, vendor,
   boot, and rollback-index levels; never advance metadata beyond incorporated code.
@@ -129,8 +137,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Impact: users and maintainers can select the wrong OTA, source lock, recovery
   image set, or checksum record; the accepted build is not reproducible from a
   complete pinned manifest.
-- Evidence: `releases/current/VERIFICATION.txt:2-6` still names the August 4 OTA,
-  while `BASELINE.md:5-10` names the accepted August 5 OTA.
+- Evidence: maintainer release pointers still name the August 4 OTA while
+  `BASELINE.md` names the accepted August 5 candidate.
 - Cause: `releases/current`, install documentation, lock files, source capture,
   and recovery bootstrap were not updated atomically.
 - Fix direction: generate one immutable payload-derived bootstrap bundle; align
@@ -147,7 +155,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Impact: basic USB/wireless charging works, but Nothing current voting,
   shell-temperature derating, abnormal handling, and reverse-wireless policy are
   unavailable.
-- Runtime: `diagnostics/final_bug_audit_20260805/service-health.txt:2`
+- Evidence: `vendor.noth.hardware.charge.ICharge/default` is absent while basic
+  platform charging remains functional.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.noth.hardware.charge-service.rc:1-7`
 - Cause: duplicate `disabled` directives and no active ICharge VINTF fragment.
 - Fix direction: verify the intended stock binary, then restore the stock RC and
@@ -161,7 +170,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Severity: high
 - Status: confirmed configuration defect
 - Impact: unicast, broadcast, VCP, CSIP, HAP, MCP, and CCP cannot start.
-- Runtime: `diagnostics/final_bug_audit_20260805/bluetooth-profile-properties.txt:1-9`
+- Evidence: all eight installed LE Audio profile properties and the hearing-aid
+  feature override are `false`.
 - Source: `product.prop:12-29`
 - Cause: effective product properties disable the profile family despite stock
   enabling it and the audio policy containing LC3 routes.
@@ -176,8 +186,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: applications receive fallback pulses or no output for standard effects
   even though the proprietary RichTap path initializes.
-- Runtime: `diagnostics/final_bug_audit_20260805/bluetooth-haptics-private.txt:53-69`
-  and `diagnostics/post_ota_sweep_20260805_0026/camera-biometrics-haptics.txt:23741`
+- Evidence: the Vibrator AIDL service advertises no prebaked effects and
+  zero-duration primitives; `TEXTURE_TICK` produces no output.
 - Source: `vendor/qcom/opensource/vibrator/aidl/HapticsPolicy.xml:43-55`
 - Cause: no prebaked effects are advertised and all primitives report zero
   duration; `TEXTURE_TICK` is dropped as unsupported.
@@ -205,8 +215,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed
 - Impact: every codec session repeatedly looks up an absent service, logs
   `Media Quality Service not found`, and generates SELinux denials.
-- Runtime: `diagnostics/final_bug_audit_20260805/logcat-private.txt:12945-22617`
-  and `diagnostics/final_bug_audit_20260805/dmesg-private.txt:3032-10485`
+- Evidence: repeated codec tests log `Media Quality Service not found` and a
+  matching servicemanager AVC for every lookup.
 - Source: `frameworks/av/media/libstagefright/MediaCodec.cpp:2094-2104`
 - Fix direction: resolve upstream by gating the lookup when the handheld service
   is absent and using correct system-service semantics. Do not add policy for a
@@ -220,7 +230,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed policy defect
 - Impact: core GNSS fixes work, but enhanced IZat/PPE/DRE process selection may
   remain disabled.
-- Runtime: `diagnostics/final_bug_audit_20260805/logcat-private.txt:196`
+- Evidence: boot log records a property-service denial when the QTI GNSS domain
+  sets `vendor.qti.izat.value_added_process`.
 - Source: `sepolicy/vendor/enforcing.te:123-128`
 - Cause: raw property-socket file access was granted instead of typed `set_prop`.
 - Fix direction: trace the exact property and grant only
@@ -234,7 +245,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed integration defect
 - Impact: GNSS fixes work, but assistance/correction behavior can degrade during
   cold starts or network transitions; XTRA retries an unavailable QCC service.
-- Runtime: `diagnostics/final_bug_audit_20260805/service-health.txt:5,8`
+- Evidence: the QCC vendor service is absent while the location process remains
+  alive and repeatedly attempts the integration path.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/init.qccvendor.rc:17-21`
 - Fix direction: restore the coherent vendor/system QCC stack and declarations,
   or remove the clients and dangling RCs together.
@@ -247,7 +259,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed integration defect
 - Impact: normal SSC sensors work, but Nothing-specific sensor/display/UDFPS
   coordination APIs are unavailable.
-- Runtime: `diagnostics/final_bug_audit_20260805/service-health.txt:3`
+- Evidence: `vendor.noth.hardware.sensor.sensor_extension.ISensorExtension/default`
+  is absent on the installed build.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.noth.hardware.sensor.sensor_extension-service.rc:1-7`
 - Fix direction: restore only after identifying actual framework consumers and
   validating the intended stock binary and standalone fragment.
@@ -260,8 +273,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed release-path defect
 - Impact: the target slot was accepted without the intended first-boot block
   verification pass. AVB still protects mounted partitions.
-- Runtime: `diagnostics/ota_20260805_perf_walt/first-boot-dmesg.txt:4914-4917`
-  and `first-boot-logcat.txt:14850`
+- Evidence: first-boot update logs state that the care map is missing and skip
+  partition verification before marking the slot successful.
 - Cause: `/data/ota_package/care_map.pb` was absent after recovery sideload.
 - Fix direction: trace recovery/update-engine handoff and require care-map
   presence before accepting a candidate.
@@ -275,7 +288,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Severity: high
 - Status: latent deterministic race
 - Impact: LHBM authentication can fail if the panel begins at 60 Hz.
-- Runtime evidence: `diagnostics/post_ota_sweep_20260805_0026/sensors-display-input.txt:556,1139-1141,1993`
+- Evidence: display/UDFPS traces record LHBM requests while the panel is still at
+  60 Hz, followed by the 120 Hz vote.
 - Source: `frameworks/base/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java:1059-1075`
 - Fix direction: hold the maximum-refresh vote for the overlay lifetime before
   accepting touch; an immediate asynchronous reorder alone may still race.
@@ -300,7 +314,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Severity: medium
 - Status: confirmed observability defect
 - Impact: suspend works, but CPU/cluster low-power residency accounting is absent.
-- Runtime: `diagnostics/ota_20260805_perf_walt/second-boot-dmesg.txt:2446`
+- Evidence: the CPUSS sleep-stats driver fails to map the configured register and
+  exposes no residency counters.
 - Source: `kernel/nothing/sm8735/arch/arm64/boot/dts/vendor/qcom/tuna.dtsi:1790-1802`
 - Fix direction: reconcile active `0x178a0098` with stock `0x178b0098` after
   restoring reproducible kernel staging.
@@ -312,7 +327,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed cleanup/integration defect
 - Impact: normal boot attempts missing executables and imports, obscuring real
   failures and advertising unavailable QSPA, CHRE, QCC, factory, and helper paths.
-- Runtime: `diagnostics/post_ota_sweep_20260805_0026/init-service-static-audit.txt:21-91`
+- Evidence: a static normal-boot audit finds inherited RC entries whose
+  executables or imports are absent from the accepted images.
 - Source: `rootdir/etc/init.qcom.rc:506-517` and inherited vendor RC inventory.
 - Fix direction: remove unreachable declarations or restore complete features;
   do not duplicate MTR-001, MTR-015, or MTR-016 as separate symptoms.
@@ -351,7 +367,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: probable runtime defect
 - Impact: tag polling and initialization pass, but payment, HCE, and off-host
   reliability remain at risk during NFC power transitions.
-- Runtime: `diagnostics/ota_20260805_pno-nfc-uicc/nfc-toggle-valid-logcat.txt:2443-2455,2801-2822`
+- Evidence: repeated NFC power-transition traces return `-107` (`ENOTCONN`) from
+  the ST21 transport despite successful initialization and tag polling.
 - Cause: unresolved; the unpublished driver appears stock-identical, so timing,
   GPIO, power, and IRQ behavior must be compared before changing code.
 - Fix direction: reproduce against synchronized Lineage/stock transition traces.
@@ -364,7 +381,8 @@ Evidence paths are workspace-relative. Source paths are relative to `lineage/`.
 - Status: confirmed integration defect
 - Impact: audio sessions repeatedly fail to bind the MusicFX keepalive service;
   effect lifecycle and persistence may be unreliable.
-- Runtime: `diagnostics/ota_20260805_perf_walt/perf-functional-logcat.txt:6125,6225,6272`
+- Evidence: repeated audio sessions fail to bind the framework-selected MusicFX
+  keepalive component because that service is not installed.
 - Source: framework binding at
   `frameworks/base/services/core/java/com/android/server/audio/MusicFxHelper.java:64-67,103-118`
   does not match the installed `packages/apps/AudioFX/AndroidManifest.xml:67-88`.

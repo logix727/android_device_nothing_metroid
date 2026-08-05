@@ -1,5 +1,5 @@
 From a1b22e719f0e1e7f2986860601a94b66f36ac2f5 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:10:20 -0400
 Subject: [PATCH] vibrator: support metroid stock haptic stack
 
@@ -236,4 +236,3 @@ index 86f0aa6..30d6221 100644
 +    setprop persist.vendor.sfdc ${persist.sys.sfdc}
 -- 
 2.43.0
-

@@ -1,5 +1,5 @@
 From a858ce57e59d9bcfdec948c6f2a817de9e045e66 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:03 -0400
 Subject: [PATCH 2/3] wifi: aidl: Add legacy HAL build dependencies
 
@@ -53,4 +53,3 @@ index c2e8541d..9f9c83ac 100644
          "libbinder_ndk",
 -- 
 2.43.0
-

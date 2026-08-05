@@ -1,5 +1,5 @@
 From 61766cb7fb6642b2883ae8972d510e203b1315a9 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:12 -0400
 Subject: [PATCH] pal: Add ADSP sleep monitor UAPI header
 
@@ -87,4 +87,3 @@ index 0000000..ca7cf30
 +#endif /* __QCOM_ADSPSLEEPMON_H__ */
 -- 
 2.43.0
-

@@ -1,5 +1,5 @@
 From 2af0c525f98a5cedf2e15376f32b4cde107606e8 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:13 -0400
 Subject: [PATCH] ipacm: Add required build include paths
 
@@ -45,4 +45,3 @@ index 3400790..3c215ca 100644
          "-DFEATURE_IPACM_AIDL",
 -- 
 2.43.0
-

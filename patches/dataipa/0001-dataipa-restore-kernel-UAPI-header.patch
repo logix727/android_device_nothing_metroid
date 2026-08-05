@@ -1,5 +1,5 @@
 From 3e65c47ab816903fddae9484bfd41631a12626a0 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:13 -0400
 Subject: [PATCH] ipanat: Add missing msm_ipa UAPI header
 
@@ -4015,4 +4015,3 @@ index 0000000..94a5fa4
 +#endif /* _UAPI_MSM_IPA_H_ */
 -- 
 2.43.0
-

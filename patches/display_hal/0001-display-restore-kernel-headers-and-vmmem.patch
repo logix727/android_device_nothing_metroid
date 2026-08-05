@@ -1,5 +1,5 @@
 From ae44b2e037437d58ff82480da577443bf8eb11ad Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <logix727@users.noreply.github.com>
 Date: Tue, 4 Aug 2026 08:34:13 -0400
 Subject: [PATCH] display: Add build compatibility shims
 
@@ -259,4 +259,3 @@ index 0000000..6d4acec
 +}
 -- 
 2.43.0
-
