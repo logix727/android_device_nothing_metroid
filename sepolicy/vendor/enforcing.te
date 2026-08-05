@@ -132,10 +132,6 @@ allow vendor_hal_gnss_qti property_socket:sock_file write;
 # is steering you toward.
 allow vendor_modprobe self:key write;
 
-# getcplc reads a system-namespace prop; it is a diagnostic tool, so silence rather than grant
-# vendor access to default_prop (which AOSP neverallows anyway).
-dontaudit vendor_getcplc default_prop:file read;
-
 # AOSP dontaudits these upstream; they only appeared because we built with secilc -D.
 dontaudit crash_dump keystore:process ptrace;
 dontaudit vendor_modprobe kernel:process setsched;

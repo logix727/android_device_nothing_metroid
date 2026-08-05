@@ -78,4 +78,4 @@
 # Nothing's binary name (AOSP expects *-service.example / @1.0-service).
 /(vendor|system/vendor)/bin/hw/android\.hardware\.power\.stats-service    u:object_r:hal_power_stats_default_exec:s0
 /(vendor|system/vendor)/bin/ft_diag_test    u:object_r:vendor_ft_diag_test_exec:s0
-/(vendor|system/vendor)/bin/st_getcplc      u:object_r:vendor_getcplc_exec:s0
+/(vendor|system/vendor)/bin/st_getcplc      u:object_r:hal_nfc_default_exec:s0

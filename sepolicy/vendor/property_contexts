@@ -42,6 +42,12 @@ persist.vendor.overlay.fp_vendor u:object_r:vendor_fingerprint_prop:s0
 persist.vendor.sfdc u:object_r:vendor_metroid_sfdc_prop:s0
 vendor.haptic.calibrate.done u:object_r:vendor_metroid_haptic_calibration_prop:s0
 
+# NFC clean-state CPLC bootstrap
+persist.vendor.st_nfc_felica_ese u:object_r:vendor_nfc_prop:s0
+persist.vendor.st_nfc_felica_fsi u:object_r:vendor_nfc_prop:s0
+persist.vendor.nfc_cfg.mode_name u:object_r:vendor_nfc_prop:s0
+persist.vendor.nfc_getcplc_completed u:object_r:vendor_nfc_prop:s0
+
 # Face HAL (Nothing), matching the stock vendor policy prefixes.
 persist.vendor.debug.face_aidl u:object_r:vendor_face_prop:s0
 persist.vendor.face. u:object_r:vendor_face_prop:s0
