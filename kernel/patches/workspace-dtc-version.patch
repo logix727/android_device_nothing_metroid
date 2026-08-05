@@ -1,0 +1,42 @@
+--- WORKSPACE
++++ WORKSPACE
+@@ -113,6 +113,7 @@
+         "util.c",
+         "util.h",
+         "version_non_gen.h",
++        "version_gen.h",
+     ],
+     deps = [":libfdt"],
+     target_compatible_with = ["@platforms//os:linux"],
+@@ -128,6 +129,7 @@
+         "util.c",
+         "util.h",
+         "version_non_gen.h",
++        "version_gen.h",
+     ],
+     deps = [":libfdt"],
+     target_compatible_with = ["@platforms//os:linux"],
+@@ -143,6 +145,7 @@
+         "util.c",
+         "util.h",
+         "version_non_gen.h",
++        "version_gen.h",
+     ],
+     deps = [":libfdt"],
+     target_compatible_with = ["@platforms//os:linux"],
+@@ -158,6 +161,7 @@
+         "util.c",
+         "util.h",
+         "version_non_gen.h",
++        "version_gen.h",
+     ],
+     deps = [":libfdt"],
+     target_compatible_with = ["@platforms//os:linux"],
+@@ -173,6 +177,7 @@
+         "util.c",
+         "util.h",
+         "version_non_gen.h",
++        "version_gen.h",
+     ],
+     deps = [":libfdt"],
+     target_compatible_with = ["@platforms//os:linux"],

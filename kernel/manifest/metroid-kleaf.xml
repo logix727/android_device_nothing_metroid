@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="aosp" fetch="https://android.googlesource.com/" />
+  <remote name="clo" fetch="https://git.codelinaro.org/" />
+  <remote name="lineage" fetch="https://github.com/LineageOS/" />
+  <remote name="logix727" fetch="https://github.com/logix727/" />
+
+  <project name="android_kernel_msm-6.6_nothing_sm8735.git" path="msm-kernel"
+           remote="logix727" revision="ce342da8315a62e6144882faeddbdeccda544f9b" />
+  <project name="kernel/common" path="common" remote="aosp"
+           revision="7ca2e5eadb67f7474da25fff154f9332e9c3ff37" />
+  <project name="clo/la/kernel/build.git" path="build/kernel" remote="clo"
+           revision="0c7bb83b440c55dcaee088ab3c95652f4451b62c" />
+  <project name="platform/build/bazel_common_rules" path="build/bazel_common_rules"
+           remote="aosp" revision="9530bee133971f25758a2e1085755200999ca1bf" />
+
+  <project name="platform/external/bazel-skylib" path="external/bazel-skylib"
+           remote="aosp" revision="6b103c40d8113f001475d5e13672922ef2aa0e5a" />
+  <project name="platform/external/bazelbuild-apple_support"
+           path="external/bazelbuild-apple_support" remote="aosp"
+           revision="f6003e1e3763f8aad9fb9acae79cfa5fff9ae988" />
+  <project name="platform/external/bazelbuild-platforms"
+           path="external/bazelbuild-platforms" remote="aosp"
+           revision="04d937168075c80205c96f31752000e9de759adb" />
+  <project name="platform/external/bazelbuild-rules_cc"
+           path="external/bazelbuild-rules_cc" remote="aosp"
+           revision="5d626dcf48e0e97933b48456a86966971799c9e9" />
+  <project name="platform/external/bazelbuild-rules_java"
+           path="external/bazelbuild-rules_java" remote="aosp"
+           revision="8e548c7053dffd1717d565f0409a88992f401da1" />
+  <project name="platform/external/bazelbuild-rules_license"
+           path="external/bazelbuild-rules_license" remote="aosp"
+           revision="f578df4fd057ffe2023728444759535685631548" />
+  <project name="platform/external/bazelbuild-rules_pkg"
+           path="external/bazelbuild-rules_pkg" remote="aosp"
+           revision="f91631bcb97956f7bdf4cdf7523d5d2e63f85b5c" />
+  <project name="platform/external/bazelbuild-rules_python"
+           path="external/bazelbuild-rules_python" remote="aosp"
+           revision="f71847ac898655b67634bb14e77a7408c4fb5e00" />
+  <project name="platform/external/python/absl-py" path="external/python/absl-py"
+           remote="aosp" revision="7b59b5e5824651c2c65bf35dcd950a091cf286a5" />
+  <project name="platform/external/libcap" path="external/libcap" remote="aosp"
+           revision="07f005558ad4ba9a3c1271a5458e09878e6d81a7" />
+  <project name="platform/external/libcap-ng" path="external/libcap-ng" remote="aosp"
+           revision="8dd5e09d5faf27a871e8654ddaa2d2af7c696578" />
+  <project name="platform/external/lz4" path="external/lz4" remote="aosp"
+           revision="f072532f6846b40417438d29daa8183a8e53b63c" />
+  <project name="platform/external/pigz" path="external/pigz" remote="aosp"
+           revision="9bc9fa17d499ddde88b77820f6d063e16c0cdd42" />
+  <project name="platform/external/toybox" path="external/toybox" remote="aosp"
+           revision="e21e76d30fa15996188b79affbc25cfd0c13deff" />
+  <project name="platform/external/zlib" path="external/zlib" remote="aosp"
+           revision="c1f2595cae6ef4703003a8c9ea53239a10d7a1dd" />
+  <project name="platform/external/zopfli" path="external/zopfli" remote="aosp"
+           revision="3d0f5fb602c2532d76f4dc71a16fdf59832ad93d" />
+  <project name="android_external_dtc.git" path="external/dtc" remote="lineage"
+           revision="94f22464476ee2d973803de77f5405ce44d20a9a" />
+
+  <project name="platform/prebuilts/bazel/linux-x86_64"
+           path="prebuilts/bazel/linux-x86_64" remote="aosp"
+           revision="5c92123af5646d469fc53ef61994f5bca0306f66" />
+  <project name="platform/prebuilts/build-tools" path="prebuilts/build-tools"
+           remote="aosp" revision="bfa65e7422cc88dc64ef3ca224daf214a77fb4d5" />
+  <project name="kernel/prebuilts/build-tools" path="prebuilts/kernel-build-tools"
+           remote="aosp" revision="b46264b70e3cdf70d08c9ae2df6ea3002b242ebc" />
+  <project name="platform/prebuilts/clang/host/linux-x86"
+           path="prebuilts/clang/host/linux-x86" remote="aosp"
+           revision="62dc563017359bca29c4a08f5f27d8ecae763462" />
+  <project name="platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8"
+           path="prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8"
+           remote="aosp" revision="ed661b61b5f6d657500fc97d485edd35b2cb3c7f" />
+  <project name="platform/prebuilts/jdk/jdk11" path="prebuilts/jdk/jdk11"
+           remote="aosp" revision="c6c90521b7c317f13d41bbd9336a8d45ee202cec" />
+  <project name="toolchain/prebuilts/ndk/r26" path="prebuilts/ndk-r26"
+           remote="aosp" revision="abad5cbde7eb9684e37d7569810743a8a34826af" />
+  <project name="platform/system/tools/mkbootimg" path="tools/mkbootimg"
+           remote="aosp" revision="f5c284e8998dd8a085cf027bb518b6c2b84cf744" />
+</manifest>

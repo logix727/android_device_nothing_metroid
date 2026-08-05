@@ -1,0 +1,31 @@
+diff --git a/kleaf/impl/kernel_build.bzl b/kleaf/impl/kernel_build.bzl
+index edef5b2..0d72fa1 100644
+--- a/kleaf/impl/kernel_build.bzl
++++ b/kleaf/impl/kernel_build.bzl
+@@ -1801,14 +1801,21 @@ def _create_infos(
+             (
+                 {kbuild_mixed_tree_cmd}
+               # Stitch together the GKI symbols and device module symbols
+-              # together for proper linking during the modpost step. This will
+-              # also help detect CRC differences between the GKI and device
+-              # builds if the same symbol is defined twice with different CRC
+-              # values.
++              # together for proper linking during the modpost step.
++              #
++              # GKI entries are listed first and win on collision: the modules
++              # that actually ship in system_dlkm come from the GKI build, so a
++              # vendor module must bind to the GKI CRC. Deduplicating on the
++              # symbol name (field 2) rather than the whole line matters when
++              # the device kernel rebuilds a module GKI already provides (e.g.
++              # net/bluetooth/bluetooth, enabled by the device gki_defconfig):
++              # the two builds emit the same symbol under the same module name
++              # with different CRCs, `sort -u` keeps both, and modpost then
++              # aborts with "'<sym>' exported twice".
+                 if [[ -f "${{KBUILD_MIXED_TREE}}/Module.symvers" ]]; then
+                   cp ${{KBUILD_MIXED_TREE}}/Module.symvers ${{OUT_DIR}}/Module.symvers.tmp
+                   grep -v -e "\\bvmlinux\\b" ${{OUT_DIR}}/Module.symvers >> ${{OUT_DIR}}/Module.symvers.tmp
+-                  cat ${{OUT_DIR}}/Module.symvers.tmp | sort -u > ${{OUT_DIR}}/Module.symvers
++                  awk '!seen[$2]++' ${{OUT_DIR}}/Module.symvers.tmp > ${{OUT_DIR}}/Module.symvers
+                   rm -f ${{OUT_DIR}}/Module.symvers.tmp
+                 fi
+             )

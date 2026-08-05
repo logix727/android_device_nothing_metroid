@@ -55,13 +55,24 @@ manifest.
 6. Build the kernel workspace and stage the generated device inputs:
 
    ```bash
+   mkdir /path/to/kernelws
    cd /path/to/kernelws
+   repo init \
+     -u https://github.com/logix727/android_device_nothing_metroid.git \
+     -b lineage-23.0-metroid \
+     -m kernel/manifest/metroid-kleaf.xml
+   repo sync -c
+   /path/to/lineage/device/nothing/metroid/kernel/setup-kleaf-workspace.sh "$PWD"
    build/kernel/kleaf/bazel.sh build --noenable_bzlmod \
      --//vendor/qcom/opensource/camera-kernel:project_name=sun \
-     --target_pattern_file=/path/to/lineage/device/nothing/metroid/kernel/vendor-module-targets.txt
+     --target_pattern_file="$PWD/vendor-module-targets.txt"
    cd /path/to/lineage
    device/nothing/metroid/kernel/stage_kernel_artifacts.sh /path/to/kernelws
    ```
+
+   The pinned manifest records every public source/tool revision used by the
+   validated build. Host requirements include `repo`, `git`, `python3`, `bash`,
+   `perl`, `rsync`, `find`, `flex`, `bison`, `patch`, and standard GNU utilities.
 
 7. Build Android:
 
@@ -78,7 +89,7 @@ manifest.
 The maintainer-local tested revisions are recorded in [`BASELINE.md`](BASELINE.md),
 but that file is not a substitute for a complete public manifest lock.
 
-The local manifest and `lineage.dependencies` use the maintainer kernel fork
+The Android local manifest and `lineage.dependencies` use the maintainer kernel fork
 while this bring-up remains unofficial. An official submission must use
 LineageOS-hosted dependencies and the active release branch conventions.
 

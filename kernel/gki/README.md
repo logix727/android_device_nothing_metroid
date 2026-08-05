@@ -34,7 +34,13 @@ The third `zram.ko` source revision also specifies Clang `r510928`.
 `a56ce8776a134b6ebf5bf0cfc67aabd56fabc41a961790dc16ee4770733770bc`.
 The sorted SHA-256 inventory of `Image`, `system_dlkm/*.ko`, and
 `system_dlkm/modules.*` hashes to
-`6e520a008b0ca8b9e6eca7a13962f87d18d31a6135b05d9a1e2337a5619813d7`.
+`765bbf9e50b31c5a3531d13dd7cc16a0d62877b80b29ede5d1130b60781ec463`.
+The digest is computed from path-normalized lines generated inside `kernel/gki`:
+
+```bash
+{ sha256sum Image; sha256sum system_dlkm/*.ko system_dlkm/modules.*; } \
+  | LC_ALL=C sort -k2 | sha256sum
+```
 
 These identifiers document the exact checked-in set; they do not replace any
 license or corresponding-source obligations.

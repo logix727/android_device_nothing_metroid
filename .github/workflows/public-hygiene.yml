@@ -43,4 +43,5 @@ jobs:
         run: |
           bash -n kernel/stage_kernel_artifacts.sh
           bash -n kernel/extract-unpublished-modules.sh
+          bash -n kernel/setup-kleaf-workspace.sh
           bash -n recovery-installer/flash-lineage-recovery.sh
