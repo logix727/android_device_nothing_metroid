@@ -21,7 +21,9 @@ jobs:
             echo "Forbidden private or stock-derived files are tracked" >&2
             exit 1
           fi
-          if git grep -nE 'REPLACE_WITH_EXTERNAL_DOWNLOAD_URL|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY'; then
+          placeholder='REPLACE_WITH_EXTERNAL_'"DOWNLOAD_URL"
+          private_key='BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY'
+          if git grep -nE "$placeholder|$private_key"; then
             echo "Placeholder URL or private-key material found" >&2
             exit 1
           fi

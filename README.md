@@ -71,6 +71,10 @@ manifest.
    m bacon
    ```
 
+   Public source builds use AOSP's non-secret AVB test key. A release maintainer
+   supplies a private signing path with `METROID_AVB_KEY_PATH`; private keys must
+   never be committed or shared.
+
 The maintainer-local tested revisions are recorded in [`BASELINE.md`](BASELINE.md),
 but that file is not a substitute for a complete public manifest lock.
 
