@@ -26,6 +26,22 @@
 - UICC secure element: declare stock ROW `SIM1` and `SIM2` instances served by
   qcrild. Both services register on the installed candidate; physical-SIM OMAPI
   testing remains. JPN-only `eSE1` is intentionally not declared.
+- Performance: restore the stock perf HAL's access to `/proc/sys/walt` after the
+  device tree relabeled those controls. SELinux and vendor-image builds pass;
+  runtime AVC and perf-lock validation require the next OTA.
+- Wi-Fi 7: OpenWrt MLD testing passes WPA3-SAE H2E, GCMP-256, 6 GHz/320 MHz
+  EHT association, about 839 Mbps down and 660 Mbps up over TCP, five-minute
+  screen-off retention, and screen-off PNO reassociation in about 5.6 seconds.
+  Android reports one active affiliated link, so simultaneous multi-link traffic
+  is not yet proven.
+- Face guidance is present and confirmed in English. Base Settings still contains
+  explicit empty localized values, so non-English guidance needs a locale-safe
+  fallback before broad release.
+- No-SIM regression testing passes speaker playback, microphone capture, Bluetooth
+  stack restart, USB gadget reset/ADB at 480 Mbps, sensors, haptic effects,
+  five-minute forced Doze with Wi-Fi retained, and a two-minute CPU thermal load.
+  Accessory audio, unplugged suspend/drain, wireless charging, and real GNSS fix
+  remain hardware/environment dependent.
 
 ## Community coverage
 
