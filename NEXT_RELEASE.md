@@ -1,5 +1,7 @@
 # Next release
 
+Canonical issue backlog: [`BUGS.md`](BUGS.md).
+
 ## Blockers
 
 - Face enrollment and authentication pass on the installed candidate with no HAL
