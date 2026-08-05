@@ -1,0 +1,60 @@
+name: Device bug
+description: Report a reproducible Nothing Phone (3) device issue
+title: "[BUG] "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository has no supported public build yet. Never upload credentials,
+        private keys, precise location, network details, serials, or subscriber data.
+  - type: input
+    id: build
+    attributes:
+      label: Build or source revision
+      placeholder: OTA SHA-256 or Git commit
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware baseline
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installation type
+      options:
+        - Clean install
+        - Update from matching-key build
+        - Source build only
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include the exact user-visible operation and frequency.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence
+      description: Attach only the smallest relevant log window and new tombstones.
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I reproduced this without an unlisted kernel, root module, or add-on.
+          required: true
+        - label: I removed credentials and personal, network, location, device, and subscriber identifiers.
+          required: true

@@ -1,0 +1,27 @@
+Nothing Phone (3) LineageOS device tree
+
+This repository combines original device integration with material originating
+from or interoperating with other projects. The root LICENSE applies only where
+no more specific license or notice is present.
+
+- Android Open Source Project and LineageOS material retains its original
+  Apache-2.0 or other applicable license.
+- Linux kernel interfaces, headers, and modules retain their applicable GPL and
+  Linux syscall-note terms.
+- `kernel/gki/` contains documented Google GKI build artifacts. Their build IDs,
+  provenance, and purpose are recorded in `kernel/gki/README.md`.
+- `prebuilt/kernel-headers.tar.gz` contains kernel-derived headers required by
+  the Android build. It is retained pending conversion to reproducible source
+  exports.
+- Proprietary Android userspace files are not redistributed. Builders extract
+  them from firmware they own by using `proprietary-files.txt` and the extraction
+  scripts.
+- Two stock GPL NFC modules lacking matching published source are not
+  redistributed. Their expected hashes and local extraction process are recorded
+  in `kernel/prebuilt-modules/README.md`.
+- Product names and trademarks belong to their respective owners. This project
+  is not affiliated with or endorsed by Nothing or LineageOS.
+
+Redistributors are responsible for complying with every applicable license,
+including corresponding-source requirements. Please report provenance or license
+concerns through the process in SECURITY.md.

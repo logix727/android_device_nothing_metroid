@@ -1,0 +1,44 @@
+name: Public hygiene
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Check tracked public boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden='^(kernel/local-prebuilt-modules/|kernel/prebuilt-modules/.*\.ko$|prebuilt/kernel_modules/|diagnostics/|bugreports/|tombstones/|release-staging/|stock_extract/|stock_dump/)'
+          if git ls-files | grep -E "$forbidden"; then
+            echo "Forbidden private or stock-derived files are tracked" >&2
+            exit 1
+          fi
+          if git grep -nE 'REPLACE_WITH_EXTERNAL_DOWNLOAD_URL|BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY'; then
+            echo "Placeholder URL or private-key material found" >&2
+            exit 1
+          fi
+          while IFS= read -r path; do
+            size=$(git cat-file -s "HEAD:$path")
+            case "$path" in
+              kernel/gki/*|prebuilt/kernel-headers.tar.gz) ;;
+              *)
+                if (( size > 5 * 1024 * 1024 )); then
+                  echo "Unexpected tracked file larger than 5 MiB: $path" >&2
+                  exit 1
+                fi
+                ;;
+            esac
+          done < <(git ls-files)
+      - name: Check shell syntax
+        run: |
+          bash -n kernel/stage_kernel_artifacts.sh
+          bash -n kernel/extract-unpublished-modules.sh
+          bash -n recovery-installer/flash-lineage-recovery.sh
