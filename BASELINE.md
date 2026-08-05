@@ -2,11 +2,11 @@
 
 ## Build
 
-- Version: `23.0-20260804-UNOFFICIAL-metroid`
-- Build date UTC: `1785813767`
-- OTA: `lineage-23.0-20260804-UNOFFICIAL-metroid.zip`
-- SHA-256: `74c012f8ef5a5cce1a860442be06bc412c43e11881c2f5f004559cec9c6c4869`
-- Verified snapshot: `releases/candidate_20260803_235015_integrated-camera-fp-face-haptic`
+- Version: `23.0-20260805-UNOFFICIAL-metroid`
+- Build date UTC: `1785935162`
+- OTA: `lineage-23.0-20260805-UNOFFICIAL-metroid.zip`
+- SHA-256: `33ccd784a7ccffb6dff927470afec941887ea2d1d21d91d84930e6f7485457a7`
+- Verified snapshot: `releases/candidate_20260805_091946_pno-nfc-uicc`
 - Installed slot when recorded: `b`
 - SELinux: Enforcing
 - Data: encrypted
@@ -15,7 +15,7 @@
 
 | Project | Revision |
 |---|---|
-| `device/nothing/metroid` | `1c7dbcd59735b80f889584d7de2a1742b3cb7c21` |
+| `device/nothing/metroid` | `dcf47297ad5da49e97a48b806c2b8e9d42337a05` |
 | `vendor/nothing/metroid` (private) | `7421cd2836304941c64ac56c6daad5517a9d1c8e` |
 | `kernel/nothing/sm8735` | `a604aa895f0b89b8d5e632c17f6046942fff6461` |
 | `bootable/recovery` | `42ea725381c1b67fb2cee6b5f7d87a7d39d3f3fa` |
@@ -29,8 +29,8 @@
 | `hardware/qcom-caf/sm8750/data-ipa-cfg-mgr` | `2af0c525f98a5cedf2e15376f32b4cde107606e8` |
 | `hardware/qcom-caf/sm8750/dataipa` | `3e65c47ab816903fddae9484bfd41631a12626a0` |
 | `hardware/qcom-caf/sm8750/display/hal` | `ae44b2e037437d58ff82480da577443bf8eb11ad` |
-| `packages/apps/Aperture` | `e3d66ba62335ee9ac95ea183d0b1ebf6e611734c` |
-| `packages/apps/Settings` | `e1521e76f588b94bb754101bf47a97c8df078747` |
+| `packages/apps/Aperture` | `43bbcd8407a09dbed099b46e0f81a8a040f37716` |
+| `packages/apps/Settings` | `16981f28482aeeba696a016631bb63d3adfc914c` |
 | `packages/modules/Bluetooth` | `bf83ccd8fc5ce4584355eac82f63ab2670b2c844` |
 | `packages/modules/common` | `9c5eaa20534c698e89cde75490225ee73ed7ff4a` |
 | `vendor/lineage` | `5581464971cc5af7e2bcc8119626b73712f78c70` |

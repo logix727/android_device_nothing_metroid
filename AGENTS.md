@@ -5,10 +5,10 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 
 ## Installed baseline
 
-- Build: `23.0-20260804-UNOFFICIAL-metroid`
+- Build: `23.0-20260805-UNOFFICIAL-metroid`
 - OTA SHA-256:
-  `74c012f8ef5a5cce1a860442be06bc412c43e11881c2f5f004559cec9c6c4869`
-- Artifact: `../../../../releases/current/`
+  `33ccd784a7ccffb6dff927470afec941887ea2d1d21d91d84930e6f7485457a7`
+- Artifact: `../../../../releases/candidate_20260805_091946_pno-nfc-uicc/`
 - Last recorded state: slot B, boot complete, SELinux Enforcing, encrypted data.
 - Never describe a newer source change as working until it is built, audited,
   installed, and tested.

@@ -6,7 +6,7 @@
   death or biometric error. Settings passes its preview surface to the HAL and
   the stock-matching graphics-allocator policy is active. The base Settings face
   guidance strings were empty; metroid now supplies the missing safety and setup
-  text. The text overlay is focused-build validated but not yet in an OTA.
+  text. The text overlay is installed; final visual confirmation remains.
 - Camera: mode changes now reselect logical camera 4 for SAT capture and physical
   camera 0 for UHD/60 fps, and high-bandwidth modes can no longer jump to an
   unsupported physical lens. Focused build and device tests pass for photo/video
@@ -17,14 +17,15 @@
   installed candidate; calibration completes and perceived output is stronger.
   Full effect parity against stock remains.
 - Wi-Fi: enable stock-matching hardware PNO so saved networks can reconnect while
-  the screen is off. The focused overlay build contains the expected resource;
-  repeated disconnect/reconnect testing remains for the next OTA.
+  the screen is off. The installed overlay starts disconnected PNO with zero
+  framework failures; saved-AP reconnection remains blocked by AP availability.
 - NFC: restore the stock CPLC helper domain and property labels, and remove the
-  forced completion value that masked clean-state bootstrap failure. SELinux and
-  vendor-image builds pass; clean-state bootstrap and tag testing remain.
+  forced completion value that masked clean-state bootstrap failure. A property-
+  clean boot regenerates all values before HAL startup; toggle and credit-card
+  polling pass. Payment/HCE remains untested.
 - UICC secure element: declare stock ROW `SIM1` and `SIM2` instances served by
-  qcrild. VINTF compatibility and duplicate-instance checks pass; physical-SIM
-  OMAPI testing remains. JPN-only `eSE1` is intentionally not declared.
+  qcrild. Both services register on the installed candidate; physical-SIM OMAPI
+  testing remains. JPN-only `eSE1` is intentionally not declared.
 
 ## Community coverage
 
