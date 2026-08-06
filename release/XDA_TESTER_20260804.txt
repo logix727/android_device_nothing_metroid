@@ -44,7 +44,7 @@ steps, and:
 
 SOURCES
 - Device: https://github.com/logix727/android_device_nothing_metroid
-- Kernel: https://github.com/logix727/android_kernel_msm-6.6_nothing_sm8735
+- Kernel: https://github.com/logix727/android_kernel_nothing_sm8735
 - LineageOS: https://github.com/LineageOS
 - Additional source patches and pinned revisions: device repo under patches/
 

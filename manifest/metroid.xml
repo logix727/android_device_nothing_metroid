@@ -5,7 +5,7 @@
            path="device/nothing/metroid"
            remote="github-logix727"
             revision="lineage-23.0" />
-  <project name="logix727/android_kernel_msm-6.6_nothing_sm8735"
+  <project name="logix727/android_kernel_nothing_sm8735"
            path="kernel/nothing/sm8735"
            remote="github-logix727"
             revision="lineage-23.0" />

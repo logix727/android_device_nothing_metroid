@@ -1,6 +1,6 @@
 [
   {
-    "repository": "android_kernel_msm-6.6_nothing_sm8735",
+    "repository": "android_kernel_nothing_sm8735",
     "target_path": "kernel/nothing/sm8735",
     "branch": "lineage-23.0",
     "remote": "logix727"
