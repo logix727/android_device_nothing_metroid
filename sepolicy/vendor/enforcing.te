@@ -124,7 +124,6 @@ allow hal_camera_default proc:file write;
 allow hal_power_stats_default sysfs:file r_file_perms;
 allow hal_fingerprint_default sysfs:file rw_file_perms;
 allow hal_audio_default debugfs:dir r_dir_perms;
-allow vendor_hal_gnss_qti property_socket:sock_file write;
 # init opens /sys/devices/platform/soc/1d84000.ufshc/.../block/sda/mq/0/nr_tags. Granting
 # `allow init sysfs:file open` is refused by AOSP —
 # "neverallow init sysfs:file { open write }: Init should not access sysfs node that are not
