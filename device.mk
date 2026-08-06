@@ -270,6 +270,7 @@ PRODUCT_PACKAGES += hal_batch1.metroid.xml hal_batch2.metroid.xml hal_batch3.met
 # same path. BUILD_BROKEN_DUP_RULES had been hiding it.
 PRODUCT_PACKAGES += android.hardware.radio.config.metroid4.xml android.hardware.radio.data.metroid4.xml android.hardware.radio.messaging.metroid4.xml android.hardware.radio.modem.metroid4.xml android.hardware.radio.network.metroid4.xml android.hardware.radio.sim.metroid4.xml android.hardware.radio.voice.metroid4.xml
 PRODUCT_PACKAGES += qti_radio_extensions.metroid.xml android.hardware.power.metroid.xml
+PRODUCT_PACKAGES += ims-ext-common ims_ext_common.xml
 
 # Force copy missing proprietary files
 $(call inherit-product-if-exists, device/nothing/metroid/proprietary_force_copy.mk)
