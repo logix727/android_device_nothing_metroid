@@ -6,7 +6,7 @@
   <remote name="logix727" fetch="https://github.com/logix727/" />
 
   <project name="android_kernel_msm-6.6_nothing_sm8735.git" path="msm-kernel"
-           remote="logix727" revision="ce342da8315a62e6144882faeddbdeccda544f9b" />
+           remote="logix727" revision="a604aa895f0b89b8d5e632c17f6046942fff6461" />
   <project name="kernel/common" path="common" remote="aosp"
            revision="7ca2e5eadb67f7474da25fff154f9332e9c3ff37" />
   <project name="clo/la/kernel/build.git" path="build/kernel" remote="clo"

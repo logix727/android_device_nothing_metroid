@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: logix727 <logix727@users.noreply.github.com>
+Date: Wed, 5 Aug 2026 19:16:18 -0400
+Subject: [PATCH 4/4] sm8735: hold task reference in affinity work
+
+The delayed worker used a task pointer after leaving its RCU read-side critical section. Hold a task reference until affinity handling or requeue completes.
+
+diff --git a/drivers/nothing_performance/nothing_named_thread_affinity.c b/drivers/nothing_performance/nothing_named_thread_affinity.c
+index 740cd80ace94..4b1e6af07c81 100644
+--- a/drivers/nothing_performance/nothing_named_thread_affinity.c
++++ b/drivers/nothing_performance/nothing_named_thread_affinity.c
+@@ -241,6 +241,8 @@ static void set_task_affinity_delay_work(struct work_struct *work)
+ 
+ 	rcu_read_lock();
+ 	t = find_task_by_vpid(pid);
++	if (t)
++		get_task_struct(t);
+ 	rcu_read_unlock();
+ 	if (!t) {
+ 		pr_err("Task not found after delay: %d", pid);
+@@ -248,6 +250,7 @@ static void set_task_affinity_delay_work(struct work_struct *work)
+ 	}
+ 
+ 	if (!check_intersects_with_online_cpu(&new_mask)) {
++		put_task_struct(t);
+ 		goto done;
+ 	}
+ 
+@@ -257,6 +260,7 @@ static void set_task_affinity_delay_work(struct work_struct *work)
+ 	} else {
+ 		nt_sched_setaffinity(t, &new_mask, silence);
+ 	}
++	put_task_struct(t);
+ 
+ done:
+ 	clean_delay_work(delay_work);
+@@ -264,6 +268,7 @@ static void set_task_affinity_delay_work(struct work_struct *work)
+ 	return;
+ 
+ requeue:
++	put_task_struct(t);
+ 	queue_delayed_work(set_task_affinity_wq, &delay_work->work, msecs_to_jiffies(SET_TASK_AFFINITY_WORK_DELAY_MS));
+ 	return;
+ }
+-- 
+2.43.0
+

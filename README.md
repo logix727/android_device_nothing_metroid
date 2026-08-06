@@ -70,8 +70,9 @@ manifest.
    device/nothing/metroid/kernel/stage_kernel_artifacts.sh /path/to/kernelws
    ```
 
-   The pinned manifest records every public source/tool revision used by the
-   validated build. Host requirements include `repo`, `git`, `python3`, `bash`,
+   The pinned manifest records every public source/tool base revision. The setup
+   script applies the four reviewed kernel carry patches from `kernel/patches/`
+   before creating the portable workspace. Host requirements include `repo`, `git`, `python3`, `bash`,
    `perl`, `rsync`, `find`, `flex`, `bison`, `patch`, and standard GNU utilities.
 
 7. Build Android:

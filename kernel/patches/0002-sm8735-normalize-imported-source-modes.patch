@@ -1,0 +1,78 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: logix727 <logix727@users.noreply.github.com>
+Date: Wed, 5 Aug 2026 17:45:14 -0400
+Subject: [PATCH 2/4] sm8735: normalize imported source modes
+
+
+diff --git a/drivers/misc/rpmb_state.c b/drivers/misc/rpmb_state.c
+old mode 100755
+new mode 100644
+diff --git a/drivers/nothing_performance/Kconfig b/drivers/nothing_performance/Kconfig
+old mode 100755
+new mode 100644
+diff --git a/drivers/nothing_performance/Makefile b/drivers/nothing_performance/Makefile
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/Kbuild b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/Kbuild
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/Makefile b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/Makefile
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_bin_parse.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_bin_parse.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_bin_parse.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_bin_parse.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_calib.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_calib.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_calib.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_calib.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_data_type.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_data_type.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_device.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_device.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_device.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_device.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_dsp.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_dsp.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_dsp.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_dsp.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_init.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_init.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_init.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_init.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_log.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_log.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_monitor.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_monitor.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_monitor.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_monitor.h
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_spin.c b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_spin.c
+old mode 100755
+new mode 100644
+diff --git a/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_spin.h b/vendor/qcom/opensource/audio-kernel/asoc/codecs/aw882xx/aw882xx_spin.h
+old mode 100755
+new mode 100644
+-- 
+2.43.0
+

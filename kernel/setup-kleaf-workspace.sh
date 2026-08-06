@@ -13,6 +13,15 @@ WORKSPACE_ROOT="$(cd "$WORKSPACE_ROOT" && pwd)"
     exit 1
 }
 
+for kernel_patch in "$DEVICE"/kernel/patches/[0-9][0-9][0-9][0-9]-sm8735-*.patch; do
+    if git -C "$WORKSPACE_ROOT/msm-kernel" apply --reverse --check "$kernel_patch" \
+            >/dev/null 2>&1; then
+        continue
+    fi
+    git -C "$WORKSPACE_ROOT/msm-kernel" apply --check "$kernel_patch"
+    git -C "$WORKSPACE_ROOT/msm-kernel" apply "$kernel_patch"
+done
+
 cp "$WORKSPACE_ROOT/msm-kernel/bazel.WORKSPACE" "$WORKSPACE_ROOT/WORKSPACE"
 patch -d "$WORKSPACE_ROOT" -p0 < "$DEVICE/kernel/patches/workspace-dtc-version.patch"
 
