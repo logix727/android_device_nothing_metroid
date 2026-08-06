@@ -1,3 +1,4 @@
+allow init vendor_sysfs_virtual_temp:file setattr;
 allow sltntc vendor_configs_file:dir search;
 allow sltntc vendor_configs_file:file r_file_perms;
 allow sltntc vendor_sysfs_battery_supply:dir search;
