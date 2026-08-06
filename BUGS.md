@@ -215,43 +215,44 @@ permission; it must never be committed to this public repository.
 ### MTR-012: Aperture stabilization setting is a no-op on metroid
 
 - Severity: high
-- Status: confirmed
+- Status: source-fixed; not installed
 - Impact: all Aperture video requests disable stabilization while the user-facing
   preference remains available.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1776-1785`
 - Cause: a device conditional unconditionally forces stabilization off.
-- Fix direction: hide the setting immediately; restore EIS only for a measured
-  mode/camera matrix that avoids the known Morpho crash path.
+- Source fix: the setting is hidden on metroid while capture requests continue
+  forcing stabilization off. Restore EIS only for a measured mode/camera matrix
+  that avoids the known Morpho crash path.
 - Acceptance: walking/panning FHD30, FHD60, and UHD30 clips; request/result
   metadata, crop, cadence, zoom transitions, provider PID, and tombstones.
 
 ### MTR-013: media quality lookup loops and produces continuous AVCs
 
 - Severity: medium
-- Status: confirmed
+- Status: source-fixed; not installed
 - Impact: every codec session repeatedly looks up an absent service, logs
   `Media Quality Service not found`, and generates SELinux denials.
 - Evidence: repeated codec tests log `Media Quality Service not found` and a
   matching servicemanager AVC for every lookup.
 - Source: `frameworks/av/media/libstagefright/MediaCodec.cpp:2094-2104`
-- Fix direction: resolve upstream by gating the lookup when the handheld service
-  is absent and using correct system-service semantics. Do not add policy for a
-  nonexistent service.
+- Source fix: integrated AOSP change `I574e5ec8a790dbcfd81ab5789f088bc28c37773a`,
+  which uses nonblocking framework `checkService` semantics instead of treating
+  `media_quality` as a declared VINTF HAL. Do not add policy for the absent service.
 - Acceptance: repeated AVC/HEVC playback and recording with no lookup loop, AVC,
   or codec regression.
 
 ### MTR-014: GNSS cannot set its value-added-process property
 
 - Severity: medium
-- Status: confirmed policy defect
+- Status: source-fixed; not installed
 - Impact: core GNSS fixes work, but enhanced IZat/PPE/DRE process selection may
   remain disabled.
 - Evidence: boot log records a property-service denial when the QTI GNSS domain
   sets `vendor.qti.izat.value_added_process`.
 - Source: `sepolicy/vendor/enforcing.te:123-128`
 - Cause: raw property-socket file access was granted instead of typed `set_prop`.
-- Fix direction: trace the exact property and grant only
-  `set_prop(vendor_hal_gnss_qti, vendor_location_prop)` if stock confirms it.
+- Source fix: replace the ineffective raw property-socket file grant with the
+  typed `set_prop(vendor_hal_gnss_qti, vendor_location_prop)` macro.
 - Acceptance: no property AVC, expected property populated, cold TTFF, raw
   measurements, restart, airplane mode, and screen-off GNSS.
 
@@ -362,12 +363,12 @@ permission; it must never be committed to this public repository.
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
 - Severity: medium
-- Status: latent deterministic defect
+- Status: source-fixed; not installed
 - Impact: a front-to-back flip can reopen logical camera 4 while UHD or 60 fps is
   selected instead of the required physical main camera.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1255-1278`
-- Fix direction: route the selected back camera through the same metroid video
-  camera selector used by normal quality/mode changes.
+- Source fix: video-mode flips now route the selected facing through the same
+  metroid video camera selector used by normal quality/mode changes.
 - Acceptance: front/back/front transitions at FHD30, FHD60, and UHD30 before
   recording and after process restart; verify camera ID and finalized files.
 

@@ -33,6 +33,10 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
 - Soong ramdisk property generation now emits the platform SPL as
   `ro.bootimage.build.version.security_patch`; focused boot/init_boot builds pass,
   but this is not installed or runtime-accepted yet (MTR-007).
+- GNSS uses a typed property grant; MediaCodec uses the upstream optional
+  framework-service lookup; Aperture hides its metroid stabilization no-op and
+  preserves high-bandwidth routing across camera flips. Focused builds pass;
+  none of these changes is installed yet (MTR-012/013/014/022).
 
 ## Community coverage still to test
 

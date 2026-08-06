@@ -1,0 +1,41 @@
+From 113ccbf172d572086818456a41b62809c38a0ac0 Mon Sep 17 00:00:00 2001
+From: Sienna Liu <liusienna@google.com>
+Date: Thu, 8 May 2025 18:05:54 -0700
+Subject: [PATCH] Fix MediaCodec error getting media_quality service.
+
+The original implementation gives the following error:
+
+"E servicemanager: VINTF HALs require names in the format type/instance
+(e.g. some.package.foo.IFoo/default) but got: media_quality"
+
+Flag: EXEMPT bug fix
+Bug: 413228432
+Test: m
+Change-Id: I574e5ec8a790dbcfd81ab5789f088bc28c37773a
+---
+ media/libstagefright/MediaCodec.cpp | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/media/libstagefright/MediaCodec.cpp b/media/libstagefright/MediaCodec.cpp
+index 97a9f18130..4180ee1823 100644
+--- a/media/libstagefright/MediaCodec.cpp
++++ b/media/libstagefright/MediaCodec.cpp
+@@ -2097,12 +2097,12 @@ void MediaCodec::updatePictureProfile(const sp<AMessage>& msg, bool applyDefault
+         return;
+     }
+ 
+-    sp<IMediaQualityManager> mediaQualityMgr =
+-            waitForDeclaredService<IMediaQualityManager>(String16("media_quality"));
+-    if (mediaQualityMgr == nullptr) {
+-        ALOGE("Media Quality Service not found.");
++    sp<IBinder> binder = defaultServiceManager()->checkService(String16("media_quality"));
++    if (binder == nullptr) {
++        ALOGI("media_quality service unavailable, skipping updatePictureProfile");
+         return;
+     }
++    sp<IMediaQualityManager> mediaQualityMgr = interface_cast<IMediaQualityManager>(binder);
+ 
+     int64_t pictureProfileHandle;
+     AString pictureProfileId;
+-- 
+2.43.0

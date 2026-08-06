@@ -1,0 +1,65 @@
+From db454eb0525be0b59bee2c32030df3fd7d553eb5 Mon Sep 17 00:00:00 2001
+From: Metroid Maintainer <maintainer@localhost>
+Date: Thu, 6 Aug 2026 16:45:41 -0400
+Subject: [PATCH] Aperture: fix metroid video controls
+
+Route camera flips through the existing metroid video selector so UHD and
+60-fps modes return to physical camera 0 rather than logical camera 4.
+
+Hide the stabilization preference because metroid currently forces
+stabilization off to avoid the measured Morpho crash path. Do not present a
+control whose value cannot affect capture requests.
+---
+ .../main/java/org/lineageos/aperture/SettingsActivity.kt    | 5 +++++
+ .../org/lineageos/aperture/viewmodels/CameraViewModel.kt    | 6 +++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/app/src/main/java/org/lineageos/aperture/SettingsActivity.kt b/app/src/main/java/org/lineageos/aperture/SettingsActivity.kt
+index 0040e85..530a42c 100644
+--- a/app/src/main/java/org/lineageos/aperture/SettingsActivity.kt
++++ b/app/src/main/java/org/lineageos/aperture/SettingsActivity.kt
+@@ -6,6 +6,7 @@
+ package org.lineageos.aperture
+ 
+ import android.hardware.input.InputManager
++import android.os.Build
+ import android.os.Bundle
+ import android.util.Log
+ import android.view.KeyCharacterMap
+@@ -159,6 +160,9 @@ class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
+         }
+         private val saveLocation by lazy { findPreference<SwitchPreference>("save_location") }
+         private val shutterSound by lazy { findPreference<SwitchPreference>("shutter_sound") }
++        private val videoStabilization by lazy {
++            findPreference<SwitchPreference>("video_stabilization")
++        }
+ 
+         private val photoCaptureModePreferenceChangeListener =
+             Preference.OnPreferenceChangeListener { preference, newValue ->
+@@ -206,6 +210,7 @@ class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
+                     }
+             }
+             shutterSound?.isVisible = !CameraSoundsUtils.mustPlaySounds
++            videoStabilization?.isVisible = Build.DEVICE != "metroid"
+ 
+             // Photo capture mode
+             photoCaptureMode.onPreferenceChangeListener = photoCaptureModePreferenceChangeListener
+diff --git a/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt b/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
+index 1986ccc..06eda41 100644
+--- a/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
++++ b/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
+@@ -1259,7 +1259,11 @@ class CameraViewModel(application: Application) : ApertureViewModel(application)
+             cameraFacingComparator
+         ).next(cameraConfiguration.camera.cameraFacing) ?: error("No camera available")
+ 
+-        val camera = when (cameraFacing) {
++        val camera = (cameraConfiguration as? CameraConfiguration.Video)?.let {
++            getMetroidVideoCamera(cameraFacing, it.videoQuality, it.videoFrameRate)
++        }?.takeIf {
++            it.supportsCameraMode(cameraConfiguration.cameraMode)
++        } ?: when (cameraFacing) {
+             CameraFacing.UNKNOWN -> null
+             CameraFacing.FRONT -> cameraRepository.mainFrontCamera
+             CameraFacing.BACK -> cameraRepository.mainBackCamera
+-- 
+2.43.0
