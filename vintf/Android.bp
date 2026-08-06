@@ -113,6 +113,21 @@ vintf_fragment {
     vendor: true,
 }
 
+// Exact QTI radio extension instances observed attempting registration on the
+// accepted baseline. Do not replace this with the aggregate stock manifest.
+vintf_fragment {
+    name: "qti_radio_extensions.metroid.xml",
+    src: "qti_radio_extensions.metroid.xml",
+    vendor: true,
+}
+
+// Stock Qualcomm Power AIDL service, already installed and running.
+vintf_fragment {
+    name: "android.hardware.power.metroid.xml",
+    src: "android.hardware.power.metroid.xml",
+    vendor: true,
+}
+
 // batch 4 (2026-07-10): radio AIDL HALs (qcrilNrd runs fine, was just undeclared -> telephony
 // dead), clearkey drm + qspa (both were crash-looping on undeclared registration). Fragments
 // copied verbatim from stock B4.0 vendor manifest. Verified live via overlay before adding.

@@ -253,6 +253,11 @@ TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
+# Nothing OS launched metroid on Android 15 / vendor API 202404.
+BOARD_SHIPPING_API_LEVEL := 202404
+VENDOR_SECURITY_PATCH := 2025-06-05
+BOOT_SECURITY_PATCH := 2025-04-05
+
 # Recovery kernel modules: NONE — deliberately (2026-07-30).
 #
 # Every recovery that has ever booted on this device ships ZERO modules in the recovery ramdisk:
@@ -307,10 +312,8 @@ BOARD_AVB_VENDOR_DLKM_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
 BOARD_AVB_VENDOR_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
 BOARD_AVB_SYSTEM_DLKM_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
 
-# Hack: prevent anti rollback
-#PLATFORM_SECURITY_PATCH := 2099-12-31
-#VENDOR_SECURITY_PATCH := 2099-12-31
-#PLATFORM_VERSION := 12
+# Keep the already-deployed custom rollback indexes monotonic. Do not lower them
+# to the older stock timestamps when correcting reported vendor/boot SPL values.
 BOARD_USES_QCOM_FBE_DECRYPTION := true
 BOARD_USES_METADATA_PARTITION := true
 

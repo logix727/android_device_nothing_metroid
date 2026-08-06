@@ -5,7 +5,6 @@ odm/etc/build_EEA.prop
 odm/etc/build_IND.prop
 odm/etc/build_JPN.prop
 odm/etc/build_TUR.prop
-odm/etc/permissions/android.hardware.telephony.euicc.xml
 odm/etc/permissions/sku_JPN/android.hardware.nfc.ese.xml
 odm/etc/permissions/sku_JPN/android.hardware.se.omapi.ese.xml
 odm/etc/permissions/sku_JPN/android.hardware.se.omapi.uicc.xml
@@ -111,6 +110,7 @@ system_ext/etc/permissions/qti_permissions.xml
 system_ext/etc/permissions/qti_telephony_hidl_wrapper.xml
 system_ext/etc/permissions/qti_telephony_utils.xml
 system_ext/etc/permissions/telephony_system-ext_privapp-permissions-qti.xml
+system_ext/priv-app/ims/ims.apk;PRESIGNED
 system_ext/etc/permissions/vendor.qti.hardware.c2pa-V1-java.xml
 system_ext/etc/permissions/vendor.qti.ims.rcsservice.xml
 system_ext/etc/permissions/vendor.qti.imsdatachannel.xml
@@ -168,6 +168,8 @@ system_ext/framework/com.qualcomm.qti.imscmservice-V2.1-java.jar
 system_ext/framework/com.qualcomm.qti.imscmservice-V2.1-java.jar.fsv_meta
 system_ext/framework/com.qualcomm.qti.imscmservice-V2.2-java.jar
 system_ext/framework/com.qualcomm.qti.imscmservice-V2.2-java.jar.fsv_meta
+product/etc/permissions/ims_ext_common.xml
+product/framework/ims-ext-common.jar
 system_ext/framework/com.qualcomm.qti.uceservice-V2.0-java.jar
 system_ext/framework/com.qualcomm.qti.uceservice-V2.0-java.jar.fsv_meta
 system_ext/framework/com.qualcomm.qti.uceservice-V2.1-java.jar

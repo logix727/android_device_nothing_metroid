@@ -1,0 +1,99 @@
+<manifest version="8.0" type="device">
+    <hal format="aidl">
+        <name>android.hardware.radio.sap</name>
+        <fqname>ISap/slot1</fqname>
+        <fqname>ISap/slot2</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.data.connectionaidl</name>
+        <fqname>IDataConnection/slot1</fqname>
+        <fqname>IDataConnection/slot2</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.data.connectionfactory</name>
+        <fqname>IFactory/slot0</fqname>
+        <fqname>IFactory/slot1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.data.iwlandata</name>
+        <version>2</version>
+        <fqname>IIWlan/slot1</fqname>
+        <fqname>IIWlan/slot2</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.am</name>
+        <fqname>IQcRilAudio/slot1</fqname>
+        <fqname>IQcRilAudio/slot2</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.atfwd</name>
+        <fqname>IAtFwd/AtFwdAidl</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.ims</name>
+        <version>16</version>
+        <fqname>IImsRadio/imsradio0</fqname>
+        <fqname>IImsRadio/imsradio1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.internal.deviceinfo</name>
+        <fqname>IDeviceInfo/deviceinfo</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.lpa</name>
+        <fqname>IUimLpa/UimLpa0</fqname>
+        <fqname>IUimLpa/UimLpa1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.qcrilhook</name>
+        <fqname>IQtiOemHook/oemhook0</fqname>
+        <fqname>IQtiOemHook/oemhook1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.qtiradio</name>
+        <version>16</version>
+        <fqname>IQtiRadioStable/slot1</fqname>
+        <fqname>IQtiRadioStable/slot2</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.qtiradioconfig</name>
+        <version>6</version>
+        <fqname>IQtiRadioConfig/default</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.uim</name>
+        <fqname>IUim/Uim0</fqname>
+        <fqname>IUim/Uim1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.uim_remote_client</name>
+        <fqname>IUimRemoteServiceClient/uimRemoteClient0</fqname>
+        <fqname>IUimRemoteServiceClient/uimRemoteClient1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.radio.uim_remote_server</name>
+        <fqname>IUimRemoteServiceServer/uimRemoteServer0</fqname>
+        <fqname>IUimRemoteServiceServer/uimRemoteServer1</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.ImsRtpService</name>
+        <fqname>IRTPService/ImsRtpService</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.ims.datachannelservice</name>
+        <version>2</version>
+        <fqname>IDataChannelService/default</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.ims.factoryaidlservice</name>
+        <fqname>IImsFactory/default</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.ims.imscmaidlservice</name>
+        <fqname>IImsCmService/default</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.ims.uceaidlservice</name>
+        <fqname>IUceService/default</fqname>
+    </hal>
+</manifest>
