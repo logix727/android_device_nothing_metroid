@@ -18,7 +18,7 @@ or a complete reproducible source lock.
 
 | Project | Revision |
 |---|---|
-| `device/nothing/metroid` | `3fe548be50b214c98f43352ae269399a4c435b88` |
+| `device/nothing/metroid` | installed record `3fe548be50b214c98f43352ae269399a4c435b88`; sanitized public equivalent `6acc7c5da8e8eaca383a0c14817f636abc84aa29` |
 | `vendor/nothing/metroid` | private extraction revision retained by maintainer |
 | `kernel/nothing/sm8735` | `a604aa895f0b89b8d5e632c17f6046942fff6461` |
 | `bootable/recovery` | `42ea725381c1b67fb2cee6b5f7d87a7d39d3f3fa` |

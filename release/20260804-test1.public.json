@@ -7,8 +7,12 @@
     "file": "lineage-23.0-20260804-UNOFFICIAL-metroid.zip",
     "sha256": "74c012f8ef5a5cce1a860442be06bc412c43e11881c2f5f004559cec9c6c4869"
   },
+  "source_history": {
+    "device_original_revision": "1c7dbcd59735b80f889584d7de2a1742b3cb7c21",
+    "device_sanitized_public_equivalent": "5dd3e610b4973efc58afc539323fecfabe57f418"
+  },
   "projects": {
-    "device/nothing/metroid": "1c7dbcd59735b80f889584d7de2a1742b3cb7c21",
+    "device/nothing/metroid": "5dd3e610b4973efc58afc539323fecfabe57f418",
     "vendor/nothing/metroid": "redacted-private-extraction",
     "kernel/nothing/sm8735": "a604aa895f0b89b8d5e632c17f6046942fff6461",
     "bootable/recovery": "42ea725381c1b67fb2cee6b5f7d87a7d39d3f3fa",
