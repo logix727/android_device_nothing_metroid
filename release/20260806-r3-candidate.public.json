@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "record_type": "public-offline-verified-candidate",
+  "status": "not-published-pending-target-device-validation",
+  "release": "lineage-23.0-20260806-r3",
+  "ota": {
+    "file": "lineage-23.0-20260806-UNOFFICIAL-metroid.zip",
+    "size": 4211041882,
+    "sha256": "2c5573fe726eb21a813842037a26bc15f255c8b10c6a6cc590e30cd274827d68"
+  },
+  "source": {
+    "tag": "lineage-23.0-20260806-source-r3",
+    "device_repository": "https://github.com/logix727/android_device_nothing_metroid",
+    "device_revision": "292e240aea214409a57fc47c15640246286df4d2",
+    "kernel_repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 0,
+    "bootstrap_source": "payload-derived"
+  },
+  "runtime_validation": "not-run",
+  "publication": {
+    "ota_download": "not-published",
+    "proprietary_redistribution_clearance": "not-established"
+  }
+}
