@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "record_type": "public-target-validated-candidate",
+  "status": "not-published-pending-proprietary-redistribution-clearance",
+  "release": "lineage-23.0-20260806-r5",
+  "ota": {
+    "file": "lineage-23.0-20260806-UNOFFICIAL-metroid.zip",
+    "size": 4211042238,
+    "sha256": "16174926b2bda7a74853f52a821bbb9e8405e8ed3bc11035e96b541a8a2cb8f7"
+  },
+  "source": {
+    "device_repository": "https://github.com/logix727/android_device_nothing_metroid",
+    "device_revision": "8003c6f4f3380fb4f61f49b13e85c96c4f252b72",
+    "kernel_repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "build_soong_repository": "https://github.com/logix727/android_build_soong",
+    "build_soong_revision": "b4bbdf5956a788ab60921bd71421b1c9be31a8f0",
+    "frameworks_av_repository": "https://github.com/logix727/android_frameworks_av",
+    "frameworks_av_revision": "113ccbf172d572086818456a41b62809c38a0ac0",
+    "aperture_repository": "https://github.com/logix727/android_packages_apps_Aperture",
+    "aperture_revision": "db454eb0525be0b59bee2c32030df3fd7d553eb5",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 0,
+    "bootstrap_source": "payload-derived"
+  },
+  "runtime_validation": "passed-two-boots-focused-no-cts",
+  "runtime_notes": [
+    "installed slot B; Enforcing; encrypted; slot successful; no snapshot merge",
+    "empty crash buffer and no new tombstones across two boots",
+    "boot-image security patch reports 2026-02-01",
+    "GNSS restart has no property-service AVC",
+    "codec creation has no invalid media_quality VINTF lookup",
+    "Power, camera provider, GNSS, IMS radio 0/1, and system_server alive"
+  ],
+  "unverified": [
+    "physical-SIM call, SMS, data, IMS, emergency UI, DSDS, and OMAPI",
+    "Aperture stabilization UI and video flip routing on clean package state",
+    "LE Audio, USB-C audio, NFC payment/off-host SE, full haptic and thermal/charging acceptance"
+  ],
+  "publication": {
+    "ota_download": "not-published",
+    "reason": "proprietary IMS redistribution clearance not established",
+    "github_file_limit": "OTA exceeds 2 GiB GitHub release asset limit"
+  }
+}

@@ -5,7 +5,7 @@ Last audited: 2026-08-06
 Installed build: `23.0-20260806-UNOFFICIAL-metroid`
 
 Installed OTA SHA-256:
-`22e98f31182daa6e0645af48d64b7f7617aedf8b180250815759171436b260df`
+`16174926b2bda7a74853f52a821bbb9e8405e8ed3bc11035e96b541a8a2cb8f7`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -127,20 +127,18 @@ permission; it must never be committed to this public repository.
 ### MTR-007: security-patch metadata is stale and incomplete
 
 - Severity: high
-- Status: partially resolved on r4; boot-image SPL still blank
+- Status: resolved on installed r5
 - Impact: consumers can misjudge the incorporated security-patch level.
-- Evidence: installed properties report platform SPL `2026-02-01`;
-  `ro.vendor.build.security_patch=2025-06-05`; `ro.bootimage.build.version.security_patch`
-  is blank.
+- Evidence: installed r5 reports platform and boot-image SPL `2026-02-01` and
+  vendor SPL `2025-06-05`; boot/init_boot AVB descriptors retain `2025-04-05`.
 - Source: `build/soong/scripts/gen_build_prop.py:137-197`
 - Cause: the Soong ramdisk `build.prop` generator emits common `bootimage`
   identity properties but omits the platform security-patch property. The boot
   and init_boot AVB descriptors independently and correctly retain the measured
   stock boot-chain SPL `2025-04-05`.
-- Source fix: staged for the next build by emitting the platform SPL as
-  `ro.bootimage.build.version.security_patch`. A focused ramdisk/boot/init_boot
-  build produces runtime metadata `2026-02-01` while preserving both AVB SPL
-  descriptors at `2025-04-05`. Not installed or runtime-accepted yet.
+- Resolution (r5): emit the platform SPL as
+  `ro.bootimage.build.version.security_patch`; verified across two installed
+  boots while preserving both AVB SPL descriptors at `2025-04-05`.
 - Acceptance: patch provenance/CVE ledger plus consistent build properties and
   AVB rollback indexes.
 
@@ -215,7 +213,7 @@ permission; it must never be committed to this public repository.
 ### MTR-012: Aperture stabilization setting is a no-op on metroid
 
 - Severity: high
-- Status: source-fixed; not installed
+- Status: installed source fix; runtime acceptance pending
 - Impact: all Aperture video requests disable stabilization while the user-facing
   preference remains available.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1776-1785`
@@ -229,7 +227,7 @@ permission; it must never be committed to this public repository.
 ### MTR-013: media quality lookup loops and produces continuous AVCs
 
 - Severity: medium
-- Status: source-fixed; not installed
+- Status: resolved on installed r5
 - Impact: every codec session repeatedly looks up an absent service, logs
   `Media Quality Service not found`, and generates SELinux denials.
 - Evidence: repeated codec tests log `Media Quality Service not found` and a
@@ -238,13 +236,15 @@ permission; it must never be committed to this public repository.
 - Source fix: integrated AOSP change `I574e5ec8a790dbcfd81ab5789f088bc28c37773a`,
   which uses nonblocking framework `checkService` semantics instead of treating
   `media_quality` as a declared VINTF HAL. Do not add policy for the absent service.
+- Resolution (r5): repeated codec creation produces no invalid `media_quality`
+  VINTF lookup or associated servicemanager denial.
 - Acceptance: repeated AVC/HEVC playback and recording with no lookup loop, AVC,
   or codec regression.
 
 ### MTR-014: GNSS cannot set its value-added-process property
 
 - Severity: medium
-- Status: source-fixed; not installed
+- Status: resolved on installed r5
 - Impact: core GNSS fixes work, but enhanced IZat/PPE/DRE process selection may
   remain disabled.
 - Evidence: boot log records a property-service denial when the QTI GNSS domain
@@ -253,6 +253,8 @@ permission; it must never be committed to this public repository.
 - Cause: raw property-socket file access was granted instead of typed `set_prop`.
 - Source fix: replace the ineffective raw property-socket file grant with the
   typed `set_prop(vendor_hal_gnss_qti, vendor_location_prop)` macro.
+- Resolution (r5): GNSS HAL restart completes without the prior property-service
+  AVC and the service re-registers.
 - Acceptance: no property AVC, expected property populated, cold TTFF, raw
   measurements, restart, airplane mode, and screen-off GNSS.
 
@@ -363,7 +365,7 @@ permission; it must never be committed to this public repository.
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
 - Severity: medium
-- Status: source-fixed; not installed
+- Status: installed source fix; runtime acceptance pending
 - Impact: a front-to-back flip can reopen logical camera 4 while UHD or 60 fps is
   selected instead of the required physical main camera.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1255-1278`

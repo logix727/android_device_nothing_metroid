@@ -1,5 +1,39 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## 2026-08-06 maintainer-local candidate (r5, focused fixes)
+
+Installed and tested privately from the immutable snapshot
+`releases/candidate_20260806_172928_xda-focused-fixes-r5/`. Public OTA upload is
+blocked until proprietary IMS redistribution clearance is established.
+
+SHA-256:
+
+`16174926b2bda7a74853f52a821bbb9e8405e8ed3bc11035e96b541a8a2cb8f7`
+
+### Verified
+
+- Install-clean signed A/B OTA; all 16 payload images match target-files.
+- `check-vintf-all` compatible; AVB chain verifies with root flags `0`.
+- Recovery sideload selected slot B; encrypted userdata retained; two boots,
+  Enforcing SELinux/verity, slot success, no pending snapshot merge, empty crash
+  buffer, and no new tombstones.
+- Boot-image SPL is now `2026-02-01`; boot/init_boot AVB SPL remains the measured
+  stock-chain level `2025-04-05`.
+- GNSS HAL restart has no prior property-service denial.
+- Codec creation has no invalid `media_quality` VINTF lookup.
+- Power, camera provider, GNSS, IMS radio 0/1, and system_server remain alive.
+
+### Unverified / tester focus
+
+- Physical-SIM calls, SMS, data, VoLTE/VoWiFi, emergency UI, DSDS, and OMAPI.
+- Aperture stabilization control and front/back video routing are installed but
+  not runtime-accepted on retained userdata due stale package-manager component
+  state from a pre-OTA APK override test.
+- LE Audio, USB-C audio, NFC payment/off-host SE, full haptic parity, thermal skin
+  policy, charging policy, and long-duration suspend drain.
+- eSIM remains intentionally unavailable; no LPA/EuiccService is installed.
+- Unlocked bootloader means no Widevine L1, strong Play Integrity, or HDCP trust.
+
 ## 2026-08-06 maintainer-local candidate (r4, IMS policy)
 
 This build was installed and tested privately by the maintainer. It is not yet

@@ -7,11 +7,11 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 
 - Build: `23.0-20260806-UNOFFICIAL-metroid`
 - OTA SHA-256:
-  `22e98f31182daa6e0645af48d64b7f7617aedf8b180250815759171436b260df`
-- Artifact: `releases/candidate_20260806_144606_ims-policy-r4/`; not a public
+  `16174926b2bda7a74853f52a821bbb9e8405e8ed3bc11035e96b541a8a2cb8f7`
+- Artifact: `releases/candidate_20260806_172928_xda-focused-fixes-r5/`; not a public
   release. `org.codeaurora.ims` runs as `vendor_qtelephony` with MMTEL bound on
   both slots and no IMS/radio AVCs across two boots.
-- Last recorded state: slot A, boot complete, SELinux Enforcing, encrypted data,
+- Last recorded state: slot B, boot complete, SELinux Enforcing, encrypted data,
   slot marked successful.
 - Never describe a newer source change as working until it is built, audited,
   installed, and tested.

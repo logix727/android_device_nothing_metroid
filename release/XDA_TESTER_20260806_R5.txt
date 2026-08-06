@@ -1,0 +1,58 @@
+[ROM][UNOFFICIAL][TESTING][16] LineageOS 23 for Nothing Phone (3) [metroid]
+
+This is an unofficial tester candidate, not an official LineageOS release or a
+daily-driver claim. Back up data and keep a complete stock restore path.
+
+DOWNLOAD
+- Status: NOT PUBLICLY UPLOADED
+- Blocker: proprietary IMS redistribution clearance is not established
+- File: lineage-23.0-20260806-UNOFFICIAL-metroid.zip
+- Size: 4211042238 bytes
+- SHA-256: 16174926b2bda7a74853f52a821bbb9e8405e8ed3bc11035e96b541a8a2cb8f7
+
+INSTALL / UPDATE
+1. Use only the matching payload-derived recovery/bootstrap images.
+2. In recovery choose Apply update -> Apply from ADB.
+3. Run:
+     adb sideload lineage-23.0-20260806-UNOFFICIAL-metroid.zip
+4. A/B sideload commonly reports about 47 percent on the host before completing;
+   wait for recovery to report success.
+5. Do not disable AVB/verity and do not manually force a target slot.
+
+VERIFIED ON THE MAINTAINER DEVICE
+- Install-clean build, 16/16 payload equivalence, VINTF compatible, AVB flags 0
+- Recovery sideload, slot B, two boots, slot successful, no snapshot merge
+- Enforcing SELinux/verity, encrypted userdata, empty crash buffer
+- Display/touch baseline, Wi-Fi, Bluetooth, NFC service, GNSS, audio, USB, sensors
+- Power HAL, camera provider, IMS radio services, and system_server alive
+- Boot-image security patch property fixed
+- GNSS property denial fixed; invalid media_quality lookup fixed
+
+TESTER PRIORITIES
+- Physical SIM: calls, SMS/MMS, data, APNs, VoLTE, VoWiFi, emergency UI, DSDS
+- UICC OMAPI and NFC payment/off-host secure element
+- Aperture: FHD30/FHD60/UHD30, front/back flips, finalized video, all lenses
+- Fingerprint enrollment/unlock loops, haptics, LE Audio, USB-C audio
+- Thermal throttling, charging curves, reverse wireless charging, suspend drain
+
+KNOWN LIMITATIONS
+- eSIM is intentionally unavailable; no LPA/EuiccService is installed.
+- Aperture r5 source changes compiled and are installed, but maintainer UI/runtime
+  acceptance was blocked by retained package state from an earlier APK override.
+- Unlocked bootloader: no Widevine L1, strong Play Integrity, or trusted HDCP.
+
+BUG REPORTS
+Include ZIP SHA-256, firmware, clean/upgrade install, exact steps, and sanitized:
+  adb logcat -b all -d > logcat.txt
+  adb shell dmesg > dmesg.txt
+
+SOURCES
+- Device: https://github.com/logix727/android_device_nothing_metroid
+- Kernel: https://github.com/logix727/android_kernel_nothing_sm8735
+- Build Soong: https://github.com/logix727/android_build_soong
+- Frameworks AV: https://github.com/logix727/android_frameworks_av
+- Aperture: https://github.com/logix727/android_packages_apps_Aperture
+- Full pinned manifest and carry patches are recorded in the device repository.
+
+Do not report bugs after installing an unlisted kernel, root module, or add-on
+unless reproduced on the clean tester candidate.
