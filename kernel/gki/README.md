@@ -45,6 +45,10 @@ The digest is computed from path-normalized lines generated inside `kernel/gki`:
 These identifiers document the exact checked-in set; they do not replace any
 license or corresponding-source obligations.
 
+The separate `prebuilt/kernel-headers.tar.gz` Android build input contains only
+headers copied from the pinned public metroid kernel. Regenerate it with
+`kernel/generate-kernel-headers.sh`; it is not extracted from stock firmware.
+
 Mixed-build module hashes:
 
 - `rfkill.ko`: `d951a1e9eff86f85b4ffc0e195c04c1b89dbe5a4fd8fd2b7472cd1d1c5f7e711`

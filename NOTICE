@@ -11,8 +11,8 @@ no more specific license or notice is present.
 - `kernel/gki/` contains documented Google GKI build artifacts. Their build IDs,
   provenance, and purpose are recorded in `kernel/gki/README.md`.
 - `prebuilt/kernel-headers.tar.gz` contains kernel-derived headers required by
-  the Android build. It is retained pending conversion to reproducible source
-  exports.
+  the Android build. It is generated from the pinned public kernel source by
+  `kernel/generate-kernel-headers.sh`.
 - Proprietary Android userspace files are not redistributed. Builders extract
   them from firmware they own by using `proprietary-files.txt` and the extraction
   scripts.

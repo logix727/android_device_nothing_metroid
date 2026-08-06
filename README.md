@@ -36,23 +36,34 @@ documented files from their own stock image; see
 
 ## Building
 
-This is currently a reconstruction recipe, not a complete reproducible source
-manifest.
+This is a pinned public-source reconstruction recipe. Proprietary inputs remain
+builder-supplied and are verified separately.
 
-1. Set up a LineageOS 23 source tree.
-2. Copy [`manifest/metroid.xml`](manifest/metroid.xml) to
-   `.repo/local_manifests/` and sync.
-3. Extract proprietary userspace files from your own documented B4.1 stock dump:
+1. Initialize the immutable source candidate:
+
+   ```bash
+   repo init \
+     -u https://github.com/logix727/android_device_nothing_metroid.git \
+     -b lineage-23.0-20260806-source \
+     -m manifest/lineage-23.0-20260806-base.xml
+   repo sync -c
+   device/nothing/metroid/patches/apply-series.sh "$PWD"
+   ```
+
+   The manifest pins all platform projects to public pre-patch revisions. The
+   application script verifies every resulting project tree. `manifest/metroid.xml`
+   remains the moving development manifest and is not a release lock.
+2. Extract proprietary userspace files from your own documented B4.1 stock dump:
 
    ```bash
    ./device/nothing/metroid/extract-files.py /path/to/stock/dump
    ```
 
-4. Extract the two locally required NFC modules as documented in
+   Exact stock inputs and hashes are recorded in [`STOCK_INPUTS.md`](STOCK_INPUTS.md).
+
+3. Extract the two locally required NFC modules as documented in
    `kernel/prebuilt-modules/README.md`.
-5. Apply every ordered patch in `patches/series.conf`; see
-   [`patches/README.md`](patches/README.md).
-6. Build the kernel workspace and stage the generated device inputs:
+4. Build the kernel workspace and stage the generated device inputs:
 
    ```bash
    mkdir /path/to/kernelws
@@ -75,7 +86,7 @@ manifest.
    before creating the portable workspace. Host requirements include `repo`, `git`, `python3`, `bash`,
    `perl`, `rsync`, `find`, `flex`, `bison`, `patch`, and standard GNU utilities.
 
-7. Build Android:
+5. Build Android:
 
    ```bash
    source build/envsetup.sh
@@ -87,8 +98,10 @@ manifest.
    supplies a private signing path with `METROID_AVB_KEY_PATH`; private keys must
    never be committed or shared.
 
-The maintainer-local tested revisions are recorded in [`BASELINE.md`](BASELINE.md),
-but that file is not a substitute for a complete public manifest lock.
+The installed maintainer baseline is recorded in [`BASELINE.md`](BASELINE.md).
+The current public reconstruction record is
+[`release/20260806-source-lock.json`](release/20260806-source-lock.json); it is a
+source candidate, not a claim that a matching OTA has passed device validation.
 
 The Android local manifest and `lineage.dependencies` use the maintainer kernel fork
 while this bring-up remains unofficial. An official submission must use

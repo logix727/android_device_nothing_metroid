@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "record_type": "public-source-candidate",
+  "status": "not-built-or-device-validated",
+  "device": "metroid",
+  "product": "lineage_metroid",
+  "release": "bp2a",
+  "variant": "userdebug",
+  "source_tag": "lineage-23.0-20260806-source",
+  "manifest": {
+    "path": "manifest/lineage-23.0-20260806-base.xml",
+    "sha256": "52d6ef5772e061a9ebaa06687f5c2f2456ef552281805493515f3c2601ef91bd",
+    "project_count": 1132
+  },
+  "carry_series": {
+    "path": "patches/series.conf",
+    "sha256": "bf8c110b23330371ad640504b7a629198b344837d10d4a93d0c570f4452cd4fa",
+    "apply_script_sha256": "dfda4ad692424df16612ffbf06326473d585e4fb9f8e14040145f8370dd9494c",
+    "project_count": 17,
+    "verification": "pre-patch revisions and expected result trees"
+  },
+  "kernel": {
+    "repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "headers_archive_sha256": "8f5623f327e9d8cb81e17906880a7aca96ce3a75db144cfbf078a08adf4b9dc0",
+    "headers_content_tree_sha256": "1bef0658c27fda9716f5d9f198c4ba5c6266b12be59e427f60a49d9451a8c0cf",
+    "headers_generator_sha256": "ef660b678d4f8c8e9ee521d17a468e5a9ee9f1ebe34eeb1fc63bf9e26d69297f"
+  },
+  "proprietary_inputs": {
+    "redistributed": false,
+    "documentation": "STOCK_INPUTS.md",
+    "extraction": "extract-files.py and setup-makefiles.py",
+    "private_revision_in_public_record": false
+  },
+  "release_artifact": null,
+  "validation": {
+    "source_reconstruction": "verified-locally",
+    "android_build": "not-run-for-this-lock",
+    "offline_release_audit": "not-run-for-this-lock",
+    "target_device": "not-run-for-this-lock"
+  }
+}
