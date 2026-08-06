@@ -62,7 +62,7 @@ Canonical issue backlog: [`BUGS.md`](BUGS.md).
 
 ## Release gate
 
-1. All modified projects committed on `lineage-23.0-metroid`.
+1. All modified projects committed on `lineage-23.0`.
 2. Fresh install-clean `m bacon` using all available build resources.
 3. VINTF, init, payload, AVB, signing and partition audits pass.
 4. Target-slot boot, second boot, Enforcing, encryption and crash sweep pass.

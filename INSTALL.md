@@ -31,6 +31,6 @@ records and are not current installation guidance.
 
 ## Bug reports
 
-Use the repository issue template. Include the exact OTA SHA-256, firmware,
-install type, reproduction steps, and sanitized logs. Never publish credentials,
-subscriber identifiers, network details, precise location, or private keys.
+Include the exact OTA SHA-256, firmware, install type, reproduction steps, and
+sanitized logs in any maintainer report. Never publish credentials, subscriber
+identifiers, network details, precise location, or private keys.

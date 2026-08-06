@@ -59,7 +59,7 @@ manifest.
    cd /path/to/kernelws
    repo init \
      -u https://github.com/logix727/android_device_nothing_metroid.git \
-     -b lineage-23.0-metroid \
+     -b lineage-23.0 \
      -m kernel/manifest/metroid-kleaf.xml
    repo sync -c
    /path/to/lineage/device/nothing/metroid/kernel/setup-kleaf-workspace.sh "$PWD"
@@ -104,11 +104,11 @@ LineageOS-hosted dependencies and the active release branch conventions.
 
 ## Reporting bugs
 
-This fork uses GitHub issue templates for maintainer testing. Official LineageOS
-devices use the central LineageOS tracker. Reports here must include the exact build hash,
-firmware baseline, clean reproduction steps, and sanitized logs. Remove account,
-network, location, radio/subscriber, and device identifiers before uploading.
-Unsupported kernels, root modules, and add-ons must be removed before reporting.
+This source mirror does not use GitHub Issues. Before reporting a problem to the
+maintainer, reproduce it on the documented source and firmware baseline with
+unsupported kernels, root modules, and add-ons removed. Reports must include the
+exact build hash, clean reproduction steps, and sanitized logs. Remove account,
+network, location, radio/subscriber, and device identifiers before sharing logs.
 
 ## Licensing and provenance
 

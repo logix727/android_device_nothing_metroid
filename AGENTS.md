@@ -83,7 +83,7 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 
 ## Source and upstream
 
-- Persistent work uses `lineage-23.0-metroid` branches with focused commits.
+- Persistent work uses `lineage-23.0` branches with focused commits.
 - Prefer upstreamable fixes. Add device conditionals only for real hardware/vendor
   behavior; avoid global platform hacks.
 - Before duplicating a fix, search current Lineage/AOSP/CLO and relevant device

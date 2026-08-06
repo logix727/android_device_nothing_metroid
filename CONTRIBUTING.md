@@ -1,9 +1,9 @@
 # Contributing
 
-GitHub issues and pull requests are accepted for this unofficial maintainer fork.
-Contributions should target `lineage-23.0-metroid` and address a measured device
-problem or an item in `BUGS.md`. Changes intended for LineageOS upstream must
-follow the official CLA, Gerrit, `Change-Id`, authorship, and review process.
+Contributions should target `lineage-23.0` and address a measured device problem
+or an item in `BUGS.md`. GitHub Issues and pull requests are not used. Changes
+intended for LineageOS must follow the official CLA, Gerrit, `Change-Id`,
+authorship, and review process.
 
 ## Before submitting
 
@@ -19,7 +19,7 @@ follow the official CLA, Gerrit, `Change-Id`, authorship, and review process.
 - Original Android contributions should use Apache-2.0/SPDX conventions;
   kernel work must preserve applicable GPL notices.
 
-## Reports and pull requests
+## Reports and changes
 
 State the build/source revision, firmware baseline, exact reproduction, expected
 and actual behavior, tests run, and remaining risks. Sanitize serials, MACs,
