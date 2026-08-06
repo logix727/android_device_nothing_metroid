@@ -1,0 +1,7 @@
+allow sltntc vendor_configs_file:dir search;
+allow sltntc vendor_configs_file:file r_file_perms;
+allow sltntc vendor_sysfs_battery_supply:dir search;
+allow sltntc vendor_sysfs_battery_supply:file r_file_perms;
+allow sltntc vendor_sysfs_usb_supply:dir search;
+allow sltntc vendor_sysfs_usb_supply:file r_file_perms;
+allow sltntc vendor_sysfs_virtual_temp:file rw_file_perms;

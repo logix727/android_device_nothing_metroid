@@ -1,0 +1,5 @@
+typeattribute sltntc coredomain;
+init_daemon_domain(sltntc)
+binder_use(sltntc)
+add_service(sltntc, sltntc_service)
+hal_client_domain(sltntc, hal_health)

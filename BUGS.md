@@ -95,17 +95,20 @@ permission; it must never be committed to this public repository.
 ### MTR-005: framework thermal policy has no skin sensor or headroom
 
 - Severity: high
-- Status: confirmed
+- Status: source-integrated; runtime acceptance pending
 - Impact: framework thermal status, headroom, display mitigation, and scheduler
   consumers are blind to enclosure temperature. Kernel and proprietary thermal
   protection still operate, so this is not total thermal-protection loss.
 - Evidence: framework thermal diagnostics expose no skin temperature and return
   `NaN` headroom while other device temperatures remain available.
 - Source: `hardware/qcom-caf/thermal/thermalConfig.cpp:2487-2501`
-- Cause: tuna maps skin to nonexistent `sys-therm-3`; the kernel exposes Nothing
-  shell sensors instead.
-- Fix direction: restore the compatible stock Thermal HAL or recover the exact
-  shell sensor mapping and thresholds. Do not guess thresholds.
+- Cause: the generic tuna HAL maps skin to nonexistent `sys-therm-3`. The build
+  also omitted Nothing's `sltntc` fitting daemon and enable property, leaving
+  kernel `shell_front`, `shell_frame`, `shell_back`, and `shell_max` at zero.
+- Source fix: package the user-extracted stock `sltntc`, restore its stock enable
+  property and measured SELinux domain, and select the hash-verified stock
+  Thermal HAL, which contains Nothing's `shell_max` mapping and thresholds.
+  Focused daemon/policy/HAL builds and `check-vintf-all` pass; not installed yet.
 - Acceptance: live `TYPE_SKIN`, non-NaN headroom, controlled thermal-status and
   cooling transitions, display mitigation, and charging interaction.
 

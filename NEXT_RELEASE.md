@@ -39,6 +39,9 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
   framework-service lookup; Aperture hides its metroid stabilization no-op and
   preserves high-bandwidth routing across camera flips. GNSS and MediaCodec pass
   runtime tests; Aperture changes remain runtime-unverified (MTR-012/013/014/022).
+- Nothing's stock `sltntc` producer, policy, enable property, and stock Thermal
+  HAL are integrated for live `shell_max`/framework skin headroom. Focused builds
+  and VINTF pass; runtime acceptance remains (MTR-005).
 
 ## Community coverage still to test
 

@@ -165,13 +165,13 @@ PRODUCT_COPY_FILES += \
 # Build these from the same QCOM/AOSP sources onyx (same SoC, sun/sm8750) builds.
 # (Verified absent in proprietary-files.txt: bin/hw/{thermal,usb,usb.gadget,vibrator,wifi}-service, bin/vndservicemanager.)
 
-# Thermal HAL (hardware/qcom-caf/thermal is its own soong namespace)
-PRODUCT_SOONG_NAMESPACES +=     hardware/qcom-caf/thermal
-
 # Display HALs (b20): build from source (hardware/qcom-caf/sm8750/display is its own soong namespace)
 PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/sm8750/display
 
-PRODUCT_PACKAGES +=     android.hardware.thermal-service.qti
+# Stock Thermal HAL carries Nothing's shell_max mapping and thresholds. Its
+# userspace shell-temperature producer is packaged as sltntc by the private
+# extraction tree.
+PRODUCT_PACKAGES +=     android.hardware.thermal-service.qti.stock
 
 # USB + USB gadget HAL (vendor/qcom/opensource/usb/hal, default namespace)
 PRODUCT_PACKAGES +=     android.hardware.usb-service.qti     android.hardware.usb.gadget-service.qti

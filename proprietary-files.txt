@@ -16,6 +16,11 @@ odm/etc/sysconfig/sku_TUR/qsb_widget.xml
 odm/etc/sysconfig/sku_TUR/tmada.xml
 odm/overlayfs_origin/vendor/etc/init/android.hardware.security.keymint-service.strongbox-thales.rc
 odm/overlayfs_origin/vendor/etc/init/android.hardware.weaver-service.thales.rc
+
+# Thermal
+system_ext/bin/sltntc
+vendor/bin/hw/android.hardware.thermal-service.qti
+
 system_ext/apex/com.android.compos.apex
 system_ext/apex/com.android.vndk.v34.apex
 system_ext/etc/aconfig/flag.info

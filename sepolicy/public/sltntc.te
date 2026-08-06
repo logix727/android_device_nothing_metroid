@@ -1,0 +1,3 @@
+type sltntc, domain;
+type sltntc_exec, system_file_type, exec_type, file_type;
+type sltntc_service, system_api_service, service_manager_type;
