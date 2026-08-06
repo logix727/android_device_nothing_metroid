@@ -1172,6 +1172,6 @@
     <copyfile src="lk_inc.mk" dest="lk_inc.mk"/>
   </project>
   
-  <project name="logix727/android_device_nothing_metroid" path="device/nothing/metroid" remote="github-logix727" revision="lineage-23.0-20260806-source"/>
+  <project name="logix727/android_device_nothing_metroid" path="device/nothing/metroid" remote="github-logix727" revision="lineage-23.0-20260806-source-r2"/>
   <project name="logix727/android_kernel_nothing_sm8735" path="kernel/nothing/sm8735" remote="github-logix727" revision="ce342da8315a62e6144882faeddbdeccda544f9b"/>
 </manifest>
