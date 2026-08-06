@@ -18,7 +18,7 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 - Never publish proprietary vendor blobs or private release/AVB keys.
 - Never declare an unserved stable HAL. Run `m check-vintf-all` after VINTF work.
 - Keep `ro.hw_timeout_multiplier=4` in `/system/build.prop`.
-- Preserve the 232-line installed `init.target.rc` with `OPUS_NTLOG_KEEP` and no
+- Preserve the 231-line installed `init.target.rc` with `OPUS_NTLOG_KEEP` and no
   `OPUS-USB-BRINGUP` block unless measured evidence justifies replacement.
 - Preserve early ADB and dynamic USB gadget operation; test ADB, MTP, tethering,
   cable reconnect, late HAL start, and HAL restart after USB changes.

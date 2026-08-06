@@ -149,7 +149,7 @@ regen_depmod() {  # <dir>
     tmp="$(mktemp -d)"
     mkdir -p "$tmp/lib/modules/0.0"
     cp "$dir"/*.ko "$tmp/lib/modules/0.0/"
-    depmod -b "$tmp" -a 0.0 2>/dev/null || true
+    depmod -b "$tmp" -a 0.0
     local n
     for n in modules.dep modules.alias modules.softdep; do
         [[ -s "$tmp/lib/modules/0.0/$n" ]] || continue
@@ -242,14 +242,15 @@ for name in ("modules.load.vendor_boot", "modules.load.recovery"):
                 add(line)
 
 missing = [m for m in want if not os.path.exists(os.path.join(out, "all", m))]
+if missing:
+    raise SystemExit(f"missing vendor ramdisk modules: {missing}")
 for m in want:
     src = os.path.join(out, "all", m)
     if os.path.exists(src):
         dst = os.path.join(out, "vendor_ramdisk", m)
         if not os.path.exists(dst):
             os.link(src, dst)
-print(f":: vendor_ramdisk: {len(want) - len(missing)} modules"
-      + (f", {len(missing)} MISSING: {missing}" if missing else ""))
+print(f":: vendor_ramdisk: {len(want)} modules")
 PY
 
 
