@@ -3,18 +3,20 @@
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
 Canonical baseline: [`BASELINE.md`](BASELINE.md).
 
-## Installed baseline (r5, `23.0-20260806-UNOFFICIAL-metroid`)
+## Installed baseline (r7, `23.0-20260806-UNOFFICIAL-metroid`)
 
 - `org.codeaurora.ims` runs as `vendor_qtelephony`; IMS radio/radio-config and
   qti-radio-stable services resolve and bind; MMTEL and EMERGENCY_MMTEL register
   on both slots; no IMS/radio/vendor-property AVCs across two boots.
 - Power HAL `android.hardware.power.IPower/default` registers.
 - `ro.product.first_api_level=35`, `ro.board.first_api_level=202404`.
-- eUICC is not advertised on r5 (no LPA/EuiccService installed).
+- eUICC is not advertised on r7 (no LPA/EuiccService installed).
 - Slot B, Enforcing, encrypted, slot marked successful, empty crash buffer after
   two boots; no pending snapshot merge.
 - Boot-image SPL is populated; GNSS property and media-quality lookup fixes pass
   focused runtime tests.
+- Live framework skin temperature, stock thresholds, and non-NaN headroom pass
+  across two boots with the stock Thermal HAL and confined `sltntc` daemon.
 
 ## Blocker priorities (in order)
 
@@ -40,8 +42,8 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
   preserves high-bandwidth routing across camera flips. GNSS and MediaCodec pass
   runtime tests; Aperture changes remain runtime-unverified (MTR-012/013/014/022).
 - Nothing's stock `sltntc` producer, policy, enable property, and stock Thermal
-  HAL are integrated for live `shell_max`/framework skin headroom. Focused builds
-  and VINTF pass; runtime acceptance remains (MTR-005).
+  HAL provide live `shell_max`, framework skin thresholds, and headroom across
+  two installed boots (MTR-005 framework path resolved).
 
 ## Community coverage still to test
 

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "record_type": "public-target-validated-candidate",
+  "status": "not-published-pending-proprietary-redistribution-clearance",
+  "release": "lineage-23.0-20260806-r7",
+  "ota": {
+    "file": "lineage-23.0-20260806-UNOFFICIAL-metroid.zip",
+    "size": 4211251740,
+    "sha256": "74d738f1ba6b8f7f4534f82a6b0e004dbebdc3f4b90f09cccef48d534cdf1bb0"
+  },
+  "source": {
+    "device_repository": "https://github.com/logix727/android_device_nothing_metroid",
+    "device_revision": "99887340b88cf6d30ed29acd408cc909c97042ac",
+    "kernel_repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "private_vendor_revision": "17d816d3234603bf545b2cc580a68c269dee1004",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 0,
+    "bootstrap_source": "payload-derived"
+  },
+  "runtime_validation": "passed-two-boots-focused-no-cts",
+  "runtime_notes": [
+    "installed slot B; Enforcing; encrypted; slot successful; no snapshot merge",
+    "empty crash buffer and no new tombstones across two boots",
+    "sltntc runs confined and updates shell front/frame/back/max",
+    "stock Thermal HAL reports live TYPE_SKIN and non-NaN headroom",
+    "skin thresholds are 39/43/44/50/54/63 C"
+  ],
+  "unverified": [
+    "controlled thermal severity, cooling, display and charging transitions",
+    "physical-SIM call, SMS, data, IMS, emergency UI, DSDS, and OMAPI",
+    "Aperture stabilization UI and video flip routing on clean package state"
+  ],
+  "publication": {
+    "ota_download": "not-published",
+    "reason": "proprietary redistribution clearance not established",
+    "github_file_limit": "OTA exceeds 2 GiB GitHub release asset limit"
+  }
+}

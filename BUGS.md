@@ -5,7 +5,7 @@ Last audited: 2026-08-06
 Installed build: `23.0-20260806-UNOFFICIAL-metroid`
 
 Installed OTA SHA-256:
-`16174926b2bda7a74853f52a821bbb9e8405e8ed3bc11035e96b541a8a2cb8f7`
+`74d738f1ba6b8f7f4534f82a6b0e004dbebdc3f4b90f09cccef48d534cdf1bb0`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -95,7 +95,7 @@ permission; it must never be committed to this public repository.
 ### MTR-005: framework thermal policy has no skin sensor or headroom
 
 - Severity: high
-- Status: source-integrated; runtime acceptance pending
+- Status: framework path resolved on installed r7; transition acceptance pending
 - Impact: framework thermal status, headroom, display mitigation, and scheduler
   consumers are blind to enclosure temperature. Kernel and proprietary thermal
   protection still operate, so this is not total thermal-protection loss.
@@ -108,7 +108,13 @@ permission; it must never be committed to this public repository.
 - Source fix: package the user-extracted stock `sltntc`, restore its stock enable
   property and measured SELinux domain, and select the hash-verified stock
   Thermal HAL, which contains Nothing's `shell_max` mapping and thresholds.
-  Focused daemon/policy/HAL builds and `check-vintf-all` pass; not installed yet.
+  Focused daemon/policy/HAL builds and `check-vintf-all` pass.
+- Resolution (r7): `sltntc` runs as `u:r:sltntc:s0`, shell zones update, stock
+  Thermal HAL hashes match the stock dump, `TYPE_SKIN` reports live values,
+  thresholds are 39/43/44/50/54/63 C, and headroom is non-NaN across two boots.
+- Residual: proprietary thermal-engine logs dynamic shell-zone name errors and a
+  missing FPS virtual sensor; controlled status/cooling/display/charging
+  transitions remain unverified.
 - Acceptance: live `TYPE_SKIN`, non-NaN headroom, controlled thermal-status and
   cooling transitions, display mitigation, and charging interaction.
 

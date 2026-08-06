@@ -1,0 +1,41 @@
+[ROM][UNOFFICIAL][TESTING][16] LineageOS 23 for Nothing Phone (3) [metroid]
+
+Maintainer-tested candidate. Back up data and keep a stock restore path.
+
+DOWNLOAD
+- Status: NOT PUBLICLY UPLOADED
+- Blocker: proprietary redistribution clearance is not established
+- File: lineage-23.0-20260806-UNOFFICIAL-metroid.zip
+- Size: 4211251740 bytes
+- SHA-256: 74d738f1ba6b8f7f4534f82a6b0e004dbebdc3f4b90f09cccef48d534cdf1bb0
+
+INSTALL / UPDATE
+1. Use only matching payload-derived recovery/bootstrap images.
+2. Recovery: Apply update -> Apply from ADB.
+3. Run `adb sideload lineage-23.0-20260806-UNOFFICIAL-metroid.zip`.
+4. Wait for recovery success; host progress near 47 percent is normal for A/B.
+5. Never disable AVB/verity or manually force a target slot.
+
+VERIFIED
+- Install-clean build; 16/16 payload equivalence; VINTF compatible; AVB flags 0
+- Slot B, two boots, Enforcing, encrypted, slot successful, no snapshot merge
+- Empty crash buffer and no new tombstones
+- Live framework skin temperature and non-NaN thermal headroom
+- Stock skin thresholds: 39/43/44/50/54/63 C
+- Boot SPL, GNSS property, media-quality lookup, radio and power fixes retained
+
+TESTER PRIORITIES
+- Physical SIM, IMS, emergency UI, DSDS, OMAPI and NFC payment
+- Controlled thermal/load/charging/display transitions and suspend drain
+- Aperture FHD30/FHD60/UHD30, camera flips, finalized video and all lenses
+- Fingerprint loops, haptics, LE Audio and USB-C audio
+
+KNOWN LIMITATIONS
+- eSIM is intentionally unavailable.
+- Proprietary thermal-engine still logs shell-zone/FPS virtual-sensor errors.
+- Unlocked bootloader: no Widevine L1, strong Play Integrity, or trusted HDCP.
+
+SOURCES
+- Device: https://github.com/logix727/android_device_nothing_metroid
+- Kernel: https://github.com/logix727/android_kernel_nothing_sm8735
+- Full pinned manifest and carry patches: device repository.

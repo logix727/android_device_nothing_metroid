@@ -1,5 +1,34 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## 2026-08-06 maintainer-local candidate (r7, thermal skin)
+
+Installed and tested privately from
+`releases/candidate_20260806_194556_xda-thermal-r7/`.
+
+SHA-256:
+
+`74d738f1ba6b8f7f4534f82a6b0e004dbebdc3f4b90f09cccef48d534cdf1bb0`
+
+### Verified
+
+- Install-clean signed A/B OTA, 16/16 payload equivalence, VINTF compatible,
+  AVB flags `0`, encrypted userdata, slot B, two boots, no snapshot merge,
+  empty crash buffer, and no new tombstones.
+- Stock-hash `sltntc` runs confined, automatically owns and updates the shell
+  thermal node, and exposes front/frame/back/max enclosure temperatures.
+- Stock-hash Thermal HAL reports live `TYPE_SKIN`, thresholds
+  39/43/44/50/54/63 C, and non-NaN framework headroom on both boots.
+- r5 boot-SPL, GNSS property, MediaCodec, radio, power, and core-service fixes
+  remain intact.
+
+### Unverified / residual
+
+- Controlled thermal severity, cooling, display mitigation, charging derating,
+  and long-duration load/suspend transitions.
+- Proprietary thermal-engine logs dynamic shell-zone name errors and a missing
+  FPS virtual sensor despite the framework path working.
+- Public OTA upload remains blocked by proprietary redistribution clearance.
+
 ## 2026-08-06 maintainer-local candidate (r5, focused fixes)
 
 Installed and tested privately from the immutable snapshot
