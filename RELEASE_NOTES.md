@@ -1,5 +1,51 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## 2026-08-06 maintainer-local candidate (r4, IMS policy)
+
+This build was installed and tested privately by the maintainer. It is not yet
+published as a supported download. Source and artifact are reproducible from the
+immutable snapshot `releases/candidate_20260806_144606_ims-policy-r4/`.
+
+SHA-256:
+
+`22e98f31182daa6e0645af48d64b7f7617aedf8b180250815759171436b260df`
+
+### Verified
+
+- Install-clean Virtual A/B recovery sideload to slot A, two boots, slot marked
+  successful, encrypted userdata retention, Enforcing SELinux, one
+  `system_server` start per boot, empty crash buffer.
+- Payload equivalence for all 16 partitions, AVB chain, signing, declared VINTF
+  (`check-vintf-all` compatible), and partition audits.
+- IMS/SELinux fix landed: `org.codeaurora.ims` runs as `vendor_qtelephony`;
+  `IQtiRadioConfig/default`, `IImsRadio/imsradio0/1` and `IQtiRadioStable/slot1/2`
+  resolve and bind; `ImsResolver` registers MMTEL and EMERGENCY_MMTEL on both
+  slots; subscription service-status updates received. No IMS/radio/vendor-property
+  AVC denials across two boots.
+- Power HAL `android.hardware.power.IPower/default` registers.
+- Launch metadata corrected: `ro.product.first_api_level=35`,
+  `ro.board.first_api_level=202404`.
+- Wi-Fi 7 (6 GHz/320 MHz, MLO/SAE) connected and transporting, Bluetooth ON, NFC
+  service registers, camera provider, vibrator HAL and sensors register; charge
+  at 100% with AC+USB powered and sane battery health.
+
+### Known issues / tester focus for this candidate
+
+- eSIM: on r4 the eUICC hardware feature is no longer advertised and no
+  LPA/EuiccService is installed, so no eSIM is available. Reintroduction requires
+  a legally distributable LPA.
+- Physical-SIM calls, SMS, data, IMS features, emergency UI and OMAPI are NOT yet
+  tested on r4 (no active subscription on the test device); these remain the
+  critical open validation.
+- Recovery sideload does not stage `care_map.pb`, so `update_verifier` skips its
+  additional cared-block read. This matches upstream A/B recovery behavior and
+  is not a metroid release blocker; AVB still protects mounted partitions.
+- Platform security patch `2026-02-01`, vendor `2025-06-05`; boot-image SPL still
+  blank (MTR-007).
+- NFC payment/secure-element and wireless-charging-property-drain figures are not
+  fully quantified; fingerprint and full haptic parity remain outstanding.
+- Unlocked bootloader means no Widevine L1, strong Play Integrity or HDCP trust.
+
 ## 2026-08-05 maintainer-local candidate
 
 This build was installed and tested privately by the maintainer. It was not
@@ -15,8 +61,9 @@ SHA-256:
   boots, encrypted userdata retention, Enforcing SELinux and one system_server
   start per boot.
 - Payload equivalence for all 16 partitions, AVB, signing, declared VINTF, and
-  partition audits. Runtime testing later found undeclared vendor services and a
-  missing post-OTA care-map verification pass; see `BUGS.md`.
+  partition audits. Runtime testing later found undeclared vendor services. The
+  absent recovery-sideload care-map pass was subsequently confirmed as expected
+  upstream behavior; see `BUGS.md`.
 - Wi-Fi hardware PNO starts while disconnected with zero framework failures.
 - NFC clean-state CPLC bootstrap regenerates all derived properties before the
   NFC HAL starts; NFC disable/enable and credit-card polling work.

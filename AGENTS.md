@@ -5,11 +5,14 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 
 ## Installed baseline
 
-- Build: `23.0-20260805-UNOFFICIAL-metroid`
+- Build: `23.0-20260806-UNOFFICIAL-metroid`
 - OTA SHA-256:
-  `d052d13c16f008f8ea80118f598f8fa7cefdcad6b1d6ef82590e63c7ec324c3c`
-- Artifact: maintainer-private audited candidate; not a public release.
-- Last recorded state: slot A, boot complete, SELinux Enforcing, encrypted data.
+  `22e98f31182daa6e0645af48d64b7f7617aedf8b180250815759171436b260df`
+- Artifact: `releases/candidate_20260806_144606_ims-policy-r4/`; not a public
+  release. `org.codeaurora.ims` runs as `vendor_qtelephony` with MMTEL bound on
+  both slots and no IMS/radio AVCs across two boots.
+- Last recorded state: slot A, boot complete, SELinux Enforcing, encrypted data,
+  slot marked successful.
 - Never describe a newer source change as working until it is built, audited,
   installed, and tested.
 

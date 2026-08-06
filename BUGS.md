@@ -1,11 +1,11 @@
 # Metroid bug backlog
 
-Last audited: 2026-08-05
+Last audited: 2026-08-06
 
-Installed build: `23.0-20260805-UNOFFICIAL-metroid`
+Installed build: `23.0-20260806-UNOFFICIAL-metroid`
 
 Installed OTA SHA-256:
-`d052d13c16f008f8ea80118f598f8fa7cefdcad6b1d6ef82590e63c7ec324c3c`
+`22e98f31182daa6e0645af48d64b7f7617aedf8b180250815759171436b260df`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -22,68 +22,75 @@ permission; it must never be committed to this public repository.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: confirmed
-- Impact: IMS, IWLAN, eSIM/LPA, QTI call-audio control, vendor radio
-  configuration, SAP, and advanced UICC/data paths cannot register.
-- Evidence: two-boot traces show servicemanager rejecting the listed QTI
+- Status: resolved for IMS/radio registration on r4; physical-SIM endurance
+  acceptance pending
+- Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
+  and advanced UICC/data paths cannot register.
+- Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
   interfaces because they are absent from the device VINTF manifest.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/qcrilNrd.rc:5-46`
 - Cause: `device.mk:264-271` installs only selected AOSP radio fragments; the
-  exact stock standalone declarations for the served QTI interfaces are absent.
-- Fix direction: package only declarations for interfaces observed attempting
-  registration. Do not import the aggregate stock manifest blindly.
-- Acceptance: `check-vintf-all`; zero relevant registration denials across two
-  boots and qcrild restart; physical-SIM call, SMS, data, IMS, IWLAN, call-audio,
+  exact stock standalone declarations for the served QTI interfaces were absent.
+- Resolution (r4): standalone QTI fragments are installed; second-boot traces show
+  `IQtiRadioConfig/default`, `IImsRadio/imsradio0/1`, and `IQtiRadioStable/slot1/2`
+  resolving and registering via servicemanager with no registration denial, and
+  `org.codeaurora.ims` binds them under `vendor_qtelephony`.
+- Acceptance remaining: physical-SIM call, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests.
-- Dependencies: root blocker for MTR-002 and MTR-003.
 
 ### MTR-002: Android IMS implementation is absent
 
 - Severity: critical
-- Status: confirmed
+- Status: resolved on r4 (infrastructure); carrier-SIM feature validation pending
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
-- Evidence: the installed package/service audit finds no IMS implementation;
+- Evidence (base): the installed package/service audit finds no IMS implementation;
   `ImsResolver` reports no carrier or device MMTEL service.
 - Source: `packages/services/Telephony/res/values/config.xml:237-241`
-- Cause: no compatible `org.codeaurora.ims` package is installed and the default
-  MMTEL package is not selected by a metroid Telephony overlay.
-- Fix direction: package the compatible stock IMS stack and dependencies, select
-  it for MMTEL, and restore the served IMS radio declarations from MTR-001.
-- Acceptance: both slots bind and register MMTEL; VoLTE/VoWiFi, IMS SMS,
-  incoming/outgoing audio, and LTE/Wi-Fi handover pass with a carrier SIM.
+- Cause: no compatible `org.codeaurora.ims` package was installed and the default
+  MMTEL package was not selected by a metroid Telephony overlay.
+- Resolution (r4): the stock `org.codeaurora.ims` is installed as a
+  system_ext/priv-app, runs under `vendor_qtelephony`, and `ImsResolver` binds
+  MMTEL and EMERGENCY_MMTEL on both slots; `QImsService` receives
+  `UNSOL_SRV_STATUS_UPDATE` for both subscriptions.
+- Acceptance remaining: VoLTE/VoWiFi, IMS SMS, incoming/outgoing audio, and
+  LTE/Wi-Fi handover with a carrier SIM.
 
 ### MTR-003: eSIM is advertised without an LPA or usable eUICC backend
 
 - Severity: high
-- Status: confirmed
-- Impact: eSIM discovery, download, activation, deletion, and settings do not
-  work even though applications see the eUICC hardware feature.
-- Evidence: `EuiccManager` is disabled, no `EuiccService` package is installed,
-  and no eUICC binder service is present.
+- Status: resolved on r4 by not advertising eUICC
+- Impact: applications were presented an eUICC hardware feature for which no
+  LPA/EuiccService or eUICC binder backend existed, so discovery, download,
+  activation, deletion, and settings could not work.
+- Evidence (base): `EuiccManager` was disabled, no `EuiccService` package was
+  installed, and no eUICC binder service was present.
 - Source: `proprietary-files.txt:6`
-- Cause: no valid `EuiccService`/LPA is installed and qcrild LPA interfaces are
-  rejected by MTR-001.
-- Fix direction: either remove the eUICC feature until support exists, or package
-  a legally distributable LPA/UI with all dependencies and served declarations.
-- Acceptance: `EuiccManager.isEnabled()`, EID discovery, profile download,
-  enable/disable, reboot persistence, deletion, and physical-SIM coexistence.
+- Cause: `android.hardware.telephony.euicc` was advertised without a legally
+  distributable LPA/EuiccService and its served declarations.
+- Resolution (r4): the eUICC hardware feature is no longer advertised on the
+  installed build, so apps no longer see eSIM as available. eSIM remains
+  intentionally unavailable until a legally distributable LPA/UI with all
+  dependencies and served declarations is packaged.
+- Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
+  profile download, enable/disable, reboot persistence, deletion, and
+  physical-SIM coexistence.
 
 ### MTR-004: Android Power HAL cannot register
 
 - Severity: high
-- Status: confirmed
-- Impact: framework and SurfaceFlinger lack the device power-mode, boost, and
+- Status: resolved on r4
+- Impact: framework and SurfaceFlinger lacked the device power-mode, boost, and
   ADPF implementation.
-- Evidence: `android.hardware.power.IPower/default` is absent and framework
-  performance-hint diagnostics report ADPF unsupported.
+- Evidence (base): `android.hardware.power.IPower/default` was absent and framework
+  performance-hint diagnostics reported ADPF unsupported.
 - Source: `device.mk:264-271`
 - Cause: the stock-equivalent `android.hardware.power.IPower/default` declaration
-  is not installed, although the vendor power process runs.
-- Fix direction: install a standalone stock-matching Power AIDL VINTF fragment.
-- Acceptance: service registration, Power AIDL VTS, interaction/launch/camera
-  boosts, sustained ADPF sessions, WALT tracing, and suspend regression.
-- Note: independent of the accepted perf/WALT SELinux fix.
+  was not installed, although the vendor power process ran.
+- Resolution (r4): a stock-matching Power AIDL VINTF fragment is installed and
+  `android.hardware.power.IPower/default` registers on both boots.
+- Acceptance remaining: Power AIDL VTS, interaction/launch/camera boosts,
+  sustained ADPF sessions, WALT tracing, and suspend regression.
 
 ### MTR-005: framework thermal policy has no skin sensor or headroom
 
@@ -105,44 +112,53 @@ permission; it must never be committed to this public repository.
 ### MTR-006: launch API metadata incorrectly identifies Android 16 hardware
 
 - Severity: high
-- Status: confirmed configuration defect
-- Impact: compatibility, VSR, permission, and security behavior can be selected
+- Status: resolved on r4
+- Impact: compatibility, VSR, permission, and security behavior could be selected
   for an Android 16-launch device instead of the stock Android 15 launch level.
-- Evidence: installed properties report first/board API level 36.
-- Source: `lineage_metroid.mk:25`
-- Cause: `PRODUCT_SHIPPING_API_LEVEL := 36`; stock evidence records API 35 and
-  board API `202404`.
-- Fix direction: restore stock-matching first/board API metadata.
-- Acceptance: install-clean build, VINTF and CTS-focused checks, factory reset,
-  permissions, setup, and broad application regression.
+- Evidence (base): installed properties reported first/board API level 36.
+- Source: `lineage_metroid.mk`
+- Cause: `PRODUCT_SHIPPING_API_LEVEL` was set to 36; stock evidence records API 35
+  and board API `202404`.
+- Resolution (r4): installed properties report `ro.product.first_api_level=35`,
+  `ro.board.first_api_level=202404`, and `ro.product.device=metroid`.
+- Acceptance: factory reset, permissions, setup, and broad application regression
+  remain to be validated.
 
 ### MTR-007: security-patch metadata is stale and incomplete
 
 - Severity: high
-- Status: confirmed
-- Impact: the August build reports platform SPL `2026-02-01`, while vendor and
-  boot SPL values are blank. Stock baseline evidence is newer.
-- Evidence: installed properties report platform SPL `2026-02-01`; vendor and
-  boot-image SPL properties are blank.
-- Source: `vendor/lineage/release/flag_values/bp2a/RELEASE_PLATFORM_SECURITY_PATCH.textproto:1-4`
-- Fix direction: integrate available fixes and declare honest platform, vendor,
-  boot, and rollback-index levels; never advance metadata beyond incorporated code.
+- Status: partially resolved on r4; boot-image SPL still blank
+- Impact: consumers can misjudge the incorporated security-patch level.
+- Evidence: installed properties report platform SPL `2026-02-01`;
+  `ro.vendor.build.security_patch=2025-06-05`; `ro.bootimage.build.version.security_patch`
+  is blank.
+- Source: `build/soong/scripts/gen_build_prop.py:137-197`
+- Cause: the Soong ramdisk `build.prop` generator emits common `bootimage`
+  identity properties but omits the platform security-patch property. The boot
+  and init_boot AVB descriptors independently and correctly retain the measured
+  stock boot-chain SPL `2025-04-05`.
+- Source fix: staged for the next build by emitting the platform SPL as
+  `ro.bootimage.build.version.security_patch`. A focused ramdisk/boot/init_boot
+  build produces runtime metadata `2026-02-01` while preserving both AVB SPL
+  descriptors at `2025-04-05`. Not installed or runtime-accepted yet.
 - Acceptance: patch provenance/CVE ledger plus consistent build properties and
   AVB rollback indexes.
 
 ### MTR-008: accepted release records and bootstrap artifacts are inconsistent
 
 - Severity: high
-- Status: confirmed maintainer/release defect
+- Status: resolved for r4 records; verify before each future release
 - Impact: users and maintainers can select the wrong OTA, source lock, recovery
-  image set, or checksum record; the accepted build is not reproducible from a
-  complete pinned manifest.
-- Evidence: maintainer release pointers still name the August 4 OTA while
-  `BASELINE.md` names the accepted August 5 candidate.
+  image set, or checksum record.
+- Evidence (base): maintainer release pointers still named the August 4 OTA while
+  `BASELINE.md` named the August 5 candidate.
 - Cause: `releases/current`, install documentation, lock files, source capture,
   and recovery bootstrap were not updated atomically.
-- Fix direction: generate one immutable payload-derived bootstrap bundle; align
-  current artifact, hashes, lock, manifest, install guide, and reachable commits.
+- Resolution (r4): `releases/current` points to
+  `candidate_20260806_144606_ims-policy-r4`; `docs/BASELINE.md` and the device
+  `BASELINE.md` name the same ZIP/hash/source; the verified snapshot seals
+  `VERIFICATION.txt`, `SHA256SUMS`, the repo-manifest lock, payload-derived
+  bootstrap, and `source/*-state.txt`.
 - Acceptance: one consistency audit proves every canonical record names the same
   ZIP/hash/revisions and a clean checkout reproduces target-files.
 
@@ -267,19 +283,27 @@ permission; it must never be committed to this public repository.
 - Acceptance: extension API, pocket/posture/orientation, UDFPS/display
   coordination, batching, wake-up delivery, suspend, and HAL restart.
 
-### MTR-017: post-OTA care-map verification did not run
+## Reclassified reports
 
-- Severity: high
-- Status: confirmed release-path defect
-- Impact: the target slot was accepted without the intended first-boot block
-  verification pass. AVB still protects mounted partitions.
-- Evidence: first-boot update logs state that the care map is missing and skip
-  partition verification before marking the slot successful.
-- Cause: `/data/ota_package/care_map.pb` was absent after recovery sideload.
-- Fix direction: trace recovery/update-engine handoff and require care-map
-  presence before accepting a candidate.
-- Acceptance: `VerifyPartitions()` completes before slot success; authorized
-  corruption testing proves rejection/fallback.
+### MTR-017: recovery sideload does not stage the care map
+
+- Severity: none
+- Status: closed; expected upstream recovery-sideload behavior, not a metroid
+  defect or release blocker
+- Impact: `update_verifier` skips its additional cared-block read after recovery
+  sideload. AVB still verifies mounted partitions.
+- Evidence: r4 first-boot logs state `/data/ota_package/care_map.pb` does not
+  exist and skip partition verification; `update_verifier` logs "Deferred marking
+  slot 0 as booted successfully." The slot is subsequently marked successful.
+- Cause: upstream A/B recovery sideload streams the OTA through FUSE and passes
+  only `payload.bin` and `payload_properties.txt` to `update_engine_sideload`.
+  It has no care-map staging path. `/data/ota_package` also uses the required
+  userdata encryption policy. The rooted userspace `update_device.py` test tool
+  stages `care_map.pb`; recovery does not.
+- Resolution: do not add a device-specific recovery write into encrypted
+  userdata. Gate recovery-sideload releases on payload/AVB audits, target-slot
+  activation, snapshot state, slot success, and two clean boots. Use a normal
+  userspace updater path when explicit care-map verification is required.
 
 ## P2: latent defects and cleanup
 

@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Metroid Maintainer <maintainer@localhost>
+Date: Thu, 6 Aug 2026 18:00:00 +0000
+Subject: [PATCH] gen_build_prop: emit boot image security patch
+
+The ramdisk build property module uses the bootimage partition name, but the
+common property generator omits its platform security patch. This leaves
+ro.bootimage.build.version.security_patch blank at runtime even though the boot
+header carries the platform patch level and the AVB descriptors carry their
+separate boot-chain patch levels.
+
+Emit the platform patch level for bootimage, matching the existing system
+property and boot header semantics.
+---
+ scripts/gen_build_prop.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/gen_build_prop.py b/scripts/gen_build_prop.py
+index 05fcf5460..3a6187355 100644
+--- a/scripts/gen_build_prop.py
++++ b/scripts/gen_build_prop.py
+@@ -194,6 +194,8 @@ def generate_common_build_props(args):
+   print(f"ro.{partition}.build.version.release_or_codename={config['Platform_version_name']}")
+   print(f"ro.{partition}.build.version.sdk={config['Platform_sdk_version']}")
+   print(f"ro.{partition}.build.version.sdk_full={config['Platform_sdk_version_full']}")
++  if partition == "bootimage":
++    print(f"ro.{partition}.build.version.security_patch={config['Platform_security_patch']}")
+ 
+ def generate_build_info(args):
+   print()
+-- 
+2.43.0

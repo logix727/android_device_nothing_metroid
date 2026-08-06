@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "record_type": "public-offline-verified-candidate",
+  "status": "not-published-pending-target-device-validation",
+  "release": "lineage-23.0-20260806-r4",
+  "ota": {
+    "file": "lineage-23.0-20260806-UNOFFICIAL-metroid.zip",
+    "size": 4211041946,
+    "sha256": "22e98f31182daa6e0645af48d64b7f7617aedf8b180250815759171436b260df"
+  },
+  "source": {
+    "tag": "lineage-23.0-20260806-source-r4",
+    "device_repository": "https://github.com/logix727/android_device_nothing_metroid",
+    "device_revision": "db3aead85743d8e38335708b73334b93555da147",
+    "kernel_repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "vendor_repository": "https://github.com/logix727/android_vendor_nothing_metroid",
+    "vendor_revision": "4414182c43414406038a477d6a1162a535b9a28a",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 0,
+    "bootstrap_source": "payload-derived"
+  },
+  "runtime_validation": "passed-two-boots-no-cts",
+  "runtime_notes": [
+    "org.codeaurora.ims runs as vendor_qtelephony; IImsRadio imsradio0/1 and IQtiRadioConfig resolve and bind",
+    "ImsResolver registers MMTEL and EMERGENCY_MMTEL on both slots; service-status updates for both subscriptions",
+    "android.hardware.power.IPower/default registers",
+    "no IMS/radio/vendor-property AVC denials across two boots; empty crash buffer",
+    "installed slot A; Enforcing; encrypted; slot marked successful on both boots",
+    "eUICC not advertised; no LPA/EuiccService installed on r4",
+    "recovery sideload did not stage care_map.pb, matching upstream A/B recovery behavior (MTR-017 closed)"
+  ],
+  "open_release_blockers": [
+    "physical-SIM call, SMS, data, IMS, emergency UI acceptance (no active subscription)",
+    "boot-image security-patch level still blank (MTR-007)",
+    "Redistribution clearance for the proprietary IMS package not yet established"
+  ],
+  "publication": {
+    "ota_download": "not-published",
+    "proprietary_redistribution_clearance": "not-established"
+  }
+}
