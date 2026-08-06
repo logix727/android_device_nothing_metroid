@@ -44,7 +44,7 @@ builder-supplied and are verified separately.
    ```bash
    repo init \
      -u https://github.com/logix727/android_device_nothing_metroid.git \
-     -b refs/tags/lineage-23.0-20260806-source-r2 \
+     -b refs/tags/lineage-23.0-20260806-source-r3 \
      -m manifest/lineage-23.0-20260806-base.xml
    repo sync -c
    device/nothing/metroid/patches/apply-series.sh "$PWD"

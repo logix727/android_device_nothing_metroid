@@ -6,10 +6,10 @@
   "product": "lineage_metroid",
   "release": "bp2a",
   "variant": "userdebug",
-  "source_tag": "lineage-23.0-20260806-source-r2",
+  "source_tag": "lineage-23.0-20260806-source-r3",
   "manifest": {
     "path": "manifest/lineage-23.0-20260806-base.xml",
-    "sha256": "0016015891714b80fe87e5556cc99a85b512749a64fb3690993e63fe8cf8f126",
+    "sha256": "71d37037ae1db0a8d44c6eee3ad4fd4170c2ce5d09d3d5a434b69396b3694168",
     "project_count": 1132
   },
   "carry_series": {
