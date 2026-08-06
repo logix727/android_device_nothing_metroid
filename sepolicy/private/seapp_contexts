@@ -1,0 +1,3 @@
+# The extracted IMS APK retains its stock signature, so it does not receive the
+# platform seinfo selector used by Qualcomm's generic rule.
+user=_app isPrivApp=true name=org.codeaurora.ims domain=vendor_qtelephony type=app_data_file levelFrom=all
