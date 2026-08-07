@@ -1,8 +1,0 @@
-android_app {
-    name: "MetroidEuiccPartner",
-    srcs: ["src/**/*.kt"],
-    resource_dirs: ["res"],
-    sdk_version: "current",
-    certificate: "platform",
-    product_specific: true,
-}

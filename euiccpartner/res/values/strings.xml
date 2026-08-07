@@ -1,5 +1,0 @@
-<resources>
-    <string name="sim_slot_mappings_json" translatable="false">
-        { sim-slot-mappings:[ { devices:[metroid], esim-slot-ids:[1], psim-slot-ids:[0] } ] }
-    </string>
-</resources>
