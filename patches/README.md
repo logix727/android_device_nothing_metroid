@@ -17,7 +17,9 @@ The framework patch carries the UDFPS coordinate override and two
 `system_server` boot-safety fixes. The recovery patch raises minui's input
 device capacity so the PMIC power and volume-down keys are registered after
 the phone's squeeze-sensor input nodes. The Soong patch restores the platform
-security-patch property in the boot/init_boot ramdisk build properties.
+security-patch property in the boot/init_boot ramdisk build properties. The
+telephony patch supports property-gated legacy eUICC transports and service
+selection without changing devices that use standard card-ID discovery.
 
 The series includes every required framework, app, HAL, build, and recovery
 patch. Do not apply it to the recorded post-patch commits.
