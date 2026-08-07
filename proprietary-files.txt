@@ -118,7 +118,6 @@ system_ext/etc/permissions/telephony_system-ext_privapp-permissions-qti.xml
 system_ext/priv-app/ims/ims.apk;PRESIGNED
 product/priv-app/EuiccGoogle/EuiccGoogle.apk;PRESIGNED
 product/app/uimlpaservice/uimlpaservice.apk
-product/lib64/libjni_aidl_service.so
 system_ext/etc/permissions/vendor.qti.hardware.c2pa-V1-java.xml
 system_ext/etc/permissions/vendor.qti.ims.rcsservice.xml
 system_ext/etc/permissions/vendor.qti.imsdatachannel.xml
