@@ -90,12 +90,6 @@ permission; it must never be committed to this public repository.
   telephony wrapper, and provide a compatibility uses-library for Qualcomm's
   orphaned `uimlpalibrary.jar` declaration. Focused Soong/uses-library/signature
   validation passes; runtime acceptance remains.
-- r14 evidence: QTI LPA loads its stock JNI bridge, binds both live modem LPA
-  instances, registers callbacks with qcril, and connects `EuiccConnector`.
-  AOSP still passes slot `-1` because RadioConfig exposes no card ID/EID.
-- Final staged compatibility: property-gated QTI backend selection, legacy slot
-  `1` routing using AOSP's documented unsupported-card compatibility path, and
-  standard `non_removable_euicc_slots={1}`. Normal devices remain unchanged.
 - Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
   profile download, enable/disable, reboot persistence, deletion, and
   physical-SIM coexistence.

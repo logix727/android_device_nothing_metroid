@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Stock metroid maps the built-in eUICC to physical slot 1. -->
-    <integer-array name="non_removable_euicc_slots">
-        <item>1</item>
-    </integer-array>
-</resources>
