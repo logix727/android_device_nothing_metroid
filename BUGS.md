@@ -72,6 +72,17 @@ permission; it must never be committed to this public repository.
   installed build, so apps no longer see eSIM as available. eSIM remains
   intentionally unavailable until a legally distributable LPA/UI with all
   dependencies and served declarations is packaged.
+- r15 forensic result: the complete stock application/transport stack was
+  integrated temporarily. Framework selected QTI automatically, routed the
+  documented legacy card-ID path to built-in slot 1, loaded the stock JNI
+  bridge, bound both `IUimLpa/UimLpa0` and `/UimLpa1`, and launched Google's
+  profile UI. The modem then returned `UimLpaResult=1` with an empty EID.
+- Conclusion: the remaining blocker is below Android UI/framework/LPA, most
+  likely stock modem NV/MCFG, persisted UIM provisioning, or SKU configuration.
+  Current QCRIL executable/database inputs are hash-identical to stock, but no
+  stock runtime/persist capture exists for comparison. The unproven feature and
+  transport stack were reverted; retain honest no-eSIM behavior until that
+  evidence is available.
 - Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
   profile download, enable/disable, reboot persistence, deletion, and
   physical-SIM coexistence.
