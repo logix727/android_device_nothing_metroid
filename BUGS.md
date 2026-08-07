@@ -80,16 +80,6 @@ permission; it must never be committed to this public repository.
   the stock ODM feature, and add Lineage `EuiccPolicy`. Focused package/product
   builds pass with preserved APK signatures; not installed or functionally
   tested yet.
-- r10/r11 evidence: Google SIM Manager and the corrected lowercase metroid slot
-  map load, but `EuiccManager` remains disabled because AOSP radio slot status
-  reports no eUICC/EID. Stock's self-contained Qualcomm LPA transport is required
-  to bridge framework `EuiccService` calls to the live `IUimLpa/UimLpa0` and
-  `/UimLpa1` services.
-- Transport fix staged: package the stock QTI LPA APK with the current platform
-  signature and stock `vendor_qtelephony` domain, enable the real product
-  telephony wrapper, and provide a compatibility uses-library for Qualcomm's
-  orphaned `uimlpalibrary.jar` declaration. Focused Soong/uses-library/signature
-  validation passes; runtime acceptance remains.
 - Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
   profile download, enable/disable, reboot persistence, deletion, and
   physical-SIM coexistence.
