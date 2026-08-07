@@ -20,6 +20,9 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
 - Official MindTheGapps recovery add-on flow passes; Play Store/GMS/GSF/Google
   Setup Wizard persist across two boots. Google files remain a separate add-on,
   not part of the ROM artifact or public source.
+- Stock eSIM application layer is staged: Google SIM Manager, metroid partner,
+  Lineage EuiccPolicy, ODM feature declaration, and exact permission policy.
+  Lower `IUimLpa` modem services are already live; runtime acceptance remains.
 
 ## Blocker priorities (in order)
 

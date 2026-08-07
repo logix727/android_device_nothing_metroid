@@ -7,6 +7,20 @@ soong_namespace {
     ],
 }
 
+prebuilt_etc {
+    name: "default-permissions-com.google.android.euicc.xml",
+    src: "configs/permissions/default-permissions-com.google.android.euicc.xml",
+    sub_dir: "default-permissions",
+    product_specific: true,
+}
+
+prebuilt_etc {
+    name: "privapp-permissions-com.google.android.euicc.xml",
+    src: "configs/permissions/privapp-permissions-com.google.android.euicc.xml",
+    sub_dir: "permissions",
+    product_specific: true,
+}
+
 install_symlink {
     name: "firmware_wlanmdsp.otaupdate_symlink",
     vendor: true,

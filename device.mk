@@ -81,6 +81,19 @@ PRODUCT_PACKAGES += \
 # Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
+# Stock metroid exposes two modem LPA instances. Google SIM Manager supplies the
+# privileged EuiccService while EuiccPolicy provides Lineage partner policy.
+PRODUCT_PACKAGES += \
+    EuiccPolicy \
+    default-permissions-com.google.android.euicc.xml \
+    privapp-permissions-com.google.android.euicc.xml
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.telephony.euicc.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/android.hardware.telephony.euicc.xml
+
+PRODUCT_PRODUCT_PROPERTIES += \
+    masterclear.allow_retain_esim_profiles_after_fdr=true
+
 # vendor_boot IS built (2026-07-28). This was `false` while the tree shipped a prebuilt
 # vendor_boot.img; leaving it false now is actively harmful, not merely redundant. With
 # BUILDING_VENDOR_BOOT_IMAGE unset, build/make/core/Makefile folds
