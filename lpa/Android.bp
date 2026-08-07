@@ -6,10 +6,3 @@ java_library {
     product_specific: true,
     sdk_version: "system_current",
 }
-
-prebuilt_etc {
-    name: "uimlpalibrary.xml",
-    src: "uimlpalibrary.xml",
-    sub_dir: "permissions",
-    product_specific: true,
-}

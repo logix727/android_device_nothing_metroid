@@ -89,7 +89,6 @@ PRODUCT_PACKAGES += \
     qti-telephony-hidl-wrapper-prd \
     qti_telephony_hidl_wrapper_prd.xml \
     uimlpalibrary \
-    uimlpalibrary.xml \
     default-permissions-com.google.android.euicc.xml \
     privapp-permissions-com.google.android.euicc.xml
 
