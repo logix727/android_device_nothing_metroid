@@ -47,6 +47,9 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
 - Nothing's stock `sltntc` producer, policy, enable property, and stock Thermal
   HAL provide live `shell_max`, framework skin thresholds, and headroom across
   two installed boots (MTR-005 framework path resolved).
+- Qualcomm's source QSPA service replaces a dangling copied RC and restores the
+  stock `IQspa/default` declaration. Focused build/VINTF pass; runtime acceptance
+  remains (MTR-021).
 - `system`, `product`, and `system_ext` use writable ext4 with measured add-on
   reserves so Lineage's recommended Android 16 ARM64 MindTheGapps installer can
   mount and populate them. Root vbmeta keeps signature/chain verification but

@@ -173,6 +173,10 @@ PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/sm8750/display
 # extraction tree.
 PRODUCT_PACKAGES +=     android.hardware.thermal-service.qti.stock
 
+# Qualcomm subsystem property aggregation service. The source module owns its
+# stock-matching init and VINTF fragments; do not copy the proprietary RC alone.
+PRODUCT_PACKAGES +=     vendor.qti.qspa-service
+
 # USB + USB gadget HAL (vendor/qcom/opensource/usb/hal, default namespace)
 PRODUCT_PACKAGES +=     android.hardware.usb-service.qti     android.hardware.usb.gadget-service.qti
 

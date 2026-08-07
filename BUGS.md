@@ -381,6 +381,10 @@ permission; it must never be committed to this public repository.
   do not duplicate MTR-001, MTR-015, or MTR-016 as separate symptoms.
 - Acceptance: zero unapproved normal-boot references to missing executables or
   imports across static audit and two boots.
+- Source fix staged: replace the copied `vendor.qti.qspa-service.rc` that pointed
+  to an absent executable with Qualcomm's source-built module, which owns the
+  stock-matching RC and `IQspa/default` VINTF fragment. Focused build and VINTF
+  validation pass; runtime acceptance remains.
 
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 

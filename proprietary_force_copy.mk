@@ -18,7 +18,6 @@ PRODUCT_COPY_FILES += \
     vendor/nothing/metroid/proprietary/vendor/etc/aidl/le_audio/aidl_audio_set_configurations.json:$(TARGET_COPY_OUT_VENDOR)/etc/aidl/le_audio/aidl_audio_set_configurations.json \
     vendor/nothing/metroid/proprietary/vendor/etc/aidl/le_audio/aidl_audio_set_scenarios.json:$(TARGET_COPY_OUT_VENDOR)/etc/aidl/le_audio/aidl_audio_set_scenarios.json \
     vendor/nothing/metroid/proprietary/vendor/etc/init/android.hardware.drm-service.clearkey.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/android.hardware.drm-service.clearkey.rc \
-    vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.qti.qspa-service.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/vendor.qti.qspa-service.rc \
     vendor/nothing/metroid/proprietary/vendor/etc/permissions/advancedSample_camera_extensions.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/advancedSample_camera_extensions.xml \
     vendor/nothing/metroid/proprietary/vendor/etc/permissions/android.hardware.hardware_keystore.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.hardware_keystore.xml \
     vendor/nothing/metroid/proprietary/vendor/etc/res/images/default/charger/battery_fail.png:$(TARGET_COPY_OUT_VENDOR)/etc/res/images/default/charger/battery_fail.png \
@@ -226,17 +225,17 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/nothing/metroid/proprietary/vendor/etc/init/android.hardware.bluetooth@aidl-service-qti.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/android.hardware.bluetooth@aidl-service-qti.rc
 
-# BISECT 2026-07-25: init.qti.display_boot.sh and vendor.qti.qspa-service REMOVED from this
+# BISECT 2026-07-25: init.qti.display_boot.sh REMOVED from this
 # (ipacm RESTORED 2026-07-25: its Android.bp also ships the tetheroffload VINTF fragment, so
 #  removing the binary left android.hardware.tetheroffload IOffload/default DECLARED WITH NO
 #  SERVER -- a guaranteed servicemanager stall. Never drop a blob whose module owns a fragment.)
-# list -- they are absent from the known-booting vendor, and force-copying them in makes
+# list -- it is absent from the known-booting vendor, and force-copying it in makes
 # previously-dangling services actually run (display_boot.sh alone sets ~25 vendor.display.* props).
 # NB: never comment a line out inside a `\` continuation list -- make joins lines first, so the '#'
 # swallows every following entry in the block. Delete the line instead.
 # dangling-rc sweep RE-ADD (2026-07-10; first added 07-09, lost in known-good revert):
 # services whose .rc ships but binary didn't. ipacm=IPA tethering/offload, clearkey DRM,
-# qspa, hlosminkdaemon (TEE mink), display_boot script.
+# hlosminkdaemon (TEE mink), display_boot script.
 PRODUCT_COPY_FILES += \
     vendor/nothing/metroid/proprietary/vendor/bin/ipacm:$(TARGET_COPY_OUT_VENDOR)/bin/ipacm \
     vendor/nothing/metroid/proprietary/vendor/bin/hlosminkdaemon:$(TARGET_COPY_OUT_VENDOR)/bin/hlosminkdaemon \
