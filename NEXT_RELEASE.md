@@ -22,7 +22,9 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
   not part of the ROM artifact or public source.
 - Stock eSIM application layer is staged: Google SIM Manager, metroid partner,
   Lineage EuiccPolicy, ODM feature declaration, and exact permission policy.
-  Lower `IUimLpa` modem services are already live; runtime acceptance remains.
+  Lower `IUimLpa` modem services are already live. A corrected source partner
+  maps lowercase `metroid` to eSIM slot 1, and the stock QTI LPA transport plus
+  required product libraries are staged; end-to-end runtime acceptance remains.
 
 ## Blocker priorities (in order)
 

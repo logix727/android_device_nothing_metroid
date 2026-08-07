@@ -1,0 +1,8 @@
+java_library {
+    name: "uimlpalibrary",
+    provides_uses_lib: "com.qualcomm.qti.lpa.uimlpalibrary",
+    srcs: ["src/Compatibility.java"],
+    installable: true,
+    product_specific: true,
+    sdk_version: "system_current",
+}
