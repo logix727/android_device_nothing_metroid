@@ -46,7 +46,9 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
   two installed boots (MTR-005 framework path resolved).
 - `system`, `product`, and `system_ext` use writable ext4 with measured add-on
   reserves so Lineage's recommended Android 16 ARM64 MindTheGapps installer can
-  mount and populate them. Build/install/runtime acceptance remains pending.
+  mount and populate them. Root vbmeta keeps signature/chain verification but
+  sets only AVB's hashtree-disabled bit so intentional recovery add-on writes
+  survive boot. Build/install/runtime acceptance remains pending.
 
 ## Community coverage still to test
 

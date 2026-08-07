@@ -280,6 +280,10 @@ BOARD_AVB_ALGORITHM := SHA256_RSA4096
 # METROID_AVB_KEY_PATH to a private key outside this repository.
 METROID_AVB_KEY_PATH ?= external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_KEY_PATH := $(METROID_AVB_KEY_PATH)
+# Recovery add-ons modify the signed dynamic partitions after OTA installation.
+# Keep vbmeta signature/chain verification enabled, but do not activate the
+# stale build-time hashtrees over those intentional post-install writes.
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --set_hashtree_disabled_flag
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 
 BOARD_AVB_BOOT_KEY_PATH := $(METROID_AVB_KEY_PATH)

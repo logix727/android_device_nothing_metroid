@@ -27,7 +27,9 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
   cable reconnect, late HAL start, and HAL restart after USB changes.
 - Physical UDFPS geometry is `(630,2539,r=107)`. Decorative enrollment/UI
   resources may move; touch/LHBM geometry must not be guessed.
-- Root vbmeta flags remain `0`. Do not disable verity/verification.
+- Root vbmeta may set only AVB's hashtree-disabled bit (`1`) when required for
+  official recovery add-ons. Never set verification-disabled (`2`); signed
+  vbmeta chains and rollback verification must remain active.
 - Vendor remains ext4; vendor_boot page size remains `0x1000`.
 - Do not manually force an OTA target slot. Use coherent recovery sideloads.
 - Product/package changes require install-clean staging because removed RC/VINTF
