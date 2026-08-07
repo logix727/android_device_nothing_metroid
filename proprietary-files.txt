@@ -117,7 +117,6 @@ system_ext/etc/permissions/qti_telephony_utils.xml
 system_ext/etc/permissions/telephony_system-ext_privapp-permissions-qti.xml
 system_ext/priv-app/ims/ims.apk;PRESIGNED
 product/priv-app/EuiccGoogle/EuiccGoogle.apk;PRESIGNED
-system/app/GoogleEuiccPartner_Metroid/GoogleEuiccPartner_Metroid.apk;PRESIGNED
 system_ext/etc/permissions/vendor.qti.hardware.c2pa-V1-java.xml
 system_ext/etc/permissions/vendor.qti.ims.rcsservice.xml
 system_ext/etc/permissions/vendor.qti.imsdatachannel.xml

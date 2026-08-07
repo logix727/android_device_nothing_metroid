@@ -85,6 +85,7 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 # privileged EuiccService while EuiccPolicy provides Lineage partner policy.
 PRODUCT_PACKAGES += \
     EuiccPolicy \
+    MetroidEuiccPartner \
     default-permissions-com.google.android.euicc.xml \
     privapp-permissions-com.google.android.euicc.xml
 
