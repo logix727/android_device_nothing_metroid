@@ -1,5 +1,13 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## Recovery sideload progress
+
+ADB intentionally scales normal sideload progress by 47 because recovery usually
+requests the package bytes about twice for verification and installation. A
+successful A/B sideload may therefore stop near 47 percent and print
+`adb: failed to read command: Success`; use recovery's final status, not the host
+percentage, as the result.
+
 ## 2026-08-06 maintainer-local candidate (r7, thermal skin)
 
 Installed and tested privately from
