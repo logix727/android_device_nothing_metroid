@@ -59,7 +59,7 @@ permission; it must never be committed to this public repository.
 ### MTR-003: eSIM is advertised without an LPA or usable eUICC backend
 
 - Severity: high
-- Status: stock-backed source integration staged; runtime acceptance pending
+- Status: resolved on r4 by not advertising eUICC
 - Impact: applications were presented an eUICC hardware feature for which no
   LPA/EuiccService or eUICC binder backend existed, so discovery, download,
   activation, deletion, and settings could not work.
@@ -72,14 +72,6 @@ permission; it must never be committed to this public repository.
   installed build, so apps no longer see eSIM as available. eSIM remains
   intentionally unavailable until a legally distributable LPA/UI with all
   dependencies and served declarations is packaged.
-- New stock evidence: metroid exposes live `IUimLpa/UimLpa0` and `/UimLpa1`
-  modem services. Stock ships Google SIM Manager, a metroid partner APK, the
-  eUICC feature in ODM, exact Google-certificate permission grants, and profile
-  retention policy.
-- Source integration: restore those two stock-signed APKs privately, advertise
-  the stock ODM feature, and add Lineage `EuiccPolicy`. Focused package/product
-  builds pass with preserved APK signatures; not installed or functionally
-  tested yet.
 - Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
   profile download, enable/disable, reboot persistence, deletion, and
   physical-SIM coexistence.
