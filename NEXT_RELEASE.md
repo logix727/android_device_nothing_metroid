@@ -3,20 +3,23 @@
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
 Canonical baseline: [`BASELINE.md`](BASELINE.md).
 
-## Installed baseline (r7, `23.0-20260806-UNOFFICIAL-metroid`)
+## Installed baseline (r9, `23.0-20260807-UNOFFICIAL-metroid`)
 
 - `org.codeaurora.ims` runs as `vendor_qtelephony`; IMS radio/radio-config and
   qti-radio-stable services resolve and bind; MMTEL and EMERGENCY_MMTEL register
   on both slots; no IMS/radio/vendor-property AVCs across two boots.
 - Power HAL `android.hardware.power.IPower/default` registers.
 - `ro.product.first_api_level=35`, `ro.board.first_api_level=202404`.
-- eUICC is not advertised on r7 (no LPA/EuiccService installed).
-- Slot B, Enforcing, encrypted, slot marked successful, empty crash buffer after
+- eUICC is not advertised on r9 (no LPA/EuiccService installed).
+- Slot A, Enforcing, encrypted, slot marked successful, empty crash buffer after
   two boots; no pending snapshot merge.
 - Boot-image SPL is populated; GNSS property and media-quality lookup fixes pass
   focused runtime tests.
 - Live framework skin temperature, stock thresholds, and non-NaN headroom pass
   across two boots with the stock Thermal HAL and confined `sltntc` daemon.
+- Official MindTheGapps recovery add-on flow passes; Play Store/GMS/GSF/Google
+  Setup Wizard persist across two boots. Google files remain a separate add-on,
+  not part of the ROM artifact or public source.
 
 ## Blocker priorities (in order)
 
@@ -48,7 +51,7 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
   reserves so Lineage's recommended Android 16 ARM64 MindTheGapps installer can
   mount and populate them. Root vbmeta keeps signature/chain verification but
   sets only AVB's hashtree-disabled bit so intentional recovery add-on writes
-  survive boot. Build/install/runtime acceptance remains pending.
+  survive boot. Installed and accepted across two r9 boots.
 
 ## Community coverage still to test
 

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "record_type": "public-target-validated-candidate",
+  "status": "not-published-pending-proprietary-redistribution-clearance",
+  "release": "lineage-23.0-20260807-r9",
+  "ota": {
+    "file": "lineage-23.0-20260807-UNOFFICIAL-metroid.zip",
+    "size": 4090017872,
+    "sha256": "70a1406da079046b746cf952debfac00722fbdc994c481c74388db7ef5dc065c"
+  },
+  "source": {
+    "device_repository": "https://github.com/logix727/android_device_nothing_metroid",
+    "device_revision": "7a71f597d4e105ba70ee012ad48dc366f0fa4858",
+    "kernel_repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass-normalized",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 1,
+    "verification_disabled": false
+  },
+  "runtime_validation": "passed-two-boots-focused-no-cts",
+  "runtime_notes": [
+    "installed slot A; Enforcing; encrypted; empty crash buffer and tombstones",
+    "MindTheGapps installed separately before first boot and persists across two boots",
+    "Play Store, GMS, GSF, and Google Setup Wizard present",
+    "thermal headroom and core power, radio, camera, and GNSS services remain healthy"
+  ],
+  "add_on": {
+    "name": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+    "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28",
+    "included_in_rom": false,
+    "redistributed": false
+  },
+  "publication": {
+    "ota_download": "not-published",
+    "reason": "proprietary redistribution clearance not established",
+    "github_file_limit": "OTA exceeds 2 GiB GitHub release asset limit"
+  }
+}
