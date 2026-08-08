@@ -75,9 +75,9 @@ guesses.
 
 ### WP3: Bluetooth and audio
 
-- MTR-010: audit effective property wiring against stock (the legacy
-  `product.prop` file is not consumed), then enable only stock-supported LE Audio
-  profiles and test real LC3 hardware.
+- MTR-010 source fix staged: `product.prop` is consumed and overrode the stock
+  vendor profile enables. Remove eight false gates and restore stock hearing-aid
+  and allow-list values; then test real LC3 hardware.
 - MTR-025: align MusicFX service discovery with installed AudioFX.
 - Validate USB-C audio, HFP/SCO, A2DP fallback, volume coordination, and suspend.
 

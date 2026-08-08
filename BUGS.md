@@ -275,15 +275,21 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-010: LE Audio profile family is explicitly disabled
 
 - Severity: high
-- Status: confirmed configuration defect
+- Status: source-fixed; runtime/hardware acceptance pending
 - Impact: unicast, broadcast, VCP, CSIP, HAP, MCP, and CCP cannot start.
 - Evidence: all eight installed LE Audio profile properties and the hearing-aid
   feature override are `false`.
-- Source: `product.prop:12-29`
-- Cause: effective product properties disable the profile family despite stock
-  enabling it and the audio policy containing LC3 routes.
-- Fix direction: enable supported profiles in the product property layer and
-  handle any persisted hearing-aid flag migration.
+- Source: `product.prop`, `vendor.prop`, `system_ext.prop`
+- Root cause: consumed product properties set eight profiles false after the
+  stock-matching vendor properties set them true. Product precedence disabled
+  BAP unicast/broadcast, CCP, CSIP, HAP, MCP, and VCP before controller
+  capability checks; no kernel, firmware, HAL, VINTF, or module deficiency was
+  found.
+- Source fix: remove the product false overrides, restore stock hearing-aid UI
+  flag true, and restore stock LE Audio allow-list bypass false. Runtime
+  controller capability checks remain authoritative. Existing devices retain
+  both old `persist.*` values in `/data`; the device init migration resets them
+  to stock on boot.
 - Acceptance: real LC3 earbuds for playback, microphone, calls, volume/set
   coordination, broadcast, reconnect, suspend, and A2DP fallback.
 
