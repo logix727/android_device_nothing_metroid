@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "record_type": "public-target-validated-candidate",
+  "status": "not-published-pending-proprietary-redistribution-clearance",
+  "release": "lineage-23.0-20260808-r20",
+  "rom": {
+    "file": "lineage-23.0-20260808-UNOFFICIAL-metroid.zip",
+    "size": 4094884415,
+    "sha256": "8a7ed31caa2415c9de8f84eb5c0411ffe497a94a313103d86bfef9cf11b5911f"
+  },
+  "source": {
+    "device_revision": "758535261f6b6ec22ea9564d57762bdde8c9e2c4",
+    "private_vendor_revision": "636496ba47257fe7a8673af07eb54b5eb06b06de",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass-normalized",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 1,
+    "verification_disabled": false
+  },
+  "runtime_validation": "passed-two-boots-focused-no-cts",
+  "verified": [
+    "normal-system update_engine installation with no recovery interaction",
+    "Lineage backuptool preserved MindTheGapps, addon.d, and Google policy",
+    "Nothing ICharge/default registered and stable in Enforcing domain",
+    "no charging HAL AVCs or new native tombstones",
+    "slot B, encrypted, snapshot state none, thermal headroom valid"
+  ],
+  "unverified": [
+    "hot-battery derating and framework severity under controlled load",
+    "wireless and reverse-wireless charging matrix",
+    "physical-SIM carrier acceptance and real eSIM profile lifecycle",
+    "remaining camera, Bluetooth/audio, haptic, NFC, USB, and suspend backlog"
+  ]
+}

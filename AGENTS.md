@@ -7,11 +7,11 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 
 - Build: `23.0-20260808-UNOFFICIAL-metroid`
 - OTA SHA-256:
-  `d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243`
-- Artifact: `releases/candidate_20260807_223220_esim-stockfw-r17/`; not a public
+  `8a7ed31caa2415c9de8f84eb5c0411ffe497a94a313103d86bfef9cf11b5911f`
+- Artifact: `releases/candidate_20260808_175755_charge-updater-r20/`; not a public
   release. `org.codeaurora.ims` runs as `vendor_qtelephony` with MMTEL bound on
   both slots and no IMS/radio AVCs across two boots.
-- Last recorded state: slot A, boot complete across two boots, SELinux Enforcing,
+- Last recorded state: slot B, boot complete across two boots, SELinux Enforcing,
   encrypted data, slot marked successful. Both modem slots use the matching A16
   stock modem build and MindTheGapps was separately sideloaded from new-slot
   recovery. See `BASELINE.md` before changing either companion input.

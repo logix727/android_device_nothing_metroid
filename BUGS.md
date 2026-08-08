@@ -236,7 +236,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-009: Nothing charging-policy HAL is disabled and undeclared
 
 - Severity: high
-- Status: confirmed
+- Status: installed on r20; bounded hardware acceptance pending
 - Impact: basic USB/wireless charging works, but Nothing current voting,
   shell-temperature derating, abnormal handling, and reverse-wireless policy are
   unavailable.
@@ -261,6 +261,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   and traversal of generic `/sys/devices/virtual` before typed thermal nodes.
   Stage a dedicated touchpanel proc label and directory-only generic sysfs
   traversal; do not grant generic proc/sysfs file access.
+- r20: exact stock service remains registered across two boots; dedicated
+  touchpanel/charger/qcom-battery labels and directory-only thermal traversal
+  produce no charge-HAL AVCs. USB charging reports expected current, voltage,
+  battery health, and service state at 28 C. Controlled unplug/reconnect,
+  hot-battery derating, wireless, and reverse-charging acceptance remain.
 - Acceptance: low-SOC USB PD/PPS and wireless curves, screen on/off, thermal
   derating, stop/resume, suspend, reverse charging, and abnormal temperatures.
 - Dependency: validate together with MTR-005.

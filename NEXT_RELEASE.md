@@ -5,14 +5,14 @@ Canonical installed baseline: [`BASELINE.md`](BASELINE.md).
 
 ## Installed baseline
 
-r17 (`23.0-20260808-UNOFFICIAL-metroid`) is installed on slot A with encrypted
+r20 (`23.0-20260808-UNOFFICIAL-metroid`) is installed on slot B with encrypted
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
 The tested configuration has three independently verified inputs:
 
-1. ROM OTA: `releases/candidate_20260807_223220_esim-stockfw-r17/`, SHA-256
-   `d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243`.
+1. ROM OTA: `releases/candidate_20260808_175755_charge-updater-r20/`, SHA-256
+   `8a7ed31caa2415c9de8f84eb5c0411ffe497a94a313103d86bfef9cf11b5911f`.
 2. MindTheGapps Android 16 ARM64 add-on, SHA-256
    `a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28`,
    sideloaded from the new-slot recovery after the ROM OTA.
@@ -27,7 +27,7 @@ Every bug starts with one evidence matrix before edits:
 
 | Evidence | Required question |
 |---|---|
-| Installed r17 | What exact user operation fails, and what is the first failing log/state? |
+| Installed r20 | What exact user operation fails, and what is the first failing log/state? |
 | Nothing stock dump | Which APK/blob/config/property/RC/VINTF behavior differs? |
 | Kernel source/DTS | Is the hardware node, IRQ, GPIO, thermal zone, power path, or driver behavior correct? |
 | AOSP/Lineage/CLO | Is this upstream behavior, a known fix, or a device-specific gap? |
@@ -58,9 +58,9 @@ guesses.
   framework severity, cooling devices, display mitigation, and process CPU/GPU.
 - MTR-009: compare stock charge HAL binary/RC/VINTF/policy and archived charge-HAL
   experiment, then restore only the complete stock policy stack.
-- MTR-009 source fix staged: exact A16 binary/RC, mandatory compatibility entry,
-  standalone VINTF, and typed SELinux policy compile with `check-vintf-all`.
-  Runtime registration, node access, and real charge-policy acceptance remain.
+- MTR-009 fix installed: exact A16 binary/RC, mandatory compatibility entry,
+  standalone VINTF, typed SELinux policy, two boots, and no charge AVCs. Complete
+  the bounded hardware charge matrix.
 - Acceptance: no sustained 48-49 C event without framework/UI severity; USB PD/PPS,
   wireless, screen on/off, hot-battery stop/resume, suspend, reverse charging.
 
@@ -100,8 +100,8 @@ guesses.
 
 ## Next execution order
 
-1. Finish WP0 cleanup and publish r17 records/source lock.
-2. Execute WP1 thermal/charging because the 49 C unplugged event is the highest
+1. Publish r20 records/source lock and retain normal-system updater as default.
+2. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.
 3. Execute WP2 when a physical SIM and private eSIM activation code are available.
 4. Execute WP3-WP5 in dependency order, using stock/kernel/upstream evidence first.
