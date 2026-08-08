@@ -48,7 +48,7 @@ adb shell 'chown system:cache /data/ota_package/payload.bin /data/ota_package/pa
 
 echo "Applying $ota"
 echo "OTA SHA-256: $zip_hash"
-adb shell 'headers=$(cat /data/ota_package/payload_properties.txt); /data/local/tmp/update_engine_client --update --follow --payload=file:///data/ota_package/payload.bin --size='"$payload_size"' --headers="$headers"' | tee "$tmp/update-engine.log"
+adb shell 'headers=$(cat /data/ota_package/payload_properties.txt); /data/local/tmp/update_engine_client --update --follow --payload=file:///data/ota_package/payload.bin --size='"$payload_size"' --headers="$headers"' 2>&1 | tee "$tmp/update-engine.log"
 grep -q 'onPayloadApplicationComplete(ErrorCode::kSuccess (0))' "$tmp/update-engine.log"
 
 adb shell reboot
