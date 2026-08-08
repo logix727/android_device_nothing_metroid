@@ -92,6 +92,16 @@ permission; it must never be committed to this public repository.
   stock modem tree (`MPSS.DE.7.0-02698...126608.2.134544.2`), replacing mixed
   2025-08 and 2026-03 builds. Radio, IMS, LPA, and QSPA services remain healthy.
   Re-test the stock stack without the speculative framework compatibility carry.
+- r10/r11 evidence: Google SIM Manager and the corrected lowercase metroid slot
+  map load, but `EuiccManager` remains disabled because AOSP radio slot status
+  reports no eUICC/EID. Stock's self-contained Qualcomm LPA transport is required
+  to bridge framework `EuiccService` calls to the live `IUimLpa/UimLpa0` and
+  `/UimLpa1` services.
+- Transport fix staged: package the stock QTI LPA APK with the current platform
+  signature and stock `vendor_qtelephony` domain, enable the real product
+  telephony wrapper, and provide a compatibility uses-library for Qualcomm's
+  orphaned `uimlpalibrary.jar` declaration. Focused Soong/uses-library/signature
+  validation passes; runtime acceptance remains.
 - Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
   profile download, enable/disable, reboot persistence, deletion, and
   physical-SIM coexistence.
