@@ -3,6 +3,7 @@ type audio_socket, file_type;
 
 # Battery
 type vendor_proc_charge, fs_type, proc_type;
+type vendor_proc_touchpanel, fs_type, proc_type;
 type vendor_sysfs_qcom_battery, fs_type, sysfs_type;
 
 # Camera

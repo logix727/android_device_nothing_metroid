@@ -256,6 +256,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   denied calling `servicemanager`, causing a five-second crash loop. The service
   was stopped immediately; r18 is diagnostic-only and not a release candidate.
   Add the standard `binder_use()` server grant before the next build.
+- r19: Binder registration succeeds and the HAL remains running. First node
+  access exposed only two denials: write to stock `/proc/touchpanel/TP_charger_flags`
+  and traversal of generic `/sys/devices/virtual` before typed thermal nodes.
+  Stage a dedicated touchpanel proc label and directory-only generic sysfs
+  traversal; do not grant generic proc/sysfs file access.
 - Acceptance: low-SOC USB PD/PPS and wireless curves, screen on/off, thermal
   derating, stop/resume, suspend, reverse charging, and abnormal temperatures.
 - Dependency: validate together with MTR-005.

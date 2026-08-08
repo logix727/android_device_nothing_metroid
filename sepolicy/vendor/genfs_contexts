@@ -1,5 +1,6 @@
 # Battery
 genfscon proc /charger u:object_r:vendor_proc_charge:s0
+genfscon proc /touchpanel u:object_r:vendor_proc_touchpanel:s0
 genfscon sysfs /class/qcom-battery u:object_r:vendor_sysfs_qcom_battery:s0
 
 # Camera

@@ -25,6 +25,14 @@ manifest locks, and release audits include the device, kernel, and private vendo
 repositories. Access to the private vendor repository is required for builds;
 never publish its contents.
 
+## Maintainer OTA updates
+
+For an installed build with MindTheGapps, use
+`scripts/apply-ota-adb.sh <audited-ota.zip>` from this directory. It invokes
+normal-system update_engine so Lineage `backuptool_ab` preserves addon.d/GApps;
+do not use recovery sideload for routine upgrades. Initial installation and
+rollback remain recovery operations.
+
 ## Repository scope
 
 This repository contains:

@@ -12,6 +12,8 @@ hal_client_domain(platform_app, vendor_hal_noth_charge)
 
 allow vendor_hal_charge_default vendor_proc_charge:dir r_dir_perms;
 allow vendor_hal_charge_default vendor_proc_charge:file rw_file_perms;
+allow vendor_hal_charge_default vendor_proc_touchpanel:dir r_dir_perms;
+allow vendor_hal_charge_default vendor_proc_touchpanel:file rw_file_perms;
 allow vendor_hal_charge_default vendor_sysfs_qcom_battery:dir r_dir_perms;
 allow vendor_hal_charge_default vendor_sysfs_qcom_battery:file rw_file_perms;
 allow vendor_hal_charge_default vendor_sysfs_battery_supply:dir r_dir_perms;
@@ -20,4 +22,7 @@ allow vendor_hal_charge_default vendor_sysfs_usb_supply:dir r_dir_perms;
 allow vendor_hal_charge_default vendor_sysfs_usb_supply:file rw_file_perms;
 allow vendor_hal_charge_default sysfs_thermal:dir r_dir_perms;
 allow vendor_hal_charge_default sysfs_thermal:file r_file_perms;
+# Traverse /sys/devices/virtual to reach typed thermal nodes; generic sysfs files
+# remain inaccessible.
+allow vendor_hal_charge_default sysfs:dir r_dir_perms;
 allow vendor_hal_charge_default kmsg_device:chr_file rw_file_perms;
