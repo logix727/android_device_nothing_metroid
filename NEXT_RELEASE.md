@@ -47,6 +47,10 @@ guesses.
 - Preserve ROM, modem, and GApps as separate tested inputs in release records.
 - After every recovery ROM update, reboot to the new-slot recovery and sideload
   MindTheGapps before Android boots; A/B recovery sideload does not run addon.d.
+- Prefer normal-system Lineage Updater/update_engine for upgrades. Stock-label
+  `vbmeta_vendor_[ab]` so update_engine can write the full payload and invoke
+  Lineage `backuptool_ab`, preserving GApps without recovery. Recovery remains
+  the initial-install and rollback path.
 
 ### WP1: Thermal and charging policy
 

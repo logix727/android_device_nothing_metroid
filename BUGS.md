@@ -224,6 +224,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   bootstrap, and `source/*-state.txt`.
 - Acceptance: one consistency audit proves every canonical record names the same
   ZIP/hash/revisions and a clean checkout reproduces target-files.
+- Update-path evidence: normal-system update_engine initially failed opening
+  `vbmeta_vendor_a` because only root/system vbmeta devices had the stock
+  `vendor_custom_ab_block_device` label. Applying stock's
+  `vbmeta_vendor_[ab]` label made the same audited payload complete with
+  `kSuccess`. The label is staged in source so future Updater/update_engine runs
+  can preserve addon.d/GApps without recovery interaction.
 
 ## P1: confirmed subsystem defects
 
