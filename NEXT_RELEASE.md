@@ -60,7 +60,7 @@ guesses.
   experiment, then restore only the complete stock policy stack.
 - MTR-009 fix installed: exact A16 binary/RC, mandatory compatibility entry,
   standalone VINTF, typed SELinux policy, two boots, and no charge AVCs. Complete
-  the bounded hardware charge matrix.
+  the remaining unplug/reconnect, hot-battery, wireless, and reverse-charge matrix.
 - Acceptance: no sustained 48-49 C event without framework/UI severity; USB PD/PPS,
   wireless, screen on/off, hot-battery stop/resume, suspend, reverse charging.
 

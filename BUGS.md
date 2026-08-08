@@ -264,7 +264,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - r20: exact stock service remains registered across two boots; dedicated
   touchpanel/charger/qcom-battery labels and directory-only thermal traversal
   produce no charge-HAL AVCs. USB charging reports expected current, voltage,
-  battery health, and service state at 28 C. Controlled unplug/reconnect,
+  battery health, and service state at 28 C. A five-minute screen-off wired/full
+  trend cooled battery 29 to 28 C, held USB at 27 C and abnormal status 0, kept
+  the same HAL PID, and produced no AVC/crash. Controlled unplug/reconnect,
   hot-battery derating, wireless, and reverse-charging acceptance remain.
 - Acceptance: low-SOC USB PD/PPS and wireless curves, screen on/off, thermal
   derating, stop/resume, suspend, reverse charging, and abnormal temperatures.
