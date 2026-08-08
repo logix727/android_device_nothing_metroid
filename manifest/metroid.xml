@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remote name="github-logix727" fetch="https://github.com/" />
-  <project name="logix727/android_device_nothing_metroid"
-           path="device/nothing/metroid"
-           remote="github-logix727"
-            revision="lineage-23.0" />
-  <project name="logix727/android_kernel_nothing_sm8735"
-           path="kernel/nothing/sm8735"
-           remote="github-logix727"
-            revision="lineage-23.0" />
-  <!-- Extract proprietary blobs from your own B4.1 stock dump. -->
+  <remote name="metroid-maintainer" fetch="ssh://git@github.com/logix727" />
+  <project
+      path="device/nothing/metroid"
+      name="android_device_nothing_metroid"
+      remote="metroid-maintainer"
+      revision="refs/heads/lineage-23.0" />
+  <project
+      path="kernel/nothing/sm8735"
+      name="android_kernel_nothing_sm8735"
+      remote="metroid-maintainer"
+      revision="refs/heads/lineage-23.0" />
+  <project
+      path="vendor/nothing/metroid"
+      name="android_vendor_nothing_metroid"
+      remote="metroid-maintainer"
+      revision="refs/heads/master" />
 </manifest>

@@ -5,16 +5,25 @@ Unofficial LineageOS 23 (Android 16) bring-up for the Nothing Phone (3), codenam
 
 ## Status
 
-**Alpha development. Not release-ready.**
+**Alpha development. Maintainer-tested; not an official release.**
 
 There is currently no supported public OTA or recovery bootstrap download. Do
 not follow old mirrors, mix artifacts, or treat this repository as an official
 LineageOS release. The latest accepted build is a maintainer-local candidate;
 its source and artifact lock is not yet completely public or reproducible.
 
-Current runtime blockers include cellular IMS/eSIM integration, Power HAL
-registration, framework thermal mapping, launch/security metadata, and release
-record consistency. See [`BUGS.md`](BUGS.md) for the evidence-ranked backlog.
+The current maintainer baseline has working radio/IMS infrastructure, Power HAL,
+framework thermal skin/headroom, corrected launch/security metadata, and native
+eSIM provisioning UI with matching stock modem firmware. Physical carrier/eSIM
+profile acceptance, thermal/charging behavior, camera, Bluetooth/audio, haptics,
+and accessory coverage remain. See [`BUGS.md`](BUGS.md).
+
+## Repo coverage
+
+Copy `manifest/metroid.xml` to `.repo/local_manifests/metroid.xml` so Repo status,
+manifest locks, and release audits include the device, kernel, and private vendor
+repositories. Access to the private vendor repository is required for builds;
+never publish its contents.
 
 ## Repository scope
 

@@ -1,81 +1,111 @@
 # Next release
 
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
-Canonical baseline: [`BASELINE.md`](BASELINE.md).
+Canonical installed baseline: [`BASELINE.md`](BASELINE.md).
 
-## Installed baseline (r9, `23.0-20260807-UNOFFICIAL-metroid`)
+## Installed baseline
 
-- `org.codeaurora.ims` runs as `vendor_qtelephony`; IMS radio/radio-config and
-  qti-radio-stable services resolve and bind; MMTEL and EMERGENCY_MMTEL register
-  on both slots; no IMS/radio/vendor-property AVCs across two boots.
-- Power HAL `android.hardware.power.IPower/default` registers.
-- `ro.product.first_api_level=35`, `ro.board.first_api_level=202404`.
-- eUICC is not advertised on r9 (no LPA/EuiccService installed).
-- Slot A, Enforcing, encrypted, slot marked successful, empty crash buffer after
-  two boots; no pending snapshot merge.
-- Boot-image SPL is populated; GNSS property and media-quality lookup fixes pass
-  focused runtime tests.
-- Live framework skin temperature, stock thresholds, and non-NaN headroom pass
-  across two boots with the stock Thermal HAL and confined `sltntc` daemon.
-- Official MindTheGapps recovery add-on flow passes; Play Store/GMS/GSF/Google
-  Setup Wizard persist across two boots. Google files remain a separate add-on,
-  not part of the ROM artifact or public source.
-- Stock eSIM application layer is staged: Google SIM Manager, metroid partner,
-  Lineage EuiccPolicy, ODM feature declaration, and exact permission policy.
-  Lower `IUimLpa` modem services are already live. A corrected source partner
-  maps lowercase `metroid` to eSIM slot 1, and the stock QTI LPA transport plus
-  required product libraries are staged. Framework now selects QTI, maps the
-  documented legacy unsupported-card path to built-in slot 1, and declares slot
-  1 non-removable; end-to-end runtime acceptance remains.
+r17 (`23.0-20260808-UNOFFICIAL-metroid`) is installed on slot A with encrypted
+userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
+tombstones, and two successful boots.
 
-## Blocker priorities (in order)
+The tested configuration has three independently verified inputs:
 
-1. Physical-SIM calls, SMS, data and IMS features; emergency UI; and OMAPI
-   acceptance — requires a carrier SIM in the device, currently blocked by
-   subscription availability.
-2. Redistribution clearance for the proprietary IMS package before any public
-   OTA sharing; keep the vendor repo unpublished.
-3. Aperture stabilization UI and flip-routing acceptance on clean package state;
-   retained user package overrides prevented a trustworthy r5 UI test.
-4. Release-reproducibility and record-consistency audits for every future release.
+1. ROM OTA: `releases/candidate_20260807_223220_esim-stockfw-r17/`, SHA-256
+   `d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243`.
+2. MindTheGapps Android 16 ARM64 add-on, SHA-256
+   `a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28`,
+   sideloaded from the new-slot recovery after the ROM OTA.
+3. Stock A16 modem filesystem on both modem slots, build
+   `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2`, reconstructed from
+   `references/upstream/dump_a16/modem/` and verified byte-for-byte after image
+   construction. The modem image is not part of the ROM OTA.
 
-## Already-landed this cycle (preserve, do not regress)
+## Required workflow
 
-- Radio/IMS VINTF fragments and device scoping that put `org.codeaurora.ims` under
-  `vendor_qtelephony` (base r4 seapp/overlay/VINTF work).
-- Standalone Power HAL VINTF fragment and stock-matching launch-API metadata.
-- Soong ramdisk property generation now emits the platform SPL as
-  `ro.bootimage.build.version.security_patch`; installed r5 reports `2026-02-01`
-  and preserves measured boot-chain AVB SPL `2025-04-05` (MTR-007).
-- GNSS uses a typed property grant; MediaCodec uses the upstream optional
-  framework-service lookup; Aperture hides its metroid stabilization no-op and
-  preserves high-bandwidth routing across camera flips. GNSS and MediaCodec pass
-  runtime tests; Aperture changes remain runtime-unverified (MTR-012/013/014/022).
-- Nothing's stock `sltntc` producer, policy, enable property, and stock Thermal
-  HAL provide live `shell_max`, framework skin thresholds, and headroom across
-  two installed boots (MTR-005 framework path resolved).
-- Qualcomm's source QSPA service replaces a dangling copied RC and restores the
-  stock `IQspa/default` declaration. Focused build/VINTF pass; runtime acceptance
-  remains (MTR-021).
-- `system`, `product`, and `system_ext` use writable ext4 with measured add-on
-  reserves so Lineage's recommended Android 16 ARM64 MindTheGapps installer can
-  mount and populate them. Root vbmeta keeps signature/chain verification but
-  sets only AVB's hashtree-disabled bit so intentional recovery add-on writes
-  survive boot. Installed and accepted across two r9 boots.
+Every bug starts with one evidence matrix before edits:
 
-## Community coverage still to test
+| Evidence | Required question |
+|---|---|
+| Installed r17 | What exact user operation fails, and what is the first failing log/state? |
+| Nothing stock dump | Which APK/blob/config/property/RC/VINTF behavior differs? |
+| Kernel source/DTS | Is the hardware node, IRQ, GPIO, thermal zone, power path, or driver behavior correct? |
+| AOSP/Lineage/CLO | Is this upstream behavior, a known fix, or a device-specific gap? |
+| Reference devices | How do same-generation Qualcomm/Nothing devices implement it? |
 
-- Calls, SMS, mobile data, IMS, emergency UI, dual SIM and handover.
-- Bluetooth LE Audio, USB-C audio, NFC payment/secure-element applets.
-- Long-duration suspend drain, thermal throttling, HDR/video, camera third-party
-  apps, factory-reset Setup Wizard/FBE/default-state.
+Only after the first deterministic divergence is identified: make the smallest
+owning-subsystem change, run focused tests, build one install-clean OTA, audit,
+install, and execute the affected hardware matrix. Do not iterate by flashing
+guesses.
+
+## Work packages
+
+### WP0: Release and source integrity
+
+- Keep device, kernel, and private vendor registered in `.repo/local_manifests`.
+- Regenerate source/carry locks from clean trees; include every local carry.
+- Preserve ROM, modem, and GApps as separate tested inputs in release records.
+- After every recovery ROM update, reboot to the new-slot recovery and sideload
+  MindTheGapps before Android boots; A/B recovery sideload does not run addon.d.
+
+### WP1: Thermal and charging policy
+
+- MTR-005: reproduce controlled unplugged load while logging live skin, battery,
+  framework severity, cooling devices, display mitigation, and process CPU/GPU.
+- MTR-009: compare stock charge HAL binary/RC/VINTF/policy and archived charge-HAL
+  experiment, then restore only the complete stock policy stack.
+- Acceptance: no sustained 48-49 C event without framework/UI severity; USB PD/PPS,
+  wireless, screen on/off, hot-battery stop/resume, suspend, reverse charging.
+
+### WP2: Physical SIM, IMS, eSIM, and OMAPI
+
+- MTR-001/MTR-002: insert a physical SIM and test calls, SMS/MMS, data, APNs,
+  VoLTE/VoWiFi, emergency UI, DSDS, handover, airplane mode, and suspend.
+- MTR-003: use a private activation code to test download, enable/disable, reboot,
+  deletion, transfer, and physical-SIM coexistence. Never retain EID/credentials.
+- Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
+  with another modem/MCFG generation.
+
+### WP3: Bluetooth and audio
+
+- MTR-010: audit effective property wiring against stock (the legacy
+  `product.prop` file is not consumed), then enable only stock-supported LE Audio
+  profiles and test real LC3 hardware.
+- MTR-025: align MusicFX service discovery with installed AudioFX.
+- Validate USB-C audio, HFP/SCO, A2DP fallback, volume coordination, and suspend.
+
+### WP4: Camera, biometrics, and haptics
+
+- MTR-012/MTR-022: clean-state Aperture FHD30/FHD60/UHD30 stabilization and
+  front/back routing acceptance with provider/tombstone monitoring.
+- MTR-018: compare UDFPS refresh/LHBM ordering with stock and upstream, then run
+  50 screen-on/AOD unlocks and enrollment at Smooth Display off.
+- MTR-011: recover actual stock effect/primitive mappings before advertising or
+  changing any haptic capability.
+- MTR-023: locale-safe face-enrollment guidance.
+
+### WP5: Connectivity, suspend, and cleanup
+
+- MTR-015 QCC, MTR-016 sensor extension, MTR-019 USB NCM, MTR-020 CPUSS residency,
+  MTR-021 remaining dangling init inventory, and MTR-024 ST21 transition errors.
+- Group RC/VINTF changes by subsystem, but retain one first-failure cause and one
+  acceptance matrix per issue.
+
+## Next execution order
+
+1. Finish WP0 cleanup and publish r17 records/source lock.
+2. Execute WP1 thermal/charging because the 49 C unplugged event is the highest
+   safety-relevant unresolved evidence.
+3. Execute WP2 when a physical SIM and private eSIM activation code are available.
+4. Execute WP3-WP5 in dependency order, using stock/kernel/upstream evidence first.
 
 ## Release gate
 
-1. All modified projects committed on `lineage-23.0` (device/kernel) with the
-   private vendor reproduced from stock extraction only.
-2. Fresh install-clean `m bacon` using all available build resources.
-3. VINTF, init, payload, AVB, signing and partition audits pass.
-4. Target-slot boot, snapshot state, slot success, second boot, Enforcing,
-   encryption and crash sweep pass.
-5. Update `BASELINE.md`, release notes and SHA-256; then tag source.
+1. `repo status` plus explicit device/kernel/vendor checks are clean.
+2. Every local carry is committed, reproducible, and represented in the source lock.
+3. Fresh install-clean `m bacon` succeeds.
+4. VINTF, init, payload, AVB, signing, partition, modem, and artifact audits pass.
+5. ROM/GApps/modem hashes and source revisions are recorded separately.
+6. Target boot, second boot, slot success, snapshot state, Enforcing, encryption,
+   crash/tombstone sweep, and affected real hardware acceptance pass.
+7. GitHub records distinguish verified, unverified, externally blocked, and broken.

@@ -1,5 +1,48 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## 2026-08-08 maintainer-local candidate (r17, stock-backed eSIM)
+
+Installed and accepted privately from
+`releases/candidate_20260807_223220_esim-stockfw-r17/`.
+
+ROM SHA-256:
+
+`d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243`
+
+### Required companion inputs
+
+- Exact stock A16 modem firmware on both modem slots, build
+  `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2`.
+- MindTheGapps Android 16 ARM64 add-on SHA-256
+  `a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28`,
+  sideloaded from the new-slot recovery after the ROM OTA.
+- Neither companion input is embedded in the ROM ZIP.
+
+### Verified
+
+- Install-clean signed A/B OTA; 16/16 payload equivalence, VINTF compatible,
+  signed AVB chain, root flag `1`, encrypted userdata, Enforcing, two boots,
+  empty crash buffer, and no new tombstones.
+- Matching modem firmware resolves the mixed QCRIL/MCFG generation that caused
+  the QTI LPA generic EID failure.
+- Native `EuiccManager` is enabled using Google's standard EuiccService. Profile
+  UI reaches **Set up an eSIM**, device-transfer chooser, and QR scanner without
+  a platform telephony compatibility patch.
+- QSPA, Power HAL, IMS radio 0/1, thermal skin/headroom, GNSS, camera provider,
+  Play Store/GMS policy, and account retention pass across two boots.
+
+### Unverified / tester focus
+
+- A real private eSIM activation code: download, enable/disable, reboot, delete,
+  transfer, and coexistence with physical SIM.
+- Physical SIM calls, SMS/MMS, data, VoLTE/VoWiFi, emergency UI, DSDS, and OMAPI.
+- Thermal status/cooling/display behavior under controlled unplugged load. A prior
+  normal-use session retained battery temperatures of 48-49 C before a manual
+  reboot; it was not charging and did not thermally shut down.
+- Aperture EIS/routing, LE Audio, haptics, NFC payment/off-host, USB-C audio, and
+  long-duration suspend.
+- Public OTA/modem distribution remains blocked pending proprietary clearance.
+
 ## Recovery sideload progress
 
 ADB intentionally scales normal sideload progress by 47 because recovery usually

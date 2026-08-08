@@ -1,11 +1,11 @@
 # Metroid bug backlog
 
-Last audited: 2026-08-06
+Last audited against installed baseline: 2026-08-08
 
-Installed build: `23.0-20260806-UNOFFICIAL-metroid`
+Installed build: `23.0-20260808-UNOFFICIAL-metroid` (r17)
 
 Installed OTA SHA-256:
-`74d738f1ba6b8f7f4534f82a6b0e004dbebdc3f4b90f09cccef48d534cdf1bb0`
+`d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -17,13 +17,28 @@ sensitive identifiers. Source paths are relative to `lineage/`. Any proprietary
 component mentioned below must be user-extracted or have explicit redistribution
 permission; it must never be committed to this public repository.
 
+## Status summary
+
+| State | Issues |
+|---|---|
+| Active fixes | MTR-005, MTR-009, MTR-010, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-020, MTR-021, MTR-023, MTR-024, MTR-025 |
+| Installed fixes needing focused acceptance | MTR-003, MTR-012, MTR-022 |
+| External hardware/carrier acceptance | MTR-001, MTR-002, physical SIM/IMS/OMAPI |
+| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017 |
+
+Before editing any active issue, complete its evidence matrix: reproduce on the
+installed build; compare the Nothing stock dump/configuration; inspect relevant
+Nothing/Qualcomm kernel source and DTS; compare AOSP, Lineage, CLO and reference
+devices; then identify the first deterministic divergence. One evidence-backed
+change gets one focused validation cycle. Do not iterate by flashing guesses.
+
 ## P0: release and core-function blockers
 
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: resolved for IMS/radio registration on r4; physical-SIM endurance
-  acceptance pending
+- Status: closed registration defect; physical-SIM acceptance is an external test
+  gate
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -38,10 +53,10 @@ permission; it must never be committed to this public repository.
 - Acceptance remaining: physical-SIM call, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests.
 
-### MTR-002: Android IMS implementation is absent
+### MTR-002: Android IMS implementation and carrier acceptance
 
 - Severity: critical
-- Status: resolved on r4 (infrastructure); carrier-SIM feature validation pending
+- Status: infrastructure closed on r4; carrier-SIM acceptance externally blocked
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
 - Evidence (base): the installed package/service audit finds no IMS implementation;
@@ -56,10 +71,11 @@ permission; it must never be committed to this public repository.
 - Acceptance remaining: VoLTE/VoWiFi, IMS SMS, incoming/outgoing audio, and
   LTE/Wi-Fi handover with a carrier SIM.
 
-### MTR-003: eSIM is advertised without an LPA or usable eUICC backend
+### MTR-003: stock-backed eSIM provisioning
 
 - Severity: high
-- Status: stock-backed source integration staged; runtime acceptance pending
+- Status: installed on r17; provisioning UI accepted through QR scanner, real
+  profile download/activation pending
 - Impact: applications were presented an eUICC hardware feature for which no
   LPA/EuiccService or eUICC binder backend existed, so discovery, download,
   activation, deletion, and settings could not work.
@@ -68,19 +84,16 @@ permission; it must never be committed to this public repository.
 - Source: `proprietary-files.txt:6`
 - Cause: `android.hardware.telephony.euicc` was advertised without a legally
   distributable LPA/EuiccService and its served declarations.
-- Resolution (r4): the eUICC hardware feature is no longer advertised on the
-  installed build, so apps no longer see eSIM as available. eSIM remains
-  intentionally unavailable until a legally distributable LPA/UI with all
-  dependencies and served declarations is packaged.
+- Interim resolution (r4-r16): stop advertising eUICC until a complete stock
+  application/transport path and matching modem firmware were available.
 - r15 forensic result: the complete stock application/transport stack was
   integrated temporarily. Framework selected QTI automatically, routed the
   documented legacy card-ID path to built-in slot 1, loaded the stock JNI
   bridge, bound both `IUimLpa/UimLpa0` and `/UimLpa1`, and launched Google's
   profile UI. The modem then returned `UimLpaResult=1` with an empty EID.
-- Conclusion: the remaining blocker is below Android UI/framework/LPA, most
-  likely stock modem NV/MCFG, persisted UIM provisioning, or SKU configuration.
-  QCRIL executable/database inputs were hash-identical to stock, but the active
-  modem firmware and all tested MCFG files did not match the A16 stock dump.
+- Root cause: QCRIL/LPA userspace matched stock, but both installed modem slots
+  used firmware/MCFG generations different from the A16 stock dump. The mixed
+  stack returned generic `UimLpaResult=1` and an empty EID.
 - New stock evidence: metroid exposes live `IUimLpa/UimLpa0` and `/UimLpa1`
   modem services. Stock ships Google SIM Manager, a metroid partner APK, the
   eUICC feature in ODM, exact Google-certificate permission grants, and profile
@@ -91,13 +104,12 @@ permission; it must never be committed to this public repository.
 - Firmware correction: both modem slots now contain the complete audited A16
   stock modem tree (`MPSS.DE.7.0-02698...126608.2.134544.2`), replacing mixed
   2025-08 and 2026-03 builds. Radio, IMS, LPA, and QSPA services remain healthy.
-  Re-test the stock stack without the speculative framework compatibility carry.
 - r10/r11 evidence: Google SIM Manager and the corrected lowercase metroid slot
   map load, but `EuiccManager` remains disabled because AOSP radio slot status
   reports no eUICC/EID. Stock's self-contained Qualcomm LPA transport is required
   to bridge framework `EuiccService` calls to the live `IUimLpa/UimLpa0` and
   `/UimLpa1` services.
-- Transport fix staged: package the stock QTI LPA APK with the current platform
+- Transport fix: package the stock QTI LPA APK with the current platform
   signature and stock `vendor_qtelephony` domain, enable the real product
   telephony wrapper, and provide a compatibility uses-library for Qualcomm's
   orphaned `uimlpalibrary.jar` declaration. Focused Soong/uses-library/signature
@@ -105,17 +117,18 @@ permission; it must never be committed to this public repository.
 - r14 evidence: QTI LPA loads its stock JNI bridge, binds both live modem LPA
   instances, registers callbacks with qcril, and connects `EuiccConnector`.
   AOSP still passes slot `-1` because RadioConfig exposes no card ID/EID.
-- Final staged compatibility: property-gated QTI backend selection, legacy slot
-  `1` routing using AOSP's documented unsupported-card compatibility path, and
-  standard `non_removable_euicc_slots={1}`. Normal devices remain unchanged.
-- Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
-  profile download, enable/disable, reboot persistence, deletion, and
-  physical-SIM coexistence.
+- r17 resolution: with matching modem firmware and stock application/transport
+  stack, `EuiccManager.isEnabled()` is true across two boots and Google SIM
+  Manager reaches the native **Set up an eSIM** chooser and QR scanner without a
+  platform telephony compatibility patch.
+- Acceptance remaining: real activation-code download, profile enable/disable,
+  reboot persistence, deletion, transfer, and physical-SIM coexistence. Never
+  print or publish the device EID or activation credentials.
 
 ### MTR-004: Android Power HAL cannot register
 
 - Severity: high
-- Status: resolved on r4
+- Status: closed on r4
 - Impact: framework and SurfaceFlinger lacked the device power-mode, boost, and
   ADPF implementation.
 - Evidence (base): `android.hardware.power.IPower/default` was absent and framework
@@ -151,13 +164,20 @@ permission; it must never be committed to this public repository.
 - Residual: proprietary thermal-engine logs dynamic shell-zone name errors and a
   missing FPS virtual sensor; controlled status/cooling/display/charging
   transitions remain unverified.
+- Heat-event evidence: during normal unplugged use in a prior boot session,
+  BatteryStats recorded 48 C for about 47 minutes, then 49 C for about 6 minutes
+  before a manual reboot. Battery level fell 73% to 58% and charge counter fell
+  3843 to 3076 mAh. There was no thermal shutdown, panic, watchdog, ANR, pstore
+  record, or new tombstone, but retained framework thermal status was 0. The
+  history also retained contradictory `+plugged +charging` state bits alongside
+  `plug=none`; do not use those stale bits as evidence that a charger was present.
 - Acceptance: live `TYPE_SKIN`, non-NaN headroom, controlled thermal-status and
   cooling transitions, display mitigation, and charging interaction.
 
 ### MTR-006: launch API metadata incorrectly identifies Android 16 hardware
 
 - Severity: high
-- Status: resolved on r4
+- Status: closed on r4
 - Impact: compatibility, VSR, permission, and security behavior could be selected
   for an Android 16-launch device instead of the stock Android 15 launch level.
 - Evidence (base): installed properties reported first/board API level 36.
@@ -172,7 +192,7 @@ permission; it must never be committed to this public repository.
 ### MTR-007: security-patch metadata is stale and incomplete
 
 - Severity: high
-- Status: resolved on installed r5
+- Status: closed on installed r5
 - Impact: consumers can misjudge the incorporated security-patch level.
 - Evidence: installed r5 reports platform and boot-image SPL `2026-02-01` and
   vendor SPL `2025-06-05`; boot/init_boot AVB descriptors retain `2025-04-05`.
@@ -190,16 +210,16 @@ permission; it must never be committed to this public repository.
 ### MTR-008: accepted release records and bootstrap artifacts are inconsistent
 
 - Severity: high
-- Status: resolved for r4 records; verify before each future release
+- Status: resolved for r17 records; recurring release gate
 - Impact: users and maintainers can select the wrong OTA, source lock, recovery
   image set, or checksum record.
 - Evidence (base): maintainer release pointers still named the August 4 OTA while
   `BASELINE.md` named the August 5 candidate.
 - Cause: `releases/current`, install documentation, lock files, source capture,
   and recovery bootstrap were not updated atomically.
-- Resolution (r4): `releases/current` points to
-  `candidate_20260806_144606_ims-policy-r4`; `docs/BASELINE.md` and the device
-  `BASELINE.md` name the same ZIP/hash/source; the verified snapshot seals
+- Resolution (r17): `releases/current`, top-level/device baseline, release notes,
+  ZIP/hash/source, separate modem-firmware requirement, and GApps add-on are
+  reconciled. The verified snapshot seals
   `VERIFICATION.txt`, `SHA256SUMS`, the repo-manifest lock, payload-derived
   bootstrap, and `source/*-state.txt`.
 - Acceptance: one consistency audit proves every canonical record names the same
@@ -216,16 +236,6 @@ permission; it must never be committed to this public repository.
   unavailable.
 - Evidence: `vendor.noth.hardware.charge.ICharge/default` is absent while basic
   platform charging remains functional.
-- Heat-event evidence: previous-boot BatteryStats recorded 48 C for about 47
-  minutes, then 49 C for about 6 minutes before a user-requested shutdown. The
-  device remained USB-attached and repeatedly woke the display; battery level
-  fell 73% to 58% and charge counter fell 3843 to 3076 mAh while stale history
-  flags still said plugged/charging. ADSP reports a 45 C high-temperature charge
-  threshold. There was no thermal shutdown, panic, watchdog, ANR, pstore record,
-  or new tombstone.
-- Observability gap: Android reported battery health good and framework thermal
-  status 0 throughout the retained evidence. Hardware charging protection acted,
-  but framework/UI state did not reflect the hot-battery derating.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.noth.hardware.charge-service.rc:1-7`
 - Cause: duplicate `disabled` directives and no active ICharge VINTF fragment.
 - Fix direction: verify the intended stock binary, then restore the stock RC and
@@ -419,7 +429,8 @@ permission; it must never be committed to this public repository.
 - Source fix staged: replace the copied `vendor.qti.qspa-service.rc` that pointed
   to an absent executable with Qualcomm's source-built module, which owns the
   stock-matching RC and `IQspa/default` VINTF fragment. Focused build and VINTF
-  validation pass; runtime acceptance remains.
+  validation pass; r17 registers `IQspa/default` across two boots. Remaining
+  MTR-021 work covers other dangling inventory only.
 
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "record_type": "public-target-validated-candidate",
+  "status": "not-published-pending-proprietary-redistribution-clearance",
+  "release": "lineage-23.0-20260808-r17",
+  "rom": {
+    "file": "lineage-23.0-20260808-UNOFFICIAL-metroid.zip",
+    "size": 4094900759,
+    "sha256": "d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243"
+  },
+  "source": {
+    "device_repository": "https://github.com/logix727/android_device_nothing_metroid",
+    "device_revision": "d5d23f4ade652d376be4f5832bc3c8086ecf1b27",
+    "kernel_repository": "https://github.com/logix727/android_kernel_nothing_sm8735",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "private_vendor_revision": "71ac13e56db7e88faf6775ba5726283cf1aba731",
+    "private_vendor_revision_published": false
+  },
+  "required_companion_inputs": {
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "constructed_image_sha256": "d53a062a749e83d5854ab17a5aa5680d27c7b1e1970ee7112e71036b1d7b2a5f",
+      "installed_slots": ["modem_a", "modem_b"],
+      "included_in_rom": false,
+      "redistributed": false
+    },
+    "gapps": {
+      "name": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28",
+      "included_in_rom": false,
+      "redistributed": false
+    }
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass-normalized",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 1,
+    "verification_disabled": false
+  },
+  "runtime_validation": "passed-two-boots-focused-no-cts",
+  "verified": [
+    "slot A, Enforcing, encrypted, empty crash buffer, no new tombstones",
+    "native EuiccManager enabled through Google EuiccService",
+    "eSIM setup reaches transfer chooser and QR scanner",
+    "QSPA, Power HAL, IMS radio 0/1, GNSS, camera provider, and thermal headroom healthy",
+    "base Google packages and policy present after required new-slot recovery sideload"
+  ],
+  "unverified": [
+    "real eSIM profile download, activation, reboot persistence, deletion, and transfer",
+    "physical-SIM calls, SMS, data, IMS, emergency UI, DSDS, and OMAPI",
+    "controlled thermal mitigation after retained 48-49 C unplugged-use event",
+    "Aperture EIS/routing, LE Audio, haptics, NFC payment, USB-C audio, and long suspend"
+  ],
+  "privacy": {
+    "eid_published": false,
+    "activation_credentials_published": false,
+    "tester_logs_published": false
+  }
+}
