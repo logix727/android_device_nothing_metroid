@@ -216,6 +216,16 @@ permission; it must never be committed to this public repository.
   unavailable.
 - Evidence: `vendor.noth.hardware.charge.ICharge/default` is absent while basic
   platform charging remains functional.
+- Heat-event evidence: previous-boot BatteryStats recorded 48 C for about 47
+  minutes, then 49 C for about 6 minutes before a user-requested shutdown. The
+  device remained USB-attached and repeatedly woke the display; battery level
+  fell 73% to 58% and charge counter fell 3843 to 3076 mAh while stale history
+  flags still said plugged/charging. ADSP reports a 45 C high-temperature charge
+  threshold. There was no thermal shutdown, panic, watchdog, ANR, pstore record,
+  or new tombstone.
+- Observability gap: Android reported battery health good and framework thermal
+  status 0 throughout the retained evidence. Hardware charging protection acted,
+  but framework/UI state did not reflect the hot-battery derating.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.noth.hardware.charge-service.rc:1-7`
 - Cause: duplicate `disabled` directives and no active ICharge VINTF fragment.
 - Fix direction: verify the intended stock binary, then restore the stock RC and
