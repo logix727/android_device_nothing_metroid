@@ -2,6 +2,7 @@ type vendor_hal_charge_default, domain;
 type vendor_hal_charge_default_exec, exec_type, vendor_file_type, file_type;
 
 init_daemon_domain(vendor_hal_charge_default)
+binder_use(vendor_hal_charge_default)
 hal_server_domain(vendor_hal_charge_default, vendor_hal_noth_charge)
 hal_attribute_service(vendor_hal_noth_charge, vendor_hal_noth_charge_service)
 

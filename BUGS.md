@@ -246,6 +246,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   standalone stock VINTF fragment, and reconstruct the stock HAL domain/service
   with typed qcom-battery, charger-proc, USB/battery supply, thermal, and kmsg
   access. Generic proc/sysfs grants remain excluded pending measured AVCs.
+- r18 first boot: HAL entered its dedicated domain but Binder registration was
+  denied calling `servicemanager`, causing a five-second crash loop. The service
+  was stopped immediately; r18 is diagnostic-only and not a release candidate.
+  Add the standard `binder_use()` server grant before the next build.
 - Acceptance: low-SOC USB PD/PPS and wireless curves, screen on/off, thermal
   derating, stop/resume, suspend, reverse charging, and abnormal temperatures.
 - Dependency: validate together with MTR-005.
