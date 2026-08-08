@@ -238,8 +238,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   platform charging remains functional.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.noth.hardware.charge-service.rc:1-7`
 - Cause: duplicate `disabled` directives and no active ICharge VINTF fragment.
-- Fix direction: verify the intended stock binary, then restore the stock RC and
-  standalone fragment.
+- Stock/source audit: r17 also shipped an older executable
+  (`73d0a05c...`) instead of the A16 stock binary (`c8c3402a...`). The AIDL
+  library matches stock. The archived experiment was incomplete and was not
+  cherry-picked.
+- Source fix staged: restore the exact A16 executable and normal-boot RC, add the
+  standalone stock VINTF fragment, and reconstruct the stock HAL domain/service
+  with typed qcom-battery, charger-proc, USB/battery supply, thermal, and kmsg
+  access. Generic proc/sysfs grants remain excluded pending measured AVCs.
 - Acceptance: low-SOC USB PD/PPS and wireless curves, screen on/off, thermal
   derating, stop/resume, suspend, reverse charging, and abnormal temperatures.
 - Dependency: validate together with MTR-005.

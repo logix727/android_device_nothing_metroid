@@ -128,6 +128,13 @@ vintf_fragment {
     vendor: true,
 }
 
+// Stock Nothing charging-policy HAL.
+vintf_fragment {
+    name: "vendor.noth.hardware.charge.metroid.xml",
+    src: "vendor.noth.hardware.charge.metroid.xml",
+    vendor: true,
+}
+
 // batch 4 (2026-07-10): radio AIDL HALs (qcrilNrd runs fine, was just undeclared -> telephony
 // dead), clearkey drm + qspa (both were crash-looping on undeclared registration). Fragments
 // copied verbatim from stock B4.0 vendor manifest. Verified live via overlay before adding.

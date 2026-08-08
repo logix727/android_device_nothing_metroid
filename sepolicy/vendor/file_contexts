@@ -52,6 +52,9 @@
 /sys/devices/virtual/thermal/thermal_message/wifi_limit u:object_r:sys_thermal_wifi_limit:s0
 /sys/powersave(/.*)? u:object_r:sysfs_power_save:s0
 
+# Charging policy
+/(vendor|system/vendor)/bin/hw/vendor\.noth\.hardware\.charge-service u:object_r:vendor_hal_charge_default_exec:s0
+
 # WLAN
 /data/vendor/mac_addr(/.*)? u:object_r:vendor_mac_vendor_data_file:s0
 /data/vendor/mbnconfig(/.*)? u:object_r:vendor_firmware_data_file:s0

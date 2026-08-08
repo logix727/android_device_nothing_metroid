@@ -1,1 +1,3 @@
-# Empty attributes
+attribute vendor_hal_noth_charge;
+attribute vendor_hal_noth_charge_client;
+attribute vendor_hal_noth_charge_server;

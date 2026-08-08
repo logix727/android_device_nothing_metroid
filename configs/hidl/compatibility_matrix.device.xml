@@ -22,6 +22,14 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <hal format="aidl">
+        <name>vendor.noth.hardware.charge</name>
+        <version>1</version>
+        <interface>
+            <name>ICharge</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
     <hal format="aidl" optional="true">
         <name>vendor.qti.hardware.ListenSoundModelAidl</name>
         <version>1</version>

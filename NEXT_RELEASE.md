@@ -54,6 +54,9 @@ guesses.
   framework severity, cooling devices, display mitigation, and process CPU/GPU.
 - MTR-009: compare stock charge HAL binary/RC/VINTF/policy and archived charge-HAL
   experiment, then restore only the complete stock policy stack.
+- MTR-009 source fix staged: exact A16 binary/RC, mandatory compatibility entry,
+  standalone VINTF, and typed SELinux policy compile with `check-vintf-all`.
+  Runtime registration, node access, and real charge-policy acceptance remain.
 - Acceptance: no sustained 48-49 C event without framework/UI severity; USB PD/PPS,
   wireless, screen on/off, hot-battery stop/resume, suspend, reverse charging.
 

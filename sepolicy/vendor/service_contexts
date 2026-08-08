@@ -1,3 +1,4 @@
 com.nothing.camera.postproc.IPostProcService/default u:object_r:vendor_nothing_camera_postproc_service:s0
 vendor.goodix.hardware.biometrics.fingerprint.IGoodixFingerprintDaemon/default u:object_r:vendor_goodix_fingerprint_service:s0
 vendor.noth.hardware.camera.INtCamService/default u:object_r:vendor_nothing_ntcam_service:s0
+vendor.noth.hardware.charge.ICharge/default u:object_r:vendor_hal_noth_charge_service:s0

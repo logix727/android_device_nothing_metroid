@@ -5,3 +5,4 @@
 type vendor_nothing_camera_postproc_service, hal_service_type, protected_service, service_manager_type;
 type vendor_goodix_fingerprint_service, hal_service_type, protected_service, service_manager_type;
 type vendor_nothing_ntcam_service, hal_service_type, protected_service, service_manager_type;
+type vendor_hal_noth_charge_service, hal_service_type, protected_service, service_manager_type;
