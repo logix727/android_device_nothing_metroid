@@ -24,7 +24,9 @@ Canonical baseline: [`BASELINE.md`](BASELINE.md).
   Lineage EuiccPolicy, ODM feature declaration, and exact permission policy.
   Lower `IUimLpa` modem services are already live. A corrected source partner
   maps lowercase `metroid` to eSIM slot 1, and the stock QTI LPA transport plus
-  required product libraries are staged; end-to-end runtime acceptance remains.
+  required product libraries are staged. Framework now selects QTI, maps the
+  documented legacy unsupported-card path to built-in slot 1, and declares slot
+  1 non-removable; end-to-end runtime acceptance remains.
 
 ## Blocker priorities (in order)
 
