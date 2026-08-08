@@ -59,7 +59,7 @@ permission; it must never be committed to this public repository.
 ### MTR-003: eSIM is advertised without an LPA or usable eUICC backend
 
 - Severity: high
-- Status: resolved on r4 by not advertising eUICC
+- Status: stock-backed source integration staged; runtime acceptance pending
 - Impact: applications were presented an eUICC hardware feature for which no
   LPA/EuiccService or eUICC binder backend existed, so discovery, download,
   activation, deletion, and settings could not work.
@@ -79,10 +79,19 @@ permission; it must never be committed to this public repository.
   profile UI. The modem then returned `UimLpaResult=1` with an empty EID.
 - Conclusion: the remaining blocker is below Android UI/framework/LPA, most
   likely stock modem NV/MCFG, persisted UIM provisioning, or SKU configuration.
-  Current QCRIL executable/database inputs are hash-identical to stock, but no
-  stock runtime/persist capture exists for comparison. The unproven feature and
-  transport stack were reverted; retain honest no-eSIM behavior until that
-  evidence is available.
+  QCRIL executable/database inputs were hash-identical to stock, but the active
+  modem firmware and all tested MCFG files did not match the A16 stock dump.
+- New stock evidence: metroid exposes live `IUimLpa/UimLpa0` and `/UimLpa1`
+  modem services. Stock ships Google SIM Manager, a metroid partner APK, the
+  eUICC feature in ODM, exact Google-certificate permission grants, and profile
+  retention policy.
+- Source integration: restore those two stock-signed APKs privately, advertise
+  the stock ODM feature, and add Lineage `EuiccPolicy`. Focused package/product
+  builds pass with preserved APK signatures.
+- Firmware correction: both modem slots now contain the complete audited A16
+  stock modem tree (`MPSS.DE.7.0-02698...126608.2.134544.2`), replacing mixed
+  2025-08 and 2026-03 builds. Radio, IMS, LPA, and QSPA services remain healthy.
+  Re-test the stock stack without the speculative framework compatibility carry.
 - Acceptance: when reintroduced, `EuiccManager.isEnabled()`, EID discovery,
   profile download, enable/disable, reboot persistence, deletion, and
   physical-SIM coexistence.
