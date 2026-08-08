@@ -32,7 +32,7 @@ adb shell 'test "$(getprop sys.boot_completed)" = 1; test "$(getenforce)" = Enfo
 adb shell 'test -x /system/addon.d/30-gapps.sh; test -f /product/etc/permissions/privapp-permissions-google-product.xml; test -f /product/etc/sysconfig/google.xml'
 adb shell 'service check android.os.UpdateEngineService | grep -q found'
 
-client="$(realpath ../../../../out/target/product/metroid/system/bin/update_engine_client)"
+client="$(realpath ../../../out/target/product/metroid/system/bin/update_engine_client)"
 [[ -x "$client" ]]
 adb push "$client" /data/local/tmp/update_engine_client >/dev/null
 adb shell 'chmod 0755 /data/local/tmp/update_engine_client; /data/local/tmp/update_engine_client --reset_status; mkdir -p /data/ota_package; chown system:cache /data/ota_package; chmod 0770 /data/ota_package; restorecon -RF /data/ota_package'
