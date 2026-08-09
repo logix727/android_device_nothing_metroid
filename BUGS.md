@@ -478,7 +478,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
 - Severity: medium
-- Status: candidate source fix validated with a temporary APK; OTA pending
+- Status: candidate source fix validated with a temporary APK; r22 OTA rejected
+  pending recovery and a complete two-boot acceptance cycle
 - Impact: a front-to-back flip can reopen logical camera 4 while UHD or 60 fps is
   selected instead of the required physical main camera.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1255-1278`
@@ -489,6 +490,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `0 -> 1 -> 0`. Finalized files were 1920x1080 at 30/60 fps and 3840x2160 at
   30 fps. UHD30 restored camera 0 after process restart. The provider remained
   PID 1395 with no camera crash or new tombstone.
+- OTA result: audited r22 SHA-256
+  `e603ada70f0c717836475481622a826d9b09bee26ce53b5a208747dc7fdba9b5`
+  booted slot B, completed snapshot merge, remained Enforcing and encrypted,
+  and preserved GApps. The required second boot did not return to ADB/fastboot;
+  therefore r22 is rejected and must not replace the accepted r21 baseline.
 - Acceptance: front/back/front transitions at FHD30, FHD60, and UHD30 before
   recording and after process restart; verify camera ID and finalized files.
 

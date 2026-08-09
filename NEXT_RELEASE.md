@@ -86,8 +86,11 @@ guesses.
 
 - MTR-022 temporary-APK acceptance passed for FHD30/FHD60/UHD30 routing,
   finalized files, process restart, provider stability, and tombstone monitoring.
-  Re-run after the coherent OTA. MTR-012 still requires measured stabilization,
-  crop, cadence, zoom-transition, and motion acceptance before enabling EIS.
+  Audited r22 reached slot B and completed snapshot merge, but failed the required
+  second-boot connectivity gate and is rejected. Recover the device without
+  erasing userdata, capture the early-boot failure, then rebuild/re-run the full
+  OTA matrix. MTR-012 still requires measured stabilization, crop, cadence,
+  zoom-transition, and motion acceptance before enabling EIS.
 - MTR-018: compare UDFPS refresh/LHBM ordering with stock and upstream, then run
   50 screen-on/AOD unlocks and enrollment at Smooth Display off.
 - MTR-011: recover actual stock effect/primitive mappings before advertising or
