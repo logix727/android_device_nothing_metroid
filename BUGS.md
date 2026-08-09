@@ -2,10 +2,10 @@
 
 Last audited against installed baseline: 2026-08-08
 
-Installed build: `23.0-20260808-UNOFFICIAL-metroid` (r17)
+Installed build: `23.0-20260808-UNOFFICIAL-metroid` (r21)
 
 Installed OTA SHA-256:
-`d5098df075e52e89ce61d35db2dbdecfd917b6bc1b899ce9b3d740d843c00243`
+`e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -22,7 +22,8 @@ permission; it must never be committed to this public repository.
 | State | Issues |
 |---|---|
 | Active fixes | MTR-005, MTR-009, MTR-010, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-020, MTR-021, MTR-023, MTR-024, MTR-025 |
-| Installed fixes needing focused acceptance | MTR-003, MTR-012, MTR-022 |
+| Installed fixes needing focused acceptance | MTR-003, MTR-012 |
+| Candidate fixes validated with a temporary APK | MTR-022 |
 | External hardware/carrier acceptance | MTR-001, MTR-002, physical SIM/IMS/OMAPI |
 | Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017 |
 
@@ -324,6 +325,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Source fix: the setting is hidden on metroid while capture requests continue
   forcing stabilization off. Restore EIS only for a measured mode/camera matrix
   that avoids the known Morpho crash path.
+- Bounded validation (2026-08-08): a temporary same-signature Aperture update
+  finalized FHD30, FHD60, and UHD30 H.264/AAC files at the requested resolution
+  and cadence. The provider remained PID 1395 with no camera crash or new
+  tombstone. This verifies the disabled-EIS fallback only, not stabilization.
 - Acceptance: walking/panning FHD30, FHD60, and UHD30 clips; request/result
   metadata, crop, cadence, zoom transitions, provider PID, and tombstones.
 
@@ -473,12 +478,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
 - Severity: medium
-- Status: installed source fix; runtime acceptance pending
+- Status: candidate source fix validated with a temporary APK; OTA pending
 - Impact: a front-to-back flip can reopen logical camera 4 while UHD or 60 fps is
   selected instead of the required physical main camera.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1255-1278`
-- Source fix: video-mode flips now route the selected facing through the same
-  metroid video camera selector used by normal quality/mode changes.
+- Source fix: video-mode flips route the selected facing through the same metroid
+  selector used by normal quality/mode changes, using persisted video preferences
+  rather than the front camera's temporary fallback configuration.
+- Validation (2026-08-08): FHD30 returned `4 -> 1 -> 4`; FHD60 and UHD30 returned
+  `0 -> 1 -> 0`. Finalized files were 1920x1080 at 30/60 fps and 3840x2160 at
+  30 fps. UHD30 restored camera 0 after process restart. The provider remained
+  PID 1395 with no camera crash or new tombstone.
 - Acceptance: front/back/front transitions at FHD30, FHD60, and UHD30 before
   recording and after process restart; verify camera ID and finalized files.
 

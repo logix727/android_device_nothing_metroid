@@ -27,7 +27,7 @@ Every bug starts with one evidence matrix before edits:
 
 | Evidence | Required question |
 |---|---|
-| Installed r20 | What exact user operation fails, and what is the first failing log/state? |
+| Installed r21 | What exact user operation fails, and what is the first failing log/state? |
 | Nothing stock dump | Which APK/blob/config/property/RC/VINTF behavior differs? |
 | Kernel source/DTS | Is the hardware node, IRQ, GPIO, thermal zone, power path, or driver behavior correct? |
 | AOSP/Lineage/CLO | Is this upstream behavior, a known fix, or a device-specific gap? |
@@ -84,8 +84,10 @@ guesses.
 
 ### WP4: Camera, biometrics, and haptics
 
-- MTR-012/MTR-022: clean-state Aperture FHD30/FHD60/UHD30 stabilization and
-  front/back routing acceptance with provider/tombstone monitoring.
+- MTR-022 temporary-APK acceptance passed for FHD30/FHD60/UHD30 routing,
+  finalized files, process restart, provider stability, and tombstone monitoring.
+  Re-run after the coherent OTA. MTR-012 still requires measured stabilization,
+  crop, cadence, zoom-transition, and motion acceptance before enabling EIS.
 - MTR-018: compare UDFPS refresh/LHBM ordering with stock and upstream, then run
   50 screen-on/AOD unlocks and enrollment at Smooth Display off.
 - MTR-011: recover actual stock effect/primitive mappings before advertising or
@@ -101,7 +103,8 @@ guesses.
 
 ## Next execution order
 
-1. Publish r20 records/source lock and retain normal-system updater as default.
+1. Produce and audit the coherent Aperture camera-routing candidate; retain
+   normal-system updater as the default upgrade path.
 2. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.
 3. Execute WP2 when a physical SIM and private eSIM activation code are available.

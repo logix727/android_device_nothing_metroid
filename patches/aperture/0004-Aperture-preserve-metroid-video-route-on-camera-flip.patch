@@ -1,0 +1,33 @@
+From ee3d168733fdb6e043fa80bed3e72fdb0246d400 Mon Sep 17 00:00:00 2001
+From: Metroid Maintainer <maintainer@localhost>
+Date: Sat, 8 Aug 2026 21:41:12 -0400
+Subject: [PATCH] Aperture: preserve metroid video route on camera flip
+
+Use the persisted video selection when returning from the front camera. The
+temporary front configuration can fall back to FHD and otherwise route UHD
+back to logical camera 4 instead of physical camera 0.
+
+Change-Id: Ib7089099fa086cfa7de828dcf0900767a06a6186
+---
+ .../org/lineageos/aperture/viewmodels/CameraViewModel.kt    | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt b/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
+index 06eda41..abe303f 100644
+--- a/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
++++ b/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt
+@@ -1260,7 +1260,11 @@ class CameraViewModel(application: Application) : ApertureViewModel(application)
+         ).next(cameraConfiguration.camera.cameraFacing) ?: error("No camera available")
+ 
+         val camera = (cameraConfiguration as? CameraConfiguration.Video)?.let {
+-            getMetroidVideoCamera(cameraFacing, it.videoQuality, it.videoFrameRate)
++            getMetroidVideoCamera(
++                cameraFacing,
++                preferencesRepository.videoQuality.value,
++                preferencesRepository.videoFrameRate.value,
++            )
+         }?.takeIf {
+             it.supportsCameraMode(cameraConfiguration.cameraMode)
+         } ?: when (cameraFacing) {
+-- 
+2.43.0
