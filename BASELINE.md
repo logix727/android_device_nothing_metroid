@@ -1,8 +1,14 @@
-# Maintainer-local installed baseline
+# Maintainer-local accepted baseline
 
 This is private target-device acceptance evidence, not a redistribution claim.
 The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
+
+This records the last accepted release, not the current live state. After r22's
+Virtual A/B merge and a manual slot-A reactivation, the device currently runs
+r22 system/vendor/product with r21 slot-A `init_boot`. This is a mixed diagnostic
+state, not a release candidate; each observed mixed-state boot produces four GMS
+Password Checkup fatalities. See `HARDWARE_ACCEPTANCE.md`.
 
 ## ROM
 
@@ -11,7 +17,7 @@ separately flashed matching stock modem firmware.
 - OTA: `lineage-23.0-20260808-UNOFFICIAL-metroid.zip`
 - OTA SHA-256: `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
 - Verified snapshot: `releases/candidate_20260808_192539_leaudio-r21/`
-- Installed slot: A
+- Accepted slot when recorded: A
 - SELinux: Enforcing
 - Data: encrypted
 - Root vbmeta flags: `1` (hashtree disabled for recovery add-ons; verification
@@ -78,7 +84,8 @@ separately flashed matching stock modem firmware.
 
 ## Source revisions
 
-Full source state is sealed under the r17 snapshot. Primary revisions:
+Full accepted source state is sealed under the r21 verified snapshot. Primary
+revisions:
 
 | Project | Revision |
 |---|---|

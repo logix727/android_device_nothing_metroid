@@ -1,13 +1,20 @@
 # Next release
 
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
-Canonical installed baseline: [`BASELINE.md`](BASELINE.md).
+Canonical accepted baseline: [`BASELINE.md`](BASELINE.md).
+Canonical hardware matrix: [`HARDWARE_ACCEPTANCE.md`](HARDWARE_ACCEPTANCE.md).
 
-## Installed baseline
+## Accepted baseline and live state
 
-r21 (`23.0-20260808-UNOFFICIAL-metroid`) is installed on slot A with encrypted
+r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypted
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
+
+After r22's audited OTA and snapshot merge, slot A was manually reactivated.
+Read-only hashes show that the device now runs r22 system/vendor/product with
+r21 slot-A `init_boot`. This mixed diagnostic state returned through ADB in 51
+seconds but reproduced four GMS Password Checkup fatalities. It is not a release
+candidate and added no native tombstone.
 
 The tested configuration has three independently verified inputs:
 
@@ -56,8 +63,6 @@ guesses.
 
 - MTR-005: reproduce controlled unplugged load while logging live skin, battery,
   framework severity, cooling devices, display mitigation, and process CPU/GPU.
-- MTR-009: compare stock charge HAL binary/RC/VINTF/policy and archived charge-HAL
-  experiment, then restore only the complete stock policy stack.
 - MTR-009 fix installed: exact A16 binary/RC, mandatory compatibility entry,
   standalone VINTF, typed SELinux policy, two boots, and no charge AVCs. Complete
   the remaining unplug/reconnect, hot-battery, wireless, and reverse-charge matrix.
@@ -75,10 +80,9 @@ guesses.
 
 ### WP3: Bluetooth and audio
 
-- MTR-010 source fix staged: `product.prop` is consumed and overrode the stock
-  vendor profile enables. Remove eight false gates and restore stock hearing-aid
-  and allow-list values. Installed r21 starts all profile services across two
-  boots; test real LC3/Auracast hardware.
+- MTR-010 fix installed: eight false profile gates were removed and stock
+  hearing-aid/allow-list values restored. Accepted r21 starts all profile
+  services across two boots; test real LC3/Auracast hardware.
 - MTR-025: align MusicFX service discovery with installed AudioFX.
 - Validate USB-C audio, HFP/SCO, A2DP fallback, volume coordination, and suspend.
 
@@ -86,11 +90,13 @@ guesses.
 
 - MTR-022 temporary-APK acceptance passed for FHD30/FHD60/UHD30 routing,
   finalized files, process restart, provider stability, and tombstone monitoring.
-  Audited r22 reached slot B and completed snapshot merge, but failed the required
-  second-boot connectivity gate and is rejected. Recover the device without
-  erasing userdata, capture the early-boot failure, then rebuild/re-run the full
-  OTA matrix. MTR-012 still requires measured stabilization, crop, cadence,
-  zoom-transition, and motion acceptance before enabling EIS.
+  Audited r22 reached slot B, completed snapshot merge, and subsequently passed a
+  controlled repeat boot on slot A. It remains rejected because every observed
+  mixed-state boot produces four GMS Password Checkup fatalities. Mixed-state
+  diagnostics show FHD60 routing and UHD30 routing/finalization working; repeat
+  on a coherent candidate and complete FHD30, long-run, zoom and restart coverage.
+  MTR-012 still requires
+  measured stabilization, crop, cadence, zoom-transition, and motion acceptance.
 - MTR-018: compare UDFPS refresh/LHBM ordering with stock and upstream, then run
   50 screen-on/AOD unlocks and enrollment at Smooth Display off.
 - MTR-011: recover actual stock effect/primitive mappings before advertising or
@@ -106,12 +112,12 @@ guesses.
 
 ## Next execution order
 
-1. Produce and audit the coherent Aperture camera-routing candidate; retain
-   normal-system updater as the default upgrade path.
-2. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
+1. Resolve the r22 GMS crash evidence and complete a clean crash-hygiene gate.
+2. Complete installed-system Aperture acceptance from the canonical hardware matrix.
+3. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.
-3. Execute WP2 when a physical SIM and private eSIM activation code are available.
-4. Execute WP3-WP5 in dependency order, using stock/kernel/upstream evidence first.
+4. Execute WP2 when a physical SIM and private eSIM activation code are available.
+5. Execute WP3-WP5 in dependency order, using stock/kernel/upstream evidence first.
 
 ## Release gate
 

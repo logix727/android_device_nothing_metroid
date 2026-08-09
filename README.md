@@ -115,7 +115,10 @@ builder-supplied and are verified separately.
    supplies a private signing path with `METROID_AVB_KEY_PATH`; private keys must
    never be committed or shared.
 
-The installed maintainer baseline is recorded in [`BASELINE.md`](BASELINE.md).
+The accepted maintainer baseline is recorded in [`BASELINE.md`](BASELINE.md).
+The exhaustive per-operation hardware status is recorded in
+[`HARDWARE_ACCEPTANCE.md`](HARDWARE_ACCEPTANCE.md); service registration alone
+does not satisfy that matrix.
 The current public reconstruction record is
 [`release/20260806-source-lock.json`](release/20260806-source-lock.json); it is a
 source candidate, not a claim that a matching OTA has passed device validation.
