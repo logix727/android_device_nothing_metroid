@@ -275,7 +275,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-010: LE Audio profile family is explicitly disabled
 
 - Severity: high
-- Status: source-fixed; runtime/hardware acceptance pending
+- Status: installed on r21; real-hardware acceptance pending
 - Impact: unicast, broadcast, VCP, CSIP, HAP, MCP, and CCP cannot start.
 - Evidence: all eight installed LE Audio profile properties and the hearing-aid
   feature override are `false`.
@@ -290,6 +290,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   controller capability checks remain authoritative. Existing devices retain
   both old `persist.*` values in `/data`; the device init migration resets them
   to stock on boot.
+- r21: all eight effective properties are true across two boots; persisted
+  hearing-aid is true and allow-list bypass false. BAP assistant, CSIP, HAP,
+  LE call control, MCP, VCP, and LE Audio services start; ISO manager and LE
+  Audio HAL client initialize with no Bluetooth crash or AVC.
 - Acceptance: real LC3 earbuds for playback, microphone, calls, volume/set
   coordination, broadcast, reconnect, suspend, and A2DP fallback.
 

@@ -9,9 +9,9 @@ separately flashed matching stock modem firmware.
 - Version: `23.0-20260808-UNOFFICIAL-metroid`
 - Build date UTC: `1786152646`
 - OTA: `lineage-23.0-20260808-UNOFFICIAL-metroid.zip`
-- OTA SHA-256: `8a7ed31caa2415c9de8f84eb5c0411ffe497a94a313103d86bfef9cf11b5911f`
-- Verified snapshot: `releases/candidate_20260808_175755_charge-updater-r20/`
-- Installed slot: B
+- OTA SHA-256: `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
+- Verified snapshot: `releases/candidate_20260808_192539_leaudio-r21/`
+- Installed slot: A
 - SELinux: Enforcing
 - Data: encrypted
 - Root vbmeta flags: `1` (hashtree disabled for recovery add-ons; verification
@@ -55,6 +55,9 @@ separately flashed matching stock modem firmware.
 - r20 was installed from Android through normal-system update_engine. Lineage
   `backuptool_ab` preserved MindTheGapps, addon.d, Google permission/sysconfig,
   GMS, and Play Store without recovery interaction.
+- r21 restores the stock LE Audio profile family. BAP assistant, CSIP, HAP,
+  LE call control, MCP, VCP, and LE Audio services start across two boots with
+  ISO manager/HAL initialization and no Bluetooth AVC/crash.
 - Launch API and boot-image SPL metadata are corrected.
 - GNSS property and MediaCodec media-quality lookup defects remain fixed.
 - eSIM: native `EuiccManager` is enabled across two boots; Google SIM Manager
@@ -79,7 +82,7 @@ Full source state is sealed under the r17 snapshot. Primary revisions:
 
 | Project | Revision |
 |---|---|
-| `device/nothing/metroid` | `758535261f6b6ec22ea9564d57762bdde8c9e2c4` |
+| `device/nothing/metroid` | `9ab75995eaf77217b9719a533fec86c844e65ae0` |
 | `vendor/nothing/metroid` | `636496ba47257fe7a8673af07eb54b5eb06b06de` (private) |
 | `kernel/nothing/sm8735` | `ce342da8315a62e6144882faeddbdeccda544f9b` |
 | `build/soong` | `b4bbdf5956a788ab60921bd71421b1c9be31a8f0` |

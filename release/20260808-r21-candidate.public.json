@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "record_type": "public-target-validated-candidate",
+  "status": "not-published-pending-proprietary-redistribution-clearance",
+  "release": "lineage-23.0-20260808-r21",
+  "rom": {
+    "file": "lineage-23.0-20260808-UNOFFICIAL-metroid.zip",
+    "size": 4094885003,
+    "sha256": "e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db"
+  },
+  "source": {
+    "device_revision": "9ab75995eaf77217b9719a533fec86c844e65ae0",
+    "private_vendor_revision": "636496ba47257fe7a8673af07eb54b5eb06b06de",
+    "kernel_revision": "ce342da8315a62e6144882faeddbdeccda544f9b",
+    "private_vendor_revision_published": false
+  },
+  "offline_validation": {
+    "check_vintf_all": "compatible",
+    "payload_target_files_equivalence": "16-of-16-pass-normalized",
+    "avb_chain": "pass",
+    "root_vbmeta_flags": 1
+  },
+  "runtime_validation": "passed-two-boots-focused-no-cts",
+  "verified": [
+    "normal-system update_engine install with GApps preservation",
+    "eight stock LE Audio profile properties enabled",
+    "BAP assistant, CSIP, HAP, CCP, MCP, VCP, and LE Audio services started",
+    "ISO manager and LE Audio HAL client initialized without Bluetooth crash or AVC",
+    "charge HAL, GApps, encryption, Enforcing, and snapshot state remained healthy"
+  ],
+  "unverified": [
+    "real LC3 earbuds, hearing aids, and Auracast source/receiver hardware",
+    "remaining camera, UDFPS, haptic, NFC, USB, suspend, and carrier acceptance"
+  ]
+}

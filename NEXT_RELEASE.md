@@ -5,14 +5,14 @@ Canonical installed baseline: [`BASELINE.md`](BASELINE.md).
 
 ## Installed baseline
 
-r20 (`23.0-20260808-UNOFFICIAL-metroid`) is installed on slot B with encrypted
+r21 (`23.0-20260808-UNOFFICIAL-metroid`) is installed on slot A with encrypted
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
 The tested configuration has three independently verified inputs:
 
-1. ROM OTA: `releases/candidate_20260808_175755_charge-updater-r20/`, SHA-256
-   `8a7ed31caa2415c9de8f84eb5c0411ffe497a94a313103d86bfef9cf11b5911f`.
+1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256
+   `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`.
 2. MindTheGapps Android 16 ARM64 add-on, SHA-256
    `a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28`,
    sideloaded from the new-slot recovery after the ROM OTA.
@@ -77,7 +77,8 @@ guesses.
 
 - MTR-010 source fix staged: `product.prop` is consumed and overrode the stock
   vendor profile enables. Remove eight false gates and restore stock hearing-aid
-  and allow-list values; then test real LC3 hardware.
+  and allow-list values. Installed r21 starts all profile services across two
+  boots; test real LC3/Auracast hardware.
 - MTR-025: align MusicFX service discovery with installed AudioFX.
 - Validate USB-C audio, HFP/SCO, A2DP fallback, volume coordination, and suspend.
 
