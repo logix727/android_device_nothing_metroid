@@ -35,7 +35,7 @@ adb shell 'service check android.os.UpdateEngineService | grep -q found'
 lineage_root="$(realpath ../../..)"
 client="${UPDATE_ENGINE_CLIENT:-$lineage_root/out/target/product/metroid/system/bin/update_engine_client}"
 if [[ ! -x "$client" ]]; then
-  "$lineage_root/../build_los23.sh" update_engine_client
+  "$lineage_root/../tools/maintenance/build_los23.sh" update_engine_client
 fi
 [[ -x "$client" ]]
 adb push "$client" /data/local/tmp/update_engine_client >/dev/null
