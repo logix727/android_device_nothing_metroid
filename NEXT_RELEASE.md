@@ -126,6 +126,11 @@ guesses.
 
 ## Release gate
 
+Frozen r25 record: `release/20260812-r25-candidate.json`. Its modem companion is
+the official B4.0 `251117` transport image; a 656-file recursive SHA-256
+comparison proves its filesystem content is identical to the accepted A16 modem
+tree already installed on both slots. r25 does not change or embed modem firmware.
+
 1. `repo status` plus explicit device/kernel/vendor checks are clean.
 2. Every local carry is committed, reproducible, and represented in the source lock.
 3. Fresh install-clean `m bacon` succeeds.
