@@ -1,0 +1,60 @@
+From 402087761da73e1151573fab75ef46b77fb262d8 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Wed, 12 Aug 2026 19:57:38 -0400
+Subject: [PATCH 2/2] Tethering: prefer active NCM classification
+
+Change-Id: I340b6099d0deffc4e2b4369bb2af23492a365efd
+---
+ .../android/networkstack/tethering/Tethering.java    |  6 ++++--
+ .../networkstack/tethering/TetheringTest.java        | 12 ++++++++++++
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/Tethering/src/com/android/networkstack/tethering/Tethering.java b/Tethering/src/com/android/networkstack/tethering/Tethering.java
+index 441a19f..0379c0b 100644
+--- a/Tethering/src/com/android/networkstack/tethering/Tethering.java
++++ b/Tethering/src/com/android/networkstack/tethering/Tethering.java
+@@ -708,7 +708,7 @@ public class Tethering {
+ 
+     void interfaceAdded(String iface) {
+         if (VDBG) Log.d(TAG, "interfaceAdded " + iface);
+-        if (mNcmEnabled && ifaceNameToType(iface) == TETHERING_NCM
++        if (mNcmEnabled && mConfig.isNcm(iface)
+                 && !mTetherStates.containsKey(iface)) {
+             final int type = getServedUsbType(true /* forNcmFunction */);
+             final TetheringRequest request = mRequestTracker.getOrCreatePendingRequest(type);
+@@ -1856,7 +1856,9 @@ public class Tethering {
+         final TetheringRequest request = mRequestTracker.getOrCreatePendingRequest(tetheringType);
+         if (ifaces != null) {
+             for (String iface : ifaces) {
+-                if (ifaceNameToType(iface) == tetheringType) {
++                final boolean matches = forNcmFunction
++                        ? mConfig.isNcm(iface) : ifaceNameToType(iface) == tetheringType;
++                if (matches) {
+                     enableIpServing(request, iface, forNcmFunction);
+                     return;
+                 }
+diff --git a/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java b/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java
+index 12b2597..56aa78d 100644
+--- a/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java
++++ b/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java
+@@ -1089,6 +1089,18 @@ public class TetheringTest {
+         verify(mNetd).tetherInterfaceAdd(TEST_NCM_IFNAME);
+     }
+ 
++    @Test
++    public void testNcmConfiguredWithOverlappingUsbRegexStartsTethering() throws Exception {
++        when(mResources.getStringArray(R.array.config_tether_usb_regexs))
++                .thenReturn(new String[] {TEST_RNDIS_REGEX, TEST_NCM_REGEX});
++        initTetheringOnTestThread();
++        prepareNcmTethering();
++
++        sendUsbBroadcast(true, true, TETHER_USB_NCM_FUNCTION);
++
++        verify(mNetd).tetherInterfaceAdd(TEST_NCM_IFNAME);
++    }
++
+     @Test
+     public void failingLocalOnlyHotspotLegacyApBroadcastWithIfaceStatusChanged() throws Exception {
+         failingLocalOnlyHotspotLegacyApBroadcast(true);
+-- 
+2.43.0

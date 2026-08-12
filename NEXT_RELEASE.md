@@ -33,6 +33,12 @@ Its NCM RRO is active, but installed testing exposed a framework race: USB
 configured precedes `usb0`, and Android B ignores the later interface event.
 The final successor adds only the tested Connectivity retry carry.
 
+r27 installed coherently twice on slot A with no init regression, but NCM still
+fails before `IpServer`: `usb0` matches both generic USB and NCM regexes and the
+generic type wins. The final source-only correction prefers NCM classification
+while NCM is active. The release train has reached its third-write stop rule; do
+not install another candidate until a new train is reviewed.
+
 The tested configuration has three independently verified inputs:
 
 1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256

@@ -455,6 +455,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Successor correction: Connectivity retries NCM serving when a matching late
   interface appears while NCM is already configured; focused Tethering tests and
   `TetheringNext` build pass.
+- r27 installed result: the retry still misclassifies `usb0` because it matches
+  both generic USB and NCM regexes and generic USB is checked first. NCM transport
+  remains partial; do not promote r27 as closing MTR-019.
+- Final source fix: when the active function is NCM, use the NCM matcher directly
+  for configured and late-interface paths. Focused overlap/race tests pass. No
+  further OTA is allowed in this release train.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 
