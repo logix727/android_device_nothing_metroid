@@ -13,14 +13,17 @@ project is patched, it verifies the resulting Git tree against `series.conf`.
 Commit IDs created by `git am` may vary with committer metadata; the result tree
 is the reproducibility contract.
 
-The framework patch carries the UDFPS coordinate override and two
-`system_server` boot-safety fixes. The recovery patch raises minui's input
+The framework patches carry the UDFPS coordinate override, two `system_server`
+boot-safety fixes, and the metroid AudioFX binding. The AudioFX and Settings
+series carry the matching service export and locale-safe face guidance. The
+recovery patch raises minui's input
 device capacity so the PMIC power and volume-down keys are registered after
 the phone's squeeze-sensor input nodes. The Soong patch restores the platform
 security-patch property in the boot/init_boot ramdisk build properties.
 
 The series includes every required framework, app, HAL, build, and recovery
-patch. Do not apply it to the recorded post-patch commits.
+patch. A candidate must not rely on an unlisted local commit. Do not apply it to
+the recorded post-patch commits.
 
 The vendor tree is proprietary and must not be published. Populate it from your
 own stock dump with `extract-files.py`. Private extraction revisions remain in

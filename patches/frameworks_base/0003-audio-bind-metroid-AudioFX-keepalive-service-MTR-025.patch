@@ -1,0 +1,91 @@
+From 9a8ec9477557854edc02a292216c6759543da4e8 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 10 Aug 2026 19:36:03 -0400
+Subject: [PATCH] audio: bind metroid AudioFX keepalive service (MTR-025)
+
+Align MusicFxHelper package/service discovery with the installed
+org.lineageos.audiofx implementation instead of repeatedly binding the
+nonexistent com.android.musicfx component.
+
+Change-Id: I19760f3bbd7ac0546e9684bc8de726ddecdb6f11
+---
+ .../android/server/audio/MusicFxHelper.java    | 18 ++++++++++--------
+ .../server/audio/MusicFxHelperTest.java        |  2 +-
+ 2 files changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/services/core/java/com/android/server/audio/MusicFxHelper.java b/services/core/java/com/android/server/audio/MusicFxHelper.java
+index cf0b2ae15..343789676 100644
+--- a/services/core/java/com/android/server/audio/MusicFxHelper.java
++++ b/services/core/java/com/android/server/audio/MusicFxHelper.java
+@@ -63,7 +63,9 @@ public class MusicFxHelper {
+ 
+     private final String mPackageName = this.getClass().getPackage().getName();
+ 
+-    private final String mMusicFxPackageName = "com.android.musicfx";
++    private static final String MUSIC_FX_PACKAGE_NAME = "org.lineageos.audiofx";
++    private static final String MUSIC_FX_SERVICE_NAME =
++            "org.lineageos.audiofx.service.AudioFxService";
+ 
+     /*package*/ static final int MSG_EFFECT_CLIENT_GONE = MUSICFX_HELPER_MSG_START + 1;
+ 
+@@ -104,21 +106,21 @@ public class MusicFxHelper {
+                 int procState = ActivityManager.PROCESS_STATE_NONEXISTENT;
+                 try {
+                     procState = ActivityManager.getService().getPackageProcessState(
+-                            mMusicFxPackageName, mPackageName);
++                            MUSIC_FX_PACKAGE_NAME, mPackageName);
+                 } catch (RemoteException e) {
+                     Log.e(TAG, "RemoteException with getPackageProcessState: " + e);
+                 }
+                 if (procState > ActivityManager.PROCESS_STATE_IMPORTANT_FOREGROUND) {
+-                    Intent bindIntent = new Intent().setClassName(mMusicFxPackageName,
+-                            "com.android.musicfx.KeepAliveService");
++                    Intent bindIntent = new Intent().setClassName(
++                            MUSIC_FX_PACKAGE_NAME, MUSIC_FX_SERVICE_NAME);
+                     mIsBound = true;
+                     mContext.bindServiceAsUser(
+                             bindIntent, mMusicFxBindConnection, Context.BIND_AUTO_CREATE,
+                             UserHandle.of(getCurrentUserId()));
+-                    Log.i(TAG, "bindService to " + mMusicFxPackageName);
++                    Log.i(TAG, "bindService to " + MUSIC_FX_PACKAGE_NAME);
+                 }
+ 
+-                Log.i(TAG, mMusicFxPackageName + " procState " + procState);
++                Log.i(TAG, MUSIC_FX_PACKAGE_NAME + " procState " + procState);
+             }
+             try {
+                 if (mUidObserverToken == null) {
+@@ -164,7 +166,7 @@ public class MusicFxHelper {
+                     mContext.unbindService(mMusicFxBindConnection);
+                     mIsBound = false;
+                     Log.i(TAG, "last session closed, unregister UID observer, and unbind "
+-                            + mMusicFxPackageName);
++                            + MUSIC_FX_PACKAGE_NAME);
+                 }
+             }
+         }
+@@ -396,7 +398,7 @@ public class MusicFxHelper {
+                     closeIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId);
+                     closeIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                     // set broadcast target
+-                    closeIntent.setPackage(mMusicFxPackageName);
++                    closeIntent.setPackage(MUSIC_FX_PACKAGE_NAME);
+                     mContext.sendBroadcastAsUser(closeIntent, UserHandle.ALL);
+                 }
+                 mClientUidSessionMap.remove(Integer.valueOf(uid));
+diff --git a/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java b/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java
+index d89cf7bb5..753014c3f 100644
+--- a/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java
++++ b/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java
+@@ -59,7 +59,7 @@ public class MusicFxHelperTest {
+     private ResolveInfo mResolveInfo2 = new ResolveInfo();
+     private final String mTestPkg1 = new String("testPkg1"), mTestPkg2 = new String("testPkg2"),
+             mTestPkg3 = new String("testPkg3"), mTestPkg1Equivalent = new String("testPkg1");
+-    private final String mMusicFxPkgName = new String("com.android.musicfx");
++    private final String mMusicFxPkgName = new String("org.lineageos.audiofx");
+     private final int mTestUid1 = 1, mTestUid2 = 2, mTestUid3 = 3, mMusicFxUid = 78;
+     private final int mTestSession1 = 11, mTestSession2 = 22, mTestSession3 = 33;
+ 
+-- 
+2.43.0
+
