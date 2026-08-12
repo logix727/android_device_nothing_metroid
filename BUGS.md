@@ -23,7 +23,8 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-021, MTR-023, MTR-024, MTR-025 |
+| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-024 |
+| Built not installed | MTR-019, MTR-021, MTR-023, MTR-025 |
 | Evidence incomplete | MTR-020 |
 | Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022 |
 | External hardware/carrier/policy acceptance | MTR-001, MTR-002, MTR-027, physical SIM/IMS/OMAPI |
@@ -436,13 +437,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: latent deterministic defect
+- Status: `BUILT-NOT-INSTALLED` for r25
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
-- Source: vendor init creates `ncm.0` at
-  `vendor/nothing/metroid/proprietary/vendor/etc/init/hw/init.qcom.usb.rc:78-86`,
-  while `vendor/qcom/opensource/usb/hal/UsbGadget.cpp:225-226` links `ncm.gs6`.
-- Fix direction: align the device configfs function or make the HAL instance
-  device-configurable.
+- First divergence: stock-derived vendor init created `ncm.0` while the selected
+  QTI gadget HAL links `ncm.gs6`.
+- Source fix: extraction changes the configfs instance to `ncm.gs6`; fresh staged
+  vendor output contains the nine matching paths and no `ncm.0`.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 
@@ -464,7 +464,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-021: inherited init inventory contains dangling services and invalid work
 
 - Severity: medium
-- Status: confirmed cleanup/integration defect
+- Status: `BUILT-NOT-INSTALLED` for the bounded r25 cleanup
 - Impact: normal boot attempts missing executables and imports, obscuring real
   failures and advertising unavailable QSPA, CHRE, QCC, factory, and helper paths.
 - Evidence: a static normal-boot audit finds inherited RC entries whose
@@ -477,8 +477,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Source fix staged: replace the copied `vendor.qti.qspa-service.rc` that pointed
   to an absent executable with Qualcomm's source-built module, which owns the
   stock-matching RC and `IQspa/default` VINTF fragment. Focused build and VINTF
-  validation pass; r17 registers `IQspa/default` across two boots. Remaining
-  MTR-021 work covers other dangling inventory only.
+  validation pass; r17 registers `IQspa/default` across two boots. The r25
+  extraction now drops five RC-only feature fragments and strips stale CAN,
+  standalone ATFWD, eSE and CHRE declarations rather than importing incomplete or
+  privacy-sensitive stock stacks. Fresh install-clean staging audits 265 RC
+  files, 376 services and 81 direct execs with zero boot-harm, zero unconditional
+  dangles and zero unknowns; VINTF compatibility and duplicate checks pass.
 
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 

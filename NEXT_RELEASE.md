@@ -105,8 +105,10 @@ guesses.
 
 ### WP5: Connectivity, suspend, and cleanup
 
-- MTR-015 QCC, MTR-016 sensor extension, MTR-019 USB NCM, MTR-021 remaining
-  dangling init inventory, and MTR-024 ST21 transition errors. MTR-020 returns to
+- MTR-019 NCM and the bounded MTR-021 init cleanup are `BUILT-NOT-INSTALLED` for
+  r25 after fresh staged-image checks. MTR-015 QCC remains a separate atomic
+  feature decision; MTR-016 sensor extension and MTR-024 ST21 remain active.
+  MTR-020 returns to
   evidence collection because current and latest NothingOSS tuna both use the
   existing register; do not transfer the `kera` address.
 - Group RC/VINTF changes by subsystem, but retain one first-failure cause and one
