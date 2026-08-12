@@ -457,8 +457,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Stock comparison: NothingOSS tuna uses `0x178a0098` in both B4.1 `260414` and
   `260624`. The previously proposed `0x178b0098` belongs to `kera`, a different
   SoC/device, and must not be copied into metroid.
-- Next action: capture probe/map failure details and compare the driver, resources,
-  permissions, and firmware behavior before defining any kernel change.
+- Live localization (2026-08-12): coherent r22 exposes the exact stock-matching
+  DT node and all ten resources, and both CPUSS modules are loaded, but
+  `17800054.cpuss-sleep-stats` remains unbound with no debugfs tree. Historical
+  boots report `-22`; the driver collapses any secure SCM configuration-register
+  read failure to that value, so the first failing address is still unknown.
+- Next action: use a separately reviewed non-promotable diagnostic kernel to log
+  the first failing SCM read, then compare equivalent stock runtime behavior.
+  Do not change a register address or include this question in r25.
 - Acceptance: successful probe and counters increasing over repeated suspend.
 
 ### MTR-021: inherited init inventory contains dangling services and invalid work
