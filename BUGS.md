@@ -529,6 +529,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   empty locale values at `packages/apps/Settings/res-product/values-es/strings.xml:58-65`.
 - Fix direction: implement a locale-safe upstream fallback or real translations.
   Do not label English text as translated content.
+- r23/r24 disposition: rejected implementation. Commit `89dfc1c` covered only
+  selected dynamic Java consumers and missed static headings, accessibility text,
+  and parental-consent resources.
+- r25 replacement: one shared resolver preserves non-empty localized text and
+  falls back to truthful English without changing locale or layout direction;
+  all dynamic, static, accessibility, and parental-consent consumers are covered.
+  Settings and focused framework builds pass. `SettingsUnitTests` is currently
+  blocked by unrelated pre-existing `SaveAndFinishWorkerTest` signature errors.
 - Acceptance: complete enrollment in representative Latin, CJK, and RTL locales;
   all actionable safety/accessibility guidance is visible and appropriate.
 
@@ -559,6 +567,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   does not match the installed `packages/apps/AudioFX/AndroidManifest.xml:67-88`.
 - Fix direction: align package/service discovery with the installed AudioFX
   implementation instead of repeatedly binding a nonexistent component.
+- r23/r24 disposition: rejected implementation. The old carry exported the
+  operational DSP/session-owning `AudioFxService` under the normal
+  `MODIFY_AUDIO_SETTINGS` permission and bound it as an AOSP keepalive.
+- r25 replacement: `AudioFxService` remains private; a dedicated inert exported
+  `KeepAliveService` owns no DSP/session state, and framework tests assert the
+  exact component. FrameworksServicesTests and AudioFX builds pass; merged
+  manifest inspection confirms only the inert service is exported.
 - Acceptance: effect open/close, playback, client death, reboot persistence, and
   no bind failures.
 

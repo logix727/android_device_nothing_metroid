@@ -1,0 +1,59 @@
+From 650c0e93148efa69fc196136056524f9473fed96 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Wed, 12 Aug 2026 14:21:49 -0400
+Subject: [PATCH] AudioFX: add inert framework keepalive service
+
+Change-Id: I2c30b5a8fb43fb372b267de32f3c4a57bc49a943
+---
+ AndroidManifest.xml                           |  6 +++++-
+ .../audiofx/service/KeepAliveService.java     | 21 +++++++++++++++++++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
+ create mode 100644 src/org/lineageos/audiofx/service/KeepAliveService.java
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index cb10936..402c6dc 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -76,7 +76,11 @@
+             </intent-filter>
+         </activity>
+ 
+-        <service android:name=".service.AudioFxService"/>
++        <service android:name=".service.AudioFxService"
++            android:exported="false"/>
++
++        <service android:name=".service.KeepAliveService"
++            android:exported="true"/>
+ 
+         <receiver android:name=".receiver.ServiceDispatcher"
+             android:exported="true">
+diff --git a/src/org/lineageos/audiofx/service/KeepAliveService.java b/src/org/lineageos/audiofx/service/KeepAliveService.java
+new file mode 100644
+index 0000000..5ee14bf
+--- /dev/null
++++ b/src/org/lineageos/audiofx/service/KeepAliveService.java
+@@ -0,0 +1,21 @@
++/*
++ * SPDX-FileCopyrightText: 2023 The Android Open Source Project
++ * SPDX-License-Identifier: Apache-2.0
++ */
++
++package org.lineageos.audiofx.service;
++
++import android.app.Service;
++import android.content.Intent;
++import android.os.Binder;
++import android.os.IBinder;
++
++/** Keeps the AudioFX process alive without owning effect sessions or DSP state. */
++public class KeepAliveService extends Service {
++    private final IBinder mBinder = new Binder();
++
++    @Override
++    public IBinder onBind(Intent intent) {
++        return mBinder;
++    }
++}
+-- 
+2.43.0
+

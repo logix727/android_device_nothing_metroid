@@ -1,0 +1,75 @@
+From 52f2ed2334c2a0e0398fe43d58b05913532b8131 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Wed, 12 Aug 2026 14:21:49 -0400
+Subject: [PATCH] audio: bind AudioFX inert keepalive service
+
+Change-Id: Ic580e6199de2893ed37b675584f838212af08df7
+---
+ .../com/android/server/audio/MusicFxHelper.java    |  4 ++--
+ .../android/server/audio/MusicFxHelperTest.java    | 14 +++++++++++++-
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/services/core/java/com/android/server/audio/MusicFxHelper.java b/services/core/java/com/android/server/audio/MusicFxHelper.java
+index cf0b2ae15..497c5fd60 100644
+--- a/services/core/java/com/android/server/audio/MusicFxHelper.java
++++ b/services/core/java/com/android/server/audio/MusicFxHelper.java
+@@ -63,7 +63,7 @@ public class MusicFxHelper {
+ 
+     private final String mPackageName = this.getClass().getPackage().getName();
+ 
+-    private final String mMusicFxPackageName = "com.android.musicfx";
++    private final String mMusicFxPackageName = "org.lineageos.audiofx";
+ 
+     /*package*/ static final int MSG_EFFECT_CLIENT_GONE = MUSICFX_HELPER_MSG_START + 1;
+ 
+@@ -110,7 +110,7 @@ public class MusicFxHelper {
+                 }
+                 if (procState > ActivityManager.PROCESS_STATE_IMPORTANT_FOREGROUND) {
+                     Intent bindIntent = new Intent().setClassName(mMusicFxPackageName,
+-                            "com.android.musicfx.KeepAliveService");
++                            "org.lineageos.audiofx.service.KeepAliveService");
+                     mIsBound = true;
+                     mContext.bindServiceAsUser(
+                             bindIntent, mMusicFxBindConnection, Context.BIND_AUTO_CREATE,
+diff --git a/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java b/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java
+index d89cf7bb5..d4e4d0131 100644
+--- a/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java
++++ b/services/tests/servicestests/src/com/android/server/audio/MusicFxHelperTest.java
+@@ -42,6 +42,7 @@ import org.junit.runner.RunWith;
+ import org.mockito.InjectMocks;
+ import org.mockito.Mock;
+ import org.mockito.MockitoAnnotations;
++import org.mockito.ArgumentCaptor;
+ 
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -59,7 +60,9 @@ public class MusicFxHelperTest {
+     private ResolveInfo mResolveInfo2 = new ResolveInfo();
+     private final String mTestPkg1 = new String("testPkg1"), mTestPkg2 = new String("testPkg2"),
+             mTestPkg3 = new String("testPkg3"), mTestPkg1Equivalent = new String("testPkg1");
+-    private final String mMusicFxPkgName = new String("com.android.musicfx");
++    private final String mMusicFxPkgName = new String("org.lineageos.audiofx");
++    private static final String MUSIC_FX_KEEPALIVE =
++            "org.lineageos.audiofx.service.KeepAliveService";
+     private final int mTestUid1 = 1, mTestUid2 = 2, mTestUid3 = 3, mMusicFxUid = 78;
+     private final int mTestSession1 = 11, mTestSession2 = 22, mTestSession3 = 33;
+ 
+@@ -124,6 +127,15 @@ public class MusicFxHelperTest {
+         mMusicFxHelper.handleAudioEffectBroadcast(mMockContext, intent);
+         verify(mMockContext, times(bind))
+                 .bindServiceAsUser(any(), any(), anyInt(), any());
++        if (bind > 0) {
++            final ArgumentCaptor<Intent> bindIntent = ArgumentCaptor.forClass(Intent.class);
++            verify(mMockContext, times(bind))
++                    .bindServiceAsUser(bindIntent.capture(), any(), anyInt(), any());
++            Assert.assertEquals(mMusicFxPkgName,
++                    bindIntent.getValue().getComponent().getPackageName());
++            Assert.assertEquals(MUSIC_FX_KEEPALIVE,
++                    bindIntent.getValue().getComponent().getClassName());
++        }
+         verify(mMockContext, times(broadcast)).sendBroadcastAsUser(any(), any());
+     }
+ 
+-- 
+2.43.0
+

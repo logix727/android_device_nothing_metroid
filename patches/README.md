@@ -14,8 +14,9 @@ Commit IDs created by `git am` may vary with committer metadata; the result tree
 is the reproducibility contract.
 
 The framework patches carry the UDFPS coordinate override, two `system_server`
-boot-safety fixes, and the metroid AudioFX binding. The AudioFX and Settings
-series carry the matching service export and locale-safe face guidance. The
+boot-safety fixes, and the metroid AudioFX keepalive binding. The AudioFX series
+exports only a dedicated inert keepalive while its DSP service remains private;
+the Settings series carries dependency-closed face-guidance fallback. The
 recovery patch raises minui's input
 device capacity so the PMIC power and volume-down keys are registered after
 the phone's squeeze-sensor input nodes. The Soong patch restores the platform

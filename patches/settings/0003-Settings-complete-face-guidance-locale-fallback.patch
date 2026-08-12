@@ -1,0 +1,225 @@
+From 2ba75ba2e13865678c2d28aa383dde311517d37e Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Wed, 12 Aug 2026 14:21:49 -0400
+Subject: [PATCH] Settings: complete face guidance locale fallback
+
+Change-Id: I6559a5c9c0da2431149a46bd10b317c2f8c69ec7
+---
+ res/layout/face_enroll_introduction.xml       |  4 +-
+ .../face/FaceEnrollAccessibilityToggle.java   |  3 +
+ .../biometrics/face/FaceEnrollEducation.java  |  6 +-
+ .../face/FaceEnrollIntroduction.java          | 22 +++++---
+ .../biometrics/face/FaceEnrollTextUtils.java  | 27 +++++++++
+ .../face/FaceEnrollTextUtilsTest.java         | 55 +++++++++++++++++++
+ 6 files changed, 107 insertions(+), 10 deletions(-)
+ create mode 100644 src/com/android/settings/biometrics/face/FaceEnrollTextUtils.java
+ create mode 100644 tests/unit/src/com/android/settings/biometrics/face/FaceEnrollTextUtilsTest.java
+
+diff --git a/res/layout/face_enroll_introduction.xml b/res/layout/face_enroll_introduction.xml
+index 8b03529..6563aaa 100644
+--- a/res/layout/face_enroll_introduction.xml
++++ b/res/layout/face_enroll_introduction.xml
+@@ -61,6 +61,7 @@
+ 
+             <!-- Keep in mind -->
+             <TextView
++                android:id="@+id/info_title"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 style="@style/BiometricEnrollIntroTitle"
+@@ -153,6 +154,7 @@
+ 
+             <!-- How it works -->
+             <TextView
++                android:id="@+id/how_title"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 style="@style/BiometricEnrollIntroTitle"
+@@ -182,4 +184,4 @@
+ 
+     </LinearLayout>
+ 
+-</com.google.android.setupdesign.GlifLayout>
+\ No newline at end of file
++</com.google.android.setupdesign.GlifLayout>
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollAccessibilityToggle.java b/src/com/android/settings/biometrics/face/FaceEnrollAccessibilityToggle.java
+index b0b9488..3d3ac84 100644
+--- a/src/com/android/settings/biometrics/face/FaceEnrollAccessibilityToggle.java
++++ b/src/com/android/settings/biometrics/face/FaceEnrollAccessibilityToggle.java
+@@ -59,6 +59,9 @@ public class FaceEnrollAccessibilityToggle extends LinearLayout {
+         } finally {
+             a.recycle();
+         }
++        final TextView subtitleTextView = findViewById(R.id.subtitle);
++        subtitleTextView.setText(FaceEnrollTextUtils.getText(context,
++                R.string.security_settings_face_enroll_introduction_accessibility_expanded));
+         mSwitch = findViewById(R.id.toggle);
+         mSwitch.setChecked(false);
+         mSwitch.setClickable(false);
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollEducation.java b/src/com/android/settings/biometrics/face/FaceEnrollEducation.java
+index b35e599..be9cad8 100644
+--- a/src/com/android/settings/biometrics/face/FaceEnrollEducation.java
++++ b/src/com/android/settings/biometrics/face/FaceEnrollEducation.java
+@@ -78,7 +78,8 @@ public class FaceEnrollEducation extends BiometricEnrollBase {
+                     final int descriptionRes = isChecked
+                             ? R.string.security_settings_face_enroll_education_message_accessibility
+                             : R.string.security_settings_face_enroll_education_message;
+-                    setDescriptionText(descriptionRes);
++                    setDescriptionText(FaceEnrollTextUtils.getText(
++                            FaceEnrollEducation.this, descriptionRes));
+ 
+                     if (isChecked) {
+                         hideDefaultIllustration();
+@@ -113,7 +114,8 @@ public class FaceEnrollEducation extends BiometricEnrollBase {
+         setContentView(R.layout.face_enroll_education);
+ 
+         setTitle(R.string.security_settings_face_enroll_education_title);
+-        setDescriptionText(R.string.security_settings_face_enroll_education_message);
++        setDescriptionText(FaceEnrollTextUtils.getText(this,
++                R.string.security_settings_face_enroll_education_message));
+ 
+         mFaceManager = Utils.getFaceManagerOrNull(this);
+ 
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollIntroduction.java b/src/com/android/settings/biometrics/face/FaceEnrollIntroduction.java
+index f594456..15afa5e 100644
+--- a/src/com/android/settings/biometrics/face/FaceEnrollIntroduction.java
++++ b/src/com/android/settings/biometrics/face/FaceEnrollIntroduction.java
+@@ -148,18 +148,25 @@ public class FaceEnrollIntroduction extends BiometricEnrollIntroduction {
+         // Set text for views with multiple variations.
+         final TextView infoMessageGlasses = findViewById(R.id.info_message_glasses);
+         final TextView infoMessageLooking = findViewById(R.id.info_message_looking);
++        final TextView infoTitle = findViewById(R.id.info_title);
++        final TextView howTitle = findViewById(R.id.how_title);
+         final TextView howMessage = findViewById(R.id.how_message);
+         final TextView inControlTitle = findViewById(R.id.title_in_control);
+         final TextView inControlMessage = findViewById(R.id.message_in_control);
+         final TextView lessSecure = findViewById(R.id.info_message_less_secure);
+-        infoMessageGlasses.setText(getInfoMessageGlasses());
+-        infoMessageLooking.setText(getInfoMessageLooking());
+-        inControlTitle.setText(getInControlTitle());
+-        howMessage.setText(getHowMessage());
+-        inControlMessage.setText(Html.fromHtml(getString(getInControlMessage()),
++        infoTitle.setText(FaceEnrollTextUtils.getText(this,
++                R.string.security_settings_face_enroll_introduction_info_title));
++        howTitle.setText(FaceEnrollTextUtils.getText(this,
++                R.string.security_settings_face_enroll_introduction_how_title));
++        infoMessageGlasses.setText(FaceEnrollTextUtils.getText(this, getInfoMessageGlasses()));
++        infoMessageLooking.setText(FaceEnrollTextUtils.getText(this, getInfoMessageLooking()));
++        inControlTitle.setText(FaceEnrollTextUtils.getText(this, getInControlTitle()));
++        howMessage.setText(FaceEnrollTextUtils.getText(this, getHowMessage()));
++        inControlMessage.setText(Html.fromHtml(
++                FaceEnrollTextUtils.getText(this, getInControlMessage()).toString(),
+                 Html.FROM_HTML_MODE_LEGACY));
+         inControlMessage.setMovementMethod(LinkMovementMethod.getInstance());
+-        lessSecure.setText(getLessSecureMessage());
++        lessSecure.setText(FaceEnrollTextUtils.getText(this, getLessSecureMessage()));
+ 
+         final ScrollView scrollView =
+                 findViewById(com.google.android.setupdesign.R.id.sud_scroll_view);
+@@ -172,7 +179,8 @@ public class FaceEnrollIntroduction extends BiometricEnrollIntroduction {
+             final TextView infoMessageRequireEyes = findViewById(R.id.info_message_require_eyes);
+             infoRowRequireEyes.setVisibility(View.VISIBLE);
+             iconRequireEyes.getBackground().setColorFilter(getIconColorFilter());
+-            infoMessageRequireEyes.setText(getInfoMessageRequireEyes());
++            infoMessageRequireEyes.setText(
++                    FaceEnrollTextUtils.getText(this, getInfoMessageRequireEyes()));
+         }
+ 
+ 
+diff --git a/src/com/android/settings/biometrics/face/FaceEnrollTextUtils.java b/src/com/android/settings/biometrics/face/FaceEnrollTextUtils.java
+new file mode 100644
+index 0000000..55898da
+--- /dev/null
++++ b/src/com/android/settings/biometrics/face/FaceEnrollTextUtils.java
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (C) 2026 The LineageOS Project
++ * SPDX-License-Identifier: Apache-2.0
++ */
++
++package com.android.settings.biometrics.face;
++
++import android.content.Context;
++import android.content.res.Configuration;
++import android.text.TextUtils;
++
++import java.util.Locale;
++
++final class FaceEnrollTextUtils {
++    private FaceEnrollTextUtils() {}
++
++    static CharSequence getText(Context context, int resId) {
++        final CharSequence localized = context.getText(resId);
++        if (!TextUtils.isEmpty(localized)) {
++            return localized;
++        }
++        final Configuration configuration = new Configuration(
++                context.getResources().getConfiguration());
++        configuration.setLocale(Locale.ENGLISH);
++        return context.createConfigurationContext(configuration).getText(resId);
++    }
++}
+diff --git a/tests/unit/src/com/android/settings/biometrics/face/FaceEnrollTextUtilsTest.java b/tests/unit/src/com/android/settings/biometrics/face/FaceEnrollTextUtilsTest.java
+new file mode 100644
+index 0000000..4f0dd59
+--- /dev/null
++++ b/tests/unit/src/com/android/settings/biometrics/face/FaceEnrollTextUtilsTest.java
+@@ -0,0 +1,55 @@
++/*
++ * Copyright (C) 2026 The LineageOS Project
++ * SPDX-License-Identifier: Apache-2.0
++ */
++
++package com.android.settings.biometrics.face;
++
++import static com.google.common.truth.Truth.assertThat;
++
++import android.content.Context;
++import android.content.res.Configuration;
++
++import androidx.test.core.app.ApplicationProvider;
++import androidx.test.ext.junit.runners.AndroidJUnit4;
++
++import com.android.settings.R;
++
++import org.junit.Test;
++import org.junit.runner.RunWith;
++
++import java.util.Locale;
++
++@RunWith(AndroidJUnit4.class)
++public class FaceEnrollTextUtilsTest {
++    @Test
++    public void emptyLocalizedGuidanceFallsBackWithoutChangingLocale() {
++        for (Locale locale : new Locale[] {
++                Locale.forLanguageTag("es"),
++                Locale.forLanguageTag("ja"),
++                Locale.forLanguageTag("ar")}) {
++            final Configuration configuration = new Configuration(
++                    ApplicationProvider.getApplicationContext().getResources().getConfiguration());
++            configuration.setLocale(locale);
++            final Context context = ApplicationProvider.getApplicationContext()
++                    .createConfigurationContext(configuration);
++
++            assertThat(FaceEnrollTextUtils.getText(context,
++                    R.string.security_settings_face_enroll_introduction_info_looking).toString())
++                    .isNotEmpty();
++            assertThat(context.getResources().getConfiguration().getLocales().get(0))
++                    .isEqualTo(locale);
++        }
++    }
++
++    @Test
++    public void parentalAndAccessibilityFallbacksAreNonEmpty() {
++        final Context context = ApplicationProvider.getApplicationContext();
++        assertThat(FaceEnrollTextUtils.getText(context,
++                R.string.security_settings_face_enroll_introduction_info_consent_looking)
++                .toString()).isNotEmpty();
++        assertThat(FaceEnrollTextUtils.getText(context,
++                R.string.security_settings_face_enroll_introduction_accessibility_expanded)
++                .toString()).isNotEmpty();
++    }
++}
+-- 
+2.43.0
+

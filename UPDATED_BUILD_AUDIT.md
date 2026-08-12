@@ -295,8 +295,8 @@ Notes about previous revisions (retained for tracking; do not reuse as current i
   (r22 system/vendor/product + r21 `init_boot`) that reproduced four GMS Password
   Checkup fatalities.
 - r23 (`candidate_20260810_201016_audiofx-face-r23`, `e262e83e...`): full install-clean
-  build carrying MTR-023 (face locale) + MTR-025 (AudioFX binding). Both remain
-  `BUILT-NOT-INSTALLED`; r23 was not flashed in this workspace.
+  build carrying incomplete/unsafe MTR-023 and MTR-025 implementations. It was
+  not flashed and both implementations are rejected; r25 replaces them.
 - r24 (`releases/xda_seed_20260811_r24/`, `50143f9e...`): incremental over r23; delta
   MTR-021 init disables (atfwd/chre/nt_key_monitor). Historical public test seed;
   no verified live state, payload equivalence, or build-state provenance. It is
