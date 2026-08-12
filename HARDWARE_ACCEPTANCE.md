@@ -16,19 +16,20 @@ actually been exercised.
 | UNKNOWN | No functional result. Enumeration, a Binder service, or absence of a bug is not a pass. |
 | N/A | The inventory shows that the device does not expose this hardware. |
 
-Rows without a specific r21 result are not accepted-release claims. Live r22
-observations are candidate evidence only until a complete release gate passes.
+Rows without a specific r21 result are not accepted-release claims. Live
+coherent-r22 observations are diagnostic evidence only until a complete release
+gate passes.
 
 ## Tested configurations
 
 | Name | Build / slot | State |
 |---|---|---|
 | Accepted baseline | r21 `23.0-20260808`, OTA `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`, slot A | Enforcing, encrypted, two boots, empty crash buffer; accepted |
-| Latest diagnostic state | r22 system/vendor/product after Virtual A/B merge, slot A with r21 `init_boot` | Mixed state, Enforcing and encrypted. Read-only hashes prove slot-A `init_boot` is r21 while userspace build dates and Aperture are r22. Repeat boot returned through ADB in 51 s but reproduced four GMS Password Checkup fatalities; never a release candidate |
+| Latest live state | coherent r22 `23.0-20260809`, slot B | Enforcing and encrypted; MTR-026 crash gate clear across three retained coherent boots; Play Store storefront blocked as Play Protect uncertified (MTR-027); not accepted |
 
-Private live evidence for the latest diagnostic state is under
-`diagnostics/hardware_acceptance_20260809_r22/`. Public release evidence must be
-sanitized before publication.
+Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
+and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public
+release evidence must be sanitized before publication.
 
 ## Display and touch
 
@@ -49,15 +50,15 @@ telephoto and front S5KJN1. Logical SAT exposes 0.6x, 1x and 3x lens points.
 
 | Operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
-| Camera2 maximum-JPEG capture, exposed IDs 0-4 | UNKNOWN | PARTIAL: second sweep captured valid JPEGs from all five IDs; provider PID 1417 stable and no new tombstone | Validate image content, focus, exposure and physical-ID mapping. |
+| Camera2 maximum-JPEG capture, exposed IDs 0-4 | UNKNOWN | PARTIAL: coherent-r22 sweep captured valid JPEGs from all five IDs; provider PID 1380 stable and no new tombstone | Validate image content, focus, exposure and physical-ID mapping. |
 | Aperture preview and ordinary stills | PARTIAL | PARTIAL | Repeat front/rear and every physical lens on installed system APK. |
 | FHD30 video and flip | PARTIAL: temporary APK finalized 1920x1080/30, route `4 -> 1 -> 4` | UNKNOWN on system APK | Finalized file, audio, zoom and restart matrix. |
 | FHD60 video and flip | PARTIAL: temporary APK finalized 1920x1080/60, route `0 -> 1 -> 0` | PARTIAL diagnostic: r22 `/product` APK routes `0 -> 1 -> 0` in mixed boot state | Repeat on a coherent candidate and finalize a fresh clip plus thermal/cadence run. |
 | UHD30 video and flip | PARTIAL: temporary APK finalized 3840x2160/30, route `0 -> 1 -> 0` | PARTIAL diagnostic: r22 `/product` APK routes `0 -> 1 -> 0` and finalized a 3840x2160/30 H.264/AAC clip in mixed boot state; provider stayed PID 1377 and no tombstone changed | Repeat on a coherent candidate; long clip, zoom and thermal run. |
 | Stabilization/EIS | FAIL: intentionally disabled to avoid Morpho crash path | FAIL: feature remains disabled | MTR-012 walking/panning, crop, cadence and zoom matrix before enabling. |
-| SAT zoom and lens transitions | UNKNOWN | UNKNOWN | 0.6x/1x/3x transitions, intermediate zoom, focus/exposure continuity. |
-| Zoom while recording | UNKNOWN | UNKNOWN | FHD30/FHD60/UHD30 across all valid lenses. |
-| Flash / torch / front screen flash | UNKNOWN | UNKNOWN | Still/video torch, auto flash, front screen flash and thermal cutoff. |
+| SAT zoom and lens transitions | UNKNOWN | PARTIAL: coherent-r22 Camera2 sweep passed 0.6x/1x/3x/10x | UI transitions, focus/exposure continuity and intermediate zoom. |
+| Zoom while recording | UNKNOWN | PARTIAL: coherent-r22 1080p Camera2 clip applied 1x -> 3x without provider failure | FHD30/FHD60/UHD30 through Aperture across valid lenses. |
+| Flash / torch / front screen flash | UNKNOWN | PARTIAL: coherent-r22 Camera2 torch increased frame luma | Still/video auto flash, front screen flash and thermal cutoff. |
 | Third-party Camera2/WebRTC | UNKNOWN | PARTIAL: maintained Camera2 probe passes still capture | Video call, preview, recording and concurrent-client behavior. |
 
 ## Audio and media
@@ -182,22 +183,22 @@ No pressure/barometer sensor is exposed.
 | Hot-battery stop/resume | UNKNOWN | UNKNOWN | Controlled safe heating/cooling matrix. |
 | Thermal skin/headroom | PARTIAL: telemetry available | PARTIAL | MTR-005 controlled load, severity, cooling, display and charging mitigation. |
 | CPU/performance policy | PARTIAL: WALT/performance stack available | PARTIAL | Sustained CPU load, scheduling, throttling and ADPF/boost behavior. |
-| GPU compute | UNKNOWN | PARTIAL diagnostic: Adreno 825 Vulkan submission and 1024/1024 verified dwords in mixed state | Repeat on coherent candidate; GLES, sustained load, throttling and recovery. |
+| GPU compute | UNKNOWN | PARTIAL diagnostic: Adreno 825 Vulkan submission and 1024/1024 verified dwords | Repeat on a promotable candidate; GLES, sustained load, throttling and recovery. |
 
 ## Storage, security, boot and suspend
 
 | Operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
-| UFS `/data` read/write integrity | UNKNOWN | PARTIAL diagnostic: encrypted `/data` 64 MiB write/copy hashes matched | Repeat on coherent candidate; capacity, fsck, trim, fill, random I/O and power loss. |
+| UFS `/data` read/write integrity | UNKNOWN | PARTIAL diagnostic: encrypted `/data` 64 MiB write/copy hashes matched | Repeat on a promotable candidate; capacity, fsck, trim, fill, random I/O and power loss. |
 | File-based encryption | PASS | PASS | Recovery decrypt/format-data and fresh-install defaults. |
 | SELinux | PASS: Enforcing | PASS: Enforcing | AVC review per affected operation. |
 | AVB/signing/payload integrity | PASS offline/runtime boot | PASS offline and boots | Deliberate corruption/rollback behavior is destructive and untested. |
-| Normal-system OTA/GApps preservation | PASS through r21 | PARTIAL: r22 applied, merged and preserved GApps; later slot-A boot is mixed with r21 `init_boot` | Resolve GMS fatalities and complete two coherent boots on one slot. |
+| Normal-system OTA/GApps preservation | PASS through r21 | PARTIAL: r22 applied, merged, preserved GApps and passed three coherent crash-clean boots | Repeat on the next promotable candidate. |
 | Recovery sideload/rollback | PARTIAL | PARTIAL | Encrypted-data preservation, rejected-slot rollback and repeated cycle. |
 | Short deep suspend | PASS on prior accepted evidence | INCONCLUSIVE: powered ADB 180 s gate recorded `success 0 -> 0`; no kernel failure and no framework wakelock | Repeat unplugged with ADB disconnected and compare suspend/SoC counters. |
 | Long idle drain | UNKNOWN | UNKNOWN | 8-hour unplugged screen-off test with subsystem wake accounting. |
 | CPUSS residency accounting | FAIL: MTR-020 wrong register | FAIL | Correct from stock evidence and verify across suspend. |
-| Crash/tombstone health | PASS: empty crash buffer, no new tombstone | FAIL diagnostic: mixed-state repeat boot reproduced four GMS Password Checkup fatalities; no new native tombstone | Reproduce/root-cause on coherent candidate, then obtain a clean buffer. |
+| Crash/tombstone health | PASS: empty crash buffer, no new tombstone | PASS diagnostic: three coherent-r22 boots produced zero GMS fatalities and no new tombstone; MTR-026 cleared | Repeat on the next promotable installed candidate. |
 | Hardware keystore / TEE / StrongBox | UNKNOWN | UNKNOWN | Key generation, attestation, authentication binding, reboot persistence and deletion. |
 | Removable storage | N/A: no removable-storage slot exposed | N/A | None. USB OTG storage is covered separately. |
 | SIM tray mechanics/hotplug | BLOCKED | BLOCKED | Physical SIM insertion/removal and tray-slot mapping. |
@@ -213,7 +214,8 @@ No pressure/barometer sensor is exposed.
 
 ## Immediate closure order
 
-1. Resolve r22 first-boot GMS fatalities and complete a clean crash-hygiene gate.
+1. Preserve the cleared MTR-026 crash gate and externally blocked MTR-027
+   certification gate on every promotable successor candidate.
 2. Run the safety-critical unplugged thermal/charging matrix and unplugged suspend.
 3. Complete installed-system Aperture routing, lens, zoom, flash and EIS acceptance.
 4. Fix UDFPS ordering, haptic capability advertising, AudioFX binding, USB NCM,

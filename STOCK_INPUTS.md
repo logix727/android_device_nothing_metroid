@@ -20,3 +20,9 @@ Public firmware hash lists are available from the Nothing Archive release
 records for `Metroid_B4.1-260624-1457` (which links the B4.1 full OTA chain) and
 `Metroid_B4.0-250917-1218`. Those third-party records are provenance evidence,
 not redistribution permission.
+
+`Metroid_B4.1-260624-1457` is the newest indexed stock evidence as of 2026-08-12.
+It is not yet a validated build input. Acquire and compare it in a separate
+immutable private reference tree; do not overwrite the accepted `260414`
+userspace extraction or atomically change userspace, firmware, GKI, and module
+inputs without a reviewed compatibility transition.

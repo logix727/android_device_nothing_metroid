@@ -21,6 +21,9 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 ## Hard invariants
 
 - Never publish proprietary vendor blobs or private release/AVB keys.
+- Public distribution is limited to device, kernel, required source forks, and
+  sanitized provenance. ROM binaries are approved `UNOFFICIAL` XDA test seeds
+  only; the private vendor repository remains private forever.
 - Never declare an unserved stable HAL. Run `m check-vintf-all` after VINTF work.
 - Keep `ro.hw_timeout_multiplier=4` in `/system/build.prop`.
 - Preserve the 231-line installed `init.target.rc` with `OPUS_NTLOG_KEEP` and no
@@ -52,6 +55,11 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 9. Build one install-clean OTA, audit it, request approval, install, and test two
    boots plus the full affected regression matrix.
 10. Update tests, `NEXT_RELEASE.md`, and eventually `BASELINE.md`.
+
+Use precise status claims: evidence may establish `CONFIRMED`; a successful
+coherent build may establish `BUILT-NOT-INSTALLED`; only the exact audited
+candidate installed on the target and passing the real operation plus affected
+regressions may be called working, fixed, or tested.
 
 ## Subsystem expectations
 
@@ -100,10 +108,30 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 - The ordered temporary carry set is `patches/series.conf`.
 - Private vendor source is reproduced from stock extraction and private commits;
   never add blobs to the public device repository.
+- Before source replacement, extraction, ref movement, sync, or handoff, record
+  project status and create a verified checkpoint containing intended tracked and
+  untracked work. Never use checkout/restore/reset/clean to manufacture a clean
+  tree.
+- Keep public forks current with focused reviewed commits and source tags. Pushes,
+  releases, repository-policy changes, and XDA posts require explicit approval;
+  published history is not rewritten.
+
+## Device and root testing
+
+- Confirm serial, installed build hash, slot, boot state, encryption, SELinux,
+  battery/thermal state, and available restore path before testing.
+- Read-only `adb root` diagnostics may run under an approved test plan. Root does
+  not authorize remounts, file pushes, property/settings changes, package or
+  service mutation, partition access, reboot, slot change, sideload, or flash.
+- Obtain exact approval before any device mutation. Capture pre/post state, stop
+  on unexpected heat, reboot, crash, slot, AVB, encryption, or data behavior, and
+  keep raw rooted logs private.
+- Workers may analyze existing evidence only. The maintainer performs approved
+  device commands and validates the resulting evidence personally.
 
 ## Release gate
 
-Before sideloading or publishing:
+Before sideloading, distributing a candidate, or making a functional claim:
 
 1. `repo status` is clean and every modified project has a named commit.
 2. Focused builds/tests pass.
@@ -111,10 +139,12 @@ Before sideloading or publishing:
 4. Init-service, VINTF, vendor-image, payload-equivalence, AVB, signing, partition,
    and artifact checks are inspected, not merely executed.
 5. Exact ZIP SHA-256 and source revisions are recorded.
-6. User approves sideload/flash.
+6. User approves the exact sideload/flash and target device.
 7. Target boot, second boot, Enforcing, encryption, crash sweep, and affected
    hardware acceptance pass.
 8. Release notes distinguish verified, unverified, and broken behavior.
+9. Any publication is separately approved, labeled `UNOFFICIAL` testing, and
+   excludes proprietary source, private inputs, credentials, and raw logs.
 
 ## Current priorities
 

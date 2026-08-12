@@ -1,5 +1,21 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## Post-r21 retained status
+
+r21 remains the accepted baseline unchanged.
+
+- Live device: coherent r22 `23.0-20260809-UNOFFICIAL-metroid`, slot B,
+  encrypted and SELinux Enforcing; not accepted.
+- MTR-026: coherent-r22 crash gate cleared across three retained boots. The four
+  Password Checkup fatalities were confined to an operator-created mixed
+  r21-`init_boot`/r22-images diagnostic state.
+- MTR-027: Google blocks the Play Store storefront as Play Protect uncertified.
+  This remains an external policy gate; no certification or bypass is claimed.
+- r23 (`e262e83ee6ce1ddb7536ed9924db8382058b1bf2cf8c368896690b9a62456ca5`)
+  was built install-clean but was not installed.
+- r24 (`50143f9e8481cd0211def4aba5776246f46fa68c0a991fb8961be45608361e98`)
+  is a non-promotable test seed, not an accepted candidate.
+
 ## 2026-08-08 maintainer-local candidate (r17, stock-backed eSIM)
 
 Installed and accepted privately from

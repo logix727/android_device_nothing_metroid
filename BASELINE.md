@@ -4,11 +4,14 @@ This is private target-device acceptance evidence, not a redistribution claim.
 The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
-This records the last accepted release, not the current live state. After r22's
-Virtual A/B merge and a manual slot-A reactivation, the device currently runs
-r22 system/vendor/product with r21 slot-A `init_boot`. This is a mixed diagnostic
-state, not a release candidate; each observed mixed-state boot produces four GMS
-Password Checkup fatalities. See `HARDWARE_ACCEPTANCE.md`.
+This records the last accepted release, not the current live state. r21 remains
+accepted unchanged. The device currently runs coherent r22
+(`23.0-20260809-UNOFFICIAL-metroid`) on slot B, with encrypted userdata and
+SELinux Enforcing. Three retained coherent-r22 boots produced no GMS Password
+Checkup fatality or new tombstone; MTR-026's failures were confined to the
+operator-created mixed r21-`init_boot`/r22-images diagnostic state. Google
+independently blocks the Play Store storefront as Play Protect uncertified
+(MTR-027); this is an external certification-policy result, not ROM acceptance.
 
 ## ROM
 
@@ -96,5 +99,7 @@ revisions:
 | `frameworks/av` | `113ccbf172d572086818456a41b62809c38a0ac0` |
 | `packages/apps/Aperture` | `db454eb0525be0b59bee2c32030df3fd7d553eb5` |
 
-Post-r20 workflow/record commits are not part of the installed OTA. Update this baseline
-only after another audited OTA and all required companion inputs are accepted.
+Post-r21 workflow/record commits and newer builds are not part of the accepted
+OTA. r23 was built but not installed; r24 is a non-promotable test seed. Update
+this baseline only after another audited OTA and all required companion inputs
+are installed and accepted.

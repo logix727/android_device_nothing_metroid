@@ -10,11 +10,12 @@ r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypte
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
-After r22's audited OTA and snapshot merge, slot A was manually reactivated.
-Read-only hashes show that the device now runs r22 system/vendor/product with
-r21 slot-A `init_boot`. This mixed diagnostic state returned through ADB in 51
-seconds but reproduced four GMS Password Checkup fatalities. It is not a release
-candidate and added no native tombstone.
+The live device is coherent r22 on slot B, encrypted and Enforcing. Three
+retained coherent-r22 boots cleared the MTR-026 crash-hygiene gate: zero GMS
+Password Checkup fatalities, no new tombstone, preserved account, and healthy
+GMS/Play Store processes. Google separately blocks the storefront as Play
+Protect uncertified (MTR-027). r23 was built but not installed; r24 is a
+non-promotable test seed.
 
 The tested configuration has three independently verified inputs:
 
@@ -34,7 +35,7 @@ Every bug starts with one evidence matrix before edits:
 
 | Evidence | Required question |
 |---|---|
-| Installed r21 | What exact user operation fails, and what is the first failing log/state? |
+| Installed/live evidence | What exact user operation fails, and what is the first failing log/state? Distinguish accepted r21 from coherent live r22. |
 | Nothing stock dump | Which APK/blob/config/property/RC/VINTF behavior differs? |
 | Kernel source/DTS | Is the hardware node, IRQ, GPIO, thermal zone, power path, or driver behavior correct? |
 | AOSP/Lineage/CLO | Is this upstream behavior, a known fix, or a device-specific gap? |
@@ -90,12 +91,11 @@ guesses.
 
 - MTR-022 temporary-APK acceptance passed for FHD30/FHD60/UHD30 routing,
   finalized files, process restart, provider stability, and tombstone monitoring.
-  Audited r22 reached slot B, completed snapshot merge, and subsequently passed a
-  controlled repeat boot on slot A. It remains rejected because every observed
-  mixed-state boot produces four GMS Password Checkup fatalities. Mixed-state
-  diagnostics show FHD60 routing and UHD30 routing/finalization working; repeat
-  on a coherent candidate and complete FHD30, long-run, zoom and restart coverage.
-  MTR-012 still requires
+  Audited r22 is now running coherently on slot B. Its crash gate is clear, and
+  retained coherent-r22 camera evidence covers all five camera IDs, SAT
+  0.6x/1x/3x/10x zoom, torch, zoom while recording, and system-APK
+  FHD30/FHD60/UHD30 evidence. Complete the remaining cadence, long-run,
+  front-screen-flash, stabilization, and UI acceptance rows. MTR-012 still requires
   measured stabilization, crop, cadence, zoom-transition, and motion acceptance.
 - MTR-018: compare UDFPS refresh/LHBM ordering with stock and upstream, then run
   50 screen-on/AOD unlocks and enrollment at Smooth Display off.
@@ -112,7 +112,8 @@ guesses.
 
 ## Next execution order
 
-1. Resolve the r22 GMS crash evidence and complete a clean crash-hygiene gate.
+1. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
+   uncertified-policy gate; re-run both on the next promotable installed candidate.
 2. Complete installed-system Aperture acceptance from the canonical hardware matrix.
 3. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.

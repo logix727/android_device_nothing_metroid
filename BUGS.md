@@ -1,10 +1,10 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and live diagnostic state: 2026-08-09
+Last audited against accepted baseline and coherent live state: 2026-08-11
 
 Accepted build: `23.0-20260808-UNOFFICIAL-metroid` (r21)
 
-Live candidate: `23.0-20260809-UNOFFICIAL-metroid` (r22), slot A; not accepted
+Live device: `23.0-20260809-UNOFFICIAL-metroid` (r22), coherent slot B; not accepted
 
 Accepted OTA SHA-256:
 `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
@@ -23,10 +23,10 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-020, MTR-021, MTR-023, MTR-024, MTR-025, MTR-026 |
+| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-020, MTR-021, MTR-023, MTR-024, MTR-025 |
 | Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022 |
-| External hardware/carrier acceptance | MTR-001, MTR-002, physical SIM/IMS/OMAPI |
-| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017 |
+| External hardware/carrier/policy acceptance | MTR-001, MTR-002, MTR-027, physical SIM/IMS/OMAPI |
+| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-026 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -479,8 +479,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
 - Severity: medium
-- Status: r22 `/product` APK has bounded mixed-state runtime evidence; coherent
-  OTA acceptance remains blocked
+- Status: coherent r22 runtime evidence retained; accepted-release promotion pending
 - Impact: a front-to-back flip can reopen logical camera 4 while UHD or 60 fps is
   selected instead of the required physical main camera.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1255-1278`
@@ -498,11 +497,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   1377 and no tombstone changed.
 - OTA result: audited r22 SHA-256
   `e603ada70f0c717836475481622a826d9b09bee26ce53b5a208747dc7fdba9b5`
-  booted slot B, completed snapshot merge, remained Enforcing and encrypted,
-  and preserved GApps. After slot-A reactivation, a controlled repeat boot
-  returned through ADB in 51 seconds but reproduced four GMS Password Checkup
-  fatalities. No new native tombstone appeared. r22 must not replace the accepted
-  r21 baseline yet.
+  booted coherent slot B, completed snapshot merge, remained Enforcing and
+  encrypted, and preserved GApps. Later coherent-r22 camera evidence passed all
+  five IDs, SAT zoom, torch, zoom while recording, and retained system-APK video
+  checks without a new crash or tombstone. r22 remains unaccepted.
 - Acceptance: front/back/front transitions at FHD30, FHD60, and UHD30 before
   recording and after process restart; verify camera ID and finalized files.
 
@@ -550,24 +548,32 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: effect open/close, playback, client death, reboot persistence, and
   no bind failures.
 
-### MTR-026: GMS Password Checkup crashes on every observed mixed-state boot
+### MTR-026: GMS Password Checkup mixed-state crash gate
 
-- Severity: high
-- Status: confirmed mixed-state release blocker; coherent reproduction pending
-- Impact: every observed mixed-state boot records four `com.google.android.gms`
-  fatalities during credential-manager initialization, so the candidate cannot
-  satisfy release crash hygiene.
-- Evidence: `PasswordCheckup.ZERO_PARTY_API` returns `SERVICE_INVALID` from
-  `com.google.android.gms.credential.manager.operations.ModuleInitializer`.
-  A mixed-state controlled repeat boot returned through ADB in 51 seconds and
-  reproduced the same four fatalities without adding a native tombstone.
-- Scope: MindTheGapps is an independently supplied companion input. Determine
-  whether the first divergence is preserved package/data state, add-on policy,
-  unlocked-device service eligibility, or ROM framework integration before
-  changing either the ROM or user data.
-- Acceptance: two consecutive boots with GApps preserved, no GMS fatality, no
-  new tombstone, and working account, Play Store, credential-manager and password
-  autofill paths.
+- Severity: high release gate
+- Status: cleared on coherent r22; recurring candidate gate
+- Evidence: four GMS Password Checkup fatalities occurred only when r22
+  system/vendor/product were booted with r21 slot-A `init_boot`.
+- Coherent result: three retained coherent-r22 boots on slot B produced zero GMS
+  fatalities, no new tombstone or Dropbox crash, preserved the Google account,
+  and kept GMS and Play Store processes healthy.
+- First deterministic divergence: operator-created boot-chain skew, not a
+  coherent ROM, GApps, or preserved-data defect.
+- Acceptance: repeat the two-boot crash-hygiene gate on every promotable
+  successor candidate.
+
+### MTR-027: Google Play Protect uncertified-device policy
+
+- Severity: external distribution/policy gate
+- Status: externally blocked; not a proven ROM defect
+- Evidence: coherent r22 on slot B displays `This device isn't Play Protect
+  certified` and blocks access to the Play Store storefront.
+- First local divergence from stock: custom Lineage build/AVB identity, root
+  vbmeta flag `1`, and orange/unlocked verified-boot state. The exact Google
+  server-side decision and private registration status are not locally observable.
+- Policy: retain `UNCERTIFIED-BLOCKED`; do not spoof fingerprints, attestation,
+  package state, boot state, or AVB, and do not present private device
+  registration as ROM certification.
 
 ## Acceptance gaps
 
