@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-019",
+    "MTR-021",
+    "MTR-023",
+    "MTR-025"
+  ],
+  "affected_test_union": [
+    "two coherent boots with crash, tombstone, pstore, AVC, encryption, slot and snapshot checks",
+    "NCM plus ADB and standalone NCM enumeration, DHCP, DNS, IPv4, IPv6, reconnect and HAL restart",
+    "late usb0 interface arrival after USB configured broadcast starts NCM IpServer",
+    "ADB, MTP, PTP and RNDIS regression matrix",
+    "zero runtime class-start attempts for every removed MTR-021 service across two boots",
+    "face enrollment and guidance in Latin, CJK and RTL locales including accessibility and parental consent",
+    "AudioFX real playback session, client death, inert keepalive lifecycle and reboot persistence",
+    "Aperture coherent-system FHD30, FHD60 and UHD30 routing regression",
+    "MTR-026 coherent crash gate and MTR-027 certification classification",
+    "MTR-028 update final status, automatic slot, snapshot merge and second boot"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "f523478ef92889a7d5018ae4e80dfa65eb91f6f7352c21fb58a2bc5ca0f24b58"
+    }
+  }
+}

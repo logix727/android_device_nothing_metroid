@@ -1,0 +1,56 @@
+From 21cd27ce4704930902c2468e5b979c314d4eb550 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Wed, 12 Aug 2026 18:57:32 -0400
+Subject: [PATCH] Tethering: retry late NCM interface serving
+
+Change-Id: Iabe8408133d744dd36efce5f3762916a5c1fe5cf
+---
+ .../android/networkstack/tethering/Tethering.java   |  7 +++++++
+ .../networkstack/tethering/TetheringTest.java       | 13 +++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/Tethering/src/com/android/networkstack/tethering/Tethering.java b/Tethering/src/com/android/networkstack/tethering/Tethering.java
+index e821d2b..441a19f 100644
+--- a/Tethering/src/com/android/networkstack/tethering/Tethering.java
++++ b/Tethering/src/com/android/networkstack/tethering/Tethering.java
+@@ -708,6 +708,13 @@ public class Tethering {
+ 
+     void interfaceAdded(String iface) {
+         if (VDBG) Log.d(TAG, "interfaceAdded " + iface);
++        if (mNcmEnabled && ifaceNameToType(iface) == TETHERING_NCM
++                && !mTetherStates.containsKey(iface)) {
++            final int type = getServedUsbType(true /* forNcmFunction */);
++            final TetheringRequest request = mRequestTracker.getOrCreatePendingRequest(type);
++            enableIpServing(request, iface, true /* isNcm */);
++            return;
++        }
+         processInterfaceStateChange(iface, true /* enabled */);
+     }
+ 
+diff --git a/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java b/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java
+index 40a673d..12b2597 100644
+--- a/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java
++++ b/Tethering/tests/unit/src/com/android/networkstack/tethering/TetheringTest.java
+@@ -1076,6 +1076,19 @@ public class TetheringTest {
+         mTetheringEventCallback.expectUpstreamChanged(upstreamState.network);
+     }
+ 
++    @Test
++    public void testNcmInterfaceAddedAfterConfiguredBroadcastStartsTethering() throws Exception {
++        initTetheringOnTestThread();
++        prepareNcmTethering();
++        when(mNetd.interfaceGetList()).thenReturn(new String[] {TEST_MOBILE_IFNAME});
++
++        sendUsbBroadcast(true, true, TETHER_USB_NCM_FUNCTION);
++        mTethering.interfaceAdded(TEST_NCM_IFNAME);
++        mLooper.dispatchAll();
++
++        verify(mNetd).tetherInterfaceAdd(TEST_NCM_IFNAME);
++    }
++
+     @Test
+     public void failingLocalOnlyHotspotLegacyApBroadcastWithIfaceStatusChanged() throws Exception {
+         failingLocalOnlyHotspotLegacyApBroadcast(true);
+-- 
+2.43.0
+

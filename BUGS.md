@@ -449,6 +449,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   start `IpServer` because `config_tether_ncm_regexs` is empty and `usb0` is not
   classified as NCM.
 - r26 correction: a metroid Tethering RRO maps `usb\\d` as NCM.
+- r26 installed result: the RRO is active and classifies `usb0`, but the USB
+  configured broadcast still arrives before the interface exists. Android B
+  ignores the later interface-added event, so `IpServer` is never retried.
+- Successor correction: Connectivity retries NCM serving when a matching late
+  interface appears while NCM is already configured; focused Tethering tests and
+  `TetheringNext` build pass.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 

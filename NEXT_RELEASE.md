@@ -28,6 +28,11 @@ for full promotion because MTR-021 still has six runtime class-start dangles and
 MTR-019 lacks the NCM tethering interface regex. r26 is the one reserved corrected
 candidate; no unrelated fixes join it.
 
+r26 installed coherently twice on slot B and closes the six runtime init dangles.
+Its NCM RRO is active, but installed testing exposed a framework race: USB
+configured precedes `usb0`, and Android B ignores the later interface event.
+The final successor adds only the tested Connectivity retry carry.
+
 The tested configuration has three independently verified inputs:
 
 1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256
