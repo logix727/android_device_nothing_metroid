@@ -49,11 +49,50 @@ blob_fixups: blob_fixups_user_type = {
             '    restorecon_recursive /data/vendor/diag_mdlog\n\n'
             'service diag_gpslog_start ',
         ),
+    'system_ext/etc/init/perfservice.rc': blob_fixup()
+        .regex_replace(
+            'service vendor.perfservice /system_ext/bin/perfservice\n'
+            '    class main\n'
+            '    user system\n'
+            '    group system readproc\n\n',
+            '',
+        ),
     'vendor/etc/init/hw/init.qcom.usb.rc': blob_fixup()
         .regex_replace('ncm\\.0', 'ncm.gs6'),
     'vendor/etc/init/hw/init.qcom.rc': blob_fixup()
         .regex_replace(
             '    exec u:r:vendor_qti_init_shell:s0 -- /vendor/bin/init\\.qti\\.can\\.sh\n',
+            '',
+        )
+        .regex_replace(
+            'service nqnfcinfo /system/vendor/bin/nqnfcinfo\n'
+            '    class late_start\n'
+            '    group nfc\n'
+            '    user system\n'
+            '    oneshot\n\n',
+            '',
+        )
+        .regex_replace(
+            'service ptt_socket_app /system/vendor/bin/ptt_socket_app -d\n'
+            '    class main\n'
+            '    user wifi\n'
+            '    group wifi system inet net_admin\n'
+            '    capabilities NET_ADMIN\n'
+            '    oneshot\n\n',
+            '',
+        )
+        .regex_replace(
+            'service qvop-daemon /vendor/bin/qvop-daemon\n'
+            '    class late_start\n'
+            '    user system\n'
+            '    group system drmrpc\n\n',
+            '',
+        )
+        .regex_replace(
+            'service qseeproxydaemon /system/vendor/bin/qseeproxydaemon\n'
+            '    class late_start\n'
+            '    user system\n'
+            '    group system\n\n',
             '',
         )
         .regex_replace(
