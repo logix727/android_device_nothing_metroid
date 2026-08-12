@@ -51,6 +51,36 @@ blob_fixups: blob_fixups_user_type = {
         ),
     'vendor/etc/init/hw/init.qcom.usb.rc': blob_fixup()
         .regex_replace('ncm\\.0', 'ncm.gs6'),
+    'vendor/etc/init/hw/init.qcom.rc': blob_fixup()
+        .regex_replace(
+            '    exec u:r:vendor_qti_init_shell:s0 -- /vendor/bin/init\\.qti\\.can\\.sh\n',
+            '',
+        )
+        .regex_replace(
+            'service vendor\\.atfwd /vendor/bin/ATFWD-daemon\n'
+            '    class late_start\n'
+            '    user system\n'
+            '    group system radio\n\n',
+            '',
+        )
+        .regex_replace(
+            'service esepmdaemon /system/vendor/bin/esepmdaemon\n'
+            '    class core\n'
+            '    user system\n'
+            '    group nfc\n\n',
+            '',
+        )
+        .regex_replace(
+            'service chre /vendor/bin/chre\n'
+            '    class late_start\n'
+            '    user system\n'
+            '    group system\n'
+            '    socket chre seqpacket 0660 root system\n'
+            '    shutdown critical\n\n'
+            'on property:vendor\\.chre\\.enabled=0\n'
+            '   stop chre\n\n',
+            '',
+        ),
     'vendor/etc/init/vendor.qti.hardware.perf2-hal-service.rc': blob_fixup()
         .regex_replace('    disabled\n    disabled\n', ''),
     'vendor/etc/init/vendor.qti.media.c2@1.0-service.rc': blob_fixup()

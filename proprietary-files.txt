@@ -45,7 +45,6 @@ system_ext/etc/init/com.qualcomm.qti.sigma_miracast_aidl-service.rc
 system_ext/etc/init/dpmd.rc
 system_ext/etc/init/init.factoryflag.rc
 system_ext/etc/init/nt_bpf.rc
-system_ext/etc/init/nt_core.rc
 system_ext/etc/init/nt_factorytest.rc
 system_ext/etc/init/nt_logkit.rc
 system_ext/etc/init/nt_performance_config.rc
@@ -58,9 +57,6 @@ system_ext/etc/init/rkp.rc
 system_ext/etc/init/sltntc.rc
 system_ext/etc/init/sxrauxd_ext.rc
 system_ext/etc/init/tcmd.rc
-system_ext/etc/init/usbudev.rc
-system_ext/etc/init/vendor.qti.hardware.qccsyshal@1.2-service.rc
-system_ext/etc/init/vendor.qti.qccsyshal_aidl-service.rc
 system_ext/etc/init/wfdservice.rc
 system_ext/etc/nt_performance/cmd_table.xml
 system_ext/etc/perf/wlc_model.tflite
@@ -1434,7 +1430,6 @@ vendor/etc/init/init.ntf.rc
 vendor/etc/init/init.qccvendor.rc
 vendor/etc/init/init.qlm-service.rc
 vendor/etc/init/init.qmesa.rc
-vendor/etc/init/init.qti.display_boot.rc
 vendor/etc/init/init.qti.fm.rc
 vendor/etc/init/init.qti.media.rc
 vendor/etc/init/init.qti.qcv.rc
