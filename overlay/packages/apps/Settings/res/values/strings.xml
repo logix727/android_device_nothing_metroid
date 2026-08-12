@@ -16,4 +16,13 @@
 
     <string name="security_settings_face_enroll_introduction_accessibility_diversity">Use this setup if you cannot complete the standard enrollment movements.</string>
     <string name="security_settings_face_enroll_introduction_accessibility_vision">Use this setup if you need an alternative to the standard visual guidance.</string>
+    <string name="security_settings_face_enroll_introduction_accessibility_expanded" product="default">Use an alternative enrollment flow if standard head movements or visual guidance are difficult to complete.</string>
+
+    <string name="security_settings_face_enroll_introduction_info_consent_glasses">Glasses may affect recognition. Help your child enroll with the look they use most.</string>
+    <string name="security_settings_face_enroll_introduction_info_consent_looking" product="default">Someone who looks like your child may be able to unlock this phone.</string>
+    <string name="security_settings_face_enroll_introduction_info_consent_gaze" product="default">Face Unlock may unlock the phone when your child looks at it, even if they did not intend to.</string>
+    <string name="security_settings_face_enroll_introduction_info_consent_less_secure" product="default">Face Unlock is less secure than your child using a strong pattern, PIN, or password.</string>
+    <string name="security_settings_face_enroll_introduction_how_consent_message" product="default">Face Unlock uses the front camera to recognize your child\'s face.</string>
+    <string name="security_settings_face_enroll_introduction_control_consent_title">You\'re in control</string>
+    <string name="security_settings_face_enroll_introduction_control_consent_message" product="default">You can remove your child\'s face data or turn off Face Unlock at any time in Settings.</string>
 </resources>
