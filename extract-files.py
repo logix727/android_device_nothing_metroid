@@ -49,6 +49,8 @@ blob_fixups: blob_fixups_user_type = {
             '    restorecon_recursive /data/vendor/diag_mdlog\n\n'
             'service diag_gpslog_start ',
         ),
+    'vendor/etc/init/hw/init.qcom.usb.rc': blob_fixup()
+        .regex_replace('ncm\\.0', 'ncm.gs6'),
     'vendor/etc/init/vendor.qti.hardware.perf2-hal-service.rc': blob_fixup()
         .regex_replace('    disabled\n    disabled\n', ''),
     'vendor/etc/init/vendor.qti.media.c2@1.0-service.rc': blob_fixup()
