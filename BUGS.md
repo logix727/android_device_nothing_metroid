@@ -24,7 +24,7 @@ permission; it must never be committed to this public repository.
 | State | Issues |
 |---|---|
 | Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-024 |
-| Built not installed | MTR-019, MTR-021, MTR-023, MTR-025 |
+| Installed / successor correction pending | MTR-019, MTR-021, MTR-023, MTR-025 |
 | Evidence incomplete | MTR-020 |
 | Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022 |
 | External hardware/carrier/policy acceptance | MTR-001, MTR-002, MTR-027, physical SIM/IMS/OMAPI |
@@ -443,6 +443,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   QTI gadget HAL links `ncm.gs6`.
 - Source fix: extraction changes the configfs instance to `ncm.gs6`; fresh staged
   vendor output contains the nine matching paths and no `ncm.0`.
+- r25 installed result: CDC NCM plus ADB enumerates as `05c6:908c`, the host
+  `cdc_ncm` driver creates a 425 Mbps link, raw IPv4/IPv6 transport passes with
+  zero packet loss, and ADB round-trip hashes match. Android Tethering cannot
+  start `IpServer` because `config_tether_ncm_regexs` is empty and `usb0` is not
+  classified as NCM.
+- r26 correction: a metroid Tethering RRO maps `usb\\d` as NCM.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 
@@ -489,6 +495,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   privacy-sensitive stock stacks. Fresh install-clean staging audits 265 RC
   files, 376 services and 81 direct execs with zero boot-harm, zero unconditional
   dangles and zero unknowns; VINTF compatibility and duplicate checks pass.
+- r25 installed result: the bounded targets are absent, but normal class starts
+  still attempt six missing services: `ptt_socket_app`, `vendor.perfservice`,
+  `nqnfcinfo`, `qvop-daemon`, `qseeproxydaemon`, and `wifi_qos_daemon`.
+  Therefore MTR-021 remains open and r25 is rejected for full promotion.
+- r26 correction: remove only those six service stanzas while preserving unrelated
+  RC actions; the classifier now treats `nonencrypted` as unconditional reachability.
 
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 

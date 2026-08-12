@@ -23,6 +23,10 @@ Latest sealed candidate (r25, offline-verified, not installed)
   ext4, vendor_boot page size `0x1000`, and zero blocking init findings.
 - Status: `OFFLINE-VERIFIED`; never installed. r21 remains accepted and coherent
   r22 remains live.
+- Installed disposition: r25 later booted twice and passed merge, GApps,
+  encryption, SELinux, exact-file and native crash gates, but is rejected for
+  promotion after runtime exposed six additional class-start dangles and missing
+  NCM tethering classification. r26 is the reserved corrected candidate.
 
 ================================================================
 Latest recorded seed (historical, non-promotable)

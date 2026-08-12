@@ -10,19 +10,23 @@ r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypte
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
-The live device is coherent r22 on slot B, encrypted and Enforcing. Three
-retained coherent-r22 boots cleared the MTR-026 crash-hygiene gate: zero GMS
-Password Checkup fatalities, no new tombstone, preserved account, and healthy
-GMS/Play Store processes. Google separately blocks the storefront as Play
-Protect uncertified (MTR-027). r23 was built but not installed; r24 is a
-non-promotable test seed.
+The live device is coherent r25 on slot A, encrypted and Enforcing. Its two boots
+cleared merge, GApps, native-crash and exact-file gates, but it is rejected for
+promotion by MTR-019/MTR-021 runtime findings. Google separately blocks the
+storefront as Play Protect uncertified (MTR-027). r23 was built but not installed;
+r24 is a non-promotable test seed.
 
-r25 is `OFFLINE-VERIFIED` and not installed. Immutable snapshot:
+r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
 `7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`.
-All 16 payload images match target-files, release signing/AVB/partition/VINTF
-gates pass, and the init classifier reports zero blocking findings. This is not
-an installed or accepted result.
+All 16 payload images match target-files and release signing/AVB/partition/VINTF
+gates pass. It is installed but rejected, not accepted.
+
+Post-install disposition: r25 booted coherently twice on slot A, merged, remained
+Enforcing/encrypted, preserved GApps, and added no native tombstone. It is rejected
+for full promotion because MTR-021 still has six runtime class-start dangles and
+MTR-019 lacks the NCM tethering interface regex. r26 is the one reserved corrected
+candidate; no unrelated fixes join it.
 
 The tested configuration has three independently verified inputs:
 
