@@ -26,3 +26,9 @@ It is not yet a validated build input. Acquire and compare it in a separate
 immutable private reference tree; do not overwrite the accepted `260414`
 userspace extraction or atomically change userspace, firmware, GKI, and module
 inputs without a reviewed compatibility transition.
+
+The private comparison set is verified locally: official `260414 -> 260624` OTA
+SHA-256 `9a745b155b0062e12b0150d694271d347964ff6dd1f48f49581b0617f83c18e3`,
+all 41 extracted partition images match the published hash list, and NothingOSS
+`sm8735/b/mr` is pinned at
+`b2381b5e146c4e50dd5871d3254c83e2af227614`.

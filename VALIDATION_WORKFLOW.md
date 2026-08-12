@@ -164,7 +164,9 @@ unrelated R3 root causes merely to save one build.
 Every installed candidate gets one small invariant suite:
 
 1. Exact ZIP hash/build/slot and companion inputs match the frozen record.
-2. Update completion, slot success, snapshot merge, first boot, and second boot.
+2. MTR-028 recovery final status, automatic target-slot selection, update
+   completion, slot success, snapshot merge, first boot, and second boot. Host
+   progress near 47 percent or its terminal-token warning is not an install result.
 3. Encrypted userdata, SELinux Enforcing, one system_server, clean crash buffer,
    no new tombstone/pstore, and no boot-critical AVC.
 4. Display/touch/unlock sanity and ADB reconnect with a transfer hash.

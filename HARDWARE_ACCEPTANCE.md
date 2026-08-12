@@ -194,7 +194,7 @@ No pressure/barometer sensor is exposed.
 | SELinux | PASS: Enforcing | PASS: Enforcing | AVC review per affected operation. |
 | AVB/signing/payload integrity | PASS offline/runtime boot | PASS offline and boots | Deliberate corruption/rollback behavior is destructive and untested. |
 | Normal-system OTA/GApps preservation | PASS through r21 | PARTIAL: r22 applied, merged, preserved GApps and passed three coherent crash-clean boots | Repeat on the next promotable candidate. |
-| Recovery sideload/rollback | PARTIAL | PARTIAL | Encrypted-data preservation, rejected-slot rollback and repeated cycle. |
+| Recovery sideload/rollback | PARTIAL | PARTIAL: successful installs may show near 47% host progress by upstream design; no retained incomplete install | MTR-028 requires recovery final status, automatic target slot, update/merge state, two coherent boots and encrypted-data retention; rejected-slot rollback remains untested. |
 | Short deep suspend | PASS on prior accepted evidence | INCONCLUSIVE: powered ADB 180 s gate recorded `success 0 -> 0`; no kernel failure and no framework wakelock | Repeat unplugged with ADB disconnected and compare suspend/SoC counters. |
 | Long idle drain | UNKNOWN | UNKNOWN | 8-hour unplugged screen-off test with subsystem wake accounting. |
 | CPUSS residency accounting | FAIL: MTR-020 wrong register | FAIL | Correct from stock evidence and verify across suspend. |

@@ -63,9 +63,11 @@ ROM SHA-256:
 
 ADB intentionally scales normal sideload progress by 47 because recovery usually
 requests the package bytes about twice for verification and installation. A
-successful A/B sideload may therefore stop near 47 percent and print
-`adb: failed to read command: Success`; use recovery's final status, not the host
-percentage, as the result.
+successful A/B sideload may therefore stop near 47 percent. The message
+`adb: failed to read command: Success` means host ADB did not receive the final
+terminal token; it is not an install verdict. MTR-028 requires recovery's final
+status, automatically selected target slot, update/snapshot state, slot success,
+and two coherent boots before accepting or rejecting the installation.
 
 ## 2026-08-06 maintainer-local candidate (r7, thermal skin)
 

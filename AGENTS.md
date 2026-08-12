@@ -11,10 +11,11 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 - Artifact: `releases/candidate_20260808_192539_leaudio-r21/`; not a public
   release. `org.codeaurora.ims` runs as `vendor_qtelephony` with MMTEL bound on
   both slots and no IMS/radio AVCs across two boots.
-- Last recorded state: slot A, boot complete across two boots, SELinux Enforcing,
-  encrypted data, slot marked successful. Both modem slots use the matching A16
-  stock modem build and MindTheGapps was separately sideloaded from new-slot
-  recovery. See `BASELINE.md` before changing either companion input.
+- Accepted r21 state: slot A, boot complete across two boots, SELinux Enforcing,
+  encrypted data, slot marked successful. The current live device is coherent r22
+  on slot B, Enforcing and encrypted, but not accepted. Both modem slots use the
+  matching A16 stock modem build and MindTheGapps was separately supplied. See
+  `BASELINE.md` before changing either companion input.
 - Never describe a newer source change as working until it is built, audited,
   installed, and tested.
 
@@ -60,6 +61,37 @@ Use precise status claims: evidence may establish `CONFIRMED`; a successful
 coherent build may establish `BUILT-NOT-INSTALLED`; only the exact audited
 candidate installed on the target and passing the real operation plus affected
 regressions may be called working, fixed, or tested.
+
+## Fast closure strategy
+
+- Keep an acceptance queue and a source queue. Acceptance-only rows run on the
+  coherent live build and consume no build. Source work starts only after a
+  confirmed first divergence and is batched by dependency and subsystem.
+- Launch independent read-only evidence matrices concurrently. The maintainer
+  reviews their first divergences, rejects hypotheses, then serializes the
+  smallest source edits per Git project.
+- Run the cheapest affected T1 check after each commit. Run T3 once at the merged
+  batch head. Build one install-clean frozen candidate, not one OTA per bug.
+- Keep one safety reserve. A failed candidate is captured and rejected before any
+  successor edit; never patch installed images or create mixed generations.
+
+## Boot-safety review
+
+Treat boot image composition, kernel/DT, vendor_boot, init_boot, critical init,
+VINTF, SELinux domains used before boot completion, AVB, partitions, firmware,
+FBE, update_engine, and package removals as boot-critical.
+
+Before a boot-critical change joins a candidate:
+
+1. State the exact first divergence and why a non-boot-critical fix is insufficient.
+2. Diff stock, accepted r21, coherent r22, and proposed staged images.
+3. Prove boot image membership, init imports/services, ELF dependencies, VINTF,
+   SELinux, AVB descriptors/flags/rollback indexes, page size, and partition type.
+4. Define recovery and rollback using already verified artifacts; do not rely on
+   the candidate being able to boot.
+5. Keep unrelated R1/R2 work out unless the change is one atomic dependency.
+6. Stop on any unexplained missing executable/import, new boot AVC, crash/pstore,
+   slot/merge anomaly, encryption change, or invariant mismatch.
 
 ## Subsystem expectations
 
@@ -148,10 +180,15 @@ Before sideloading, distributing a candidate, or making a functional claim:
 
 ## Current priorities
 
-1. Radio VINTF, IMS, and eSIM integration.
-2. Power HAL and framework thermal policy.
-3. Release reproducibility, metadata, and public artifact consistency.
-4. Camera stabilization/routing and haptic parity.
-5. Physical-SIM and accessory acceptance.
+1. Seal reproducible r25 source and complete the installed-r22 thermal/camera
+   acceptance rows without another OTA.
+2. Carry and accept MTR-023 face guidance and MTR-025 AudioFX without r24's
+   unproven blanket init disable.
+3. Close evidence-ready MTR-019, MTR-021, MTR-018, MTR-011, and MTR-024 in safe
+   dependency order; do not change MTR-020 without metroid stock-backed evidence.
+4. Execute physical-SIM, eSIM, OMAPI, LE Audio, and accessory matrices when the
+   required hardware or credentials are available.
+5. Maintain public source provenance and private vendor separation; XDA builds
+   remain explicitly unofficial until all required rows are accepted.
 
 Do not start from archived plans or handoffs; they describe superseded states.

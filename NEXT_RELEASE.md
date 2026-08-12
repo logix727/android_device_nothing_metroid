@@ -105,8 +105,10 @@ guesses.
 
 ### WP5: Connectivity, suspend, and cleanup
 
-- MTR-015 QCC, MTR-016 sensor extension, MTR-019 USB NCM, MTR-020 CPUSS residency,
-  MTR-021 remaining dangling init inventory, and MTR-024 ST21 transition errors.
+- MTR-015 QCC, MTR-016 sensor extension, MTR-019 USB NCM, MTR-021 remaining
+  dangling init inventory, and MTR-024 ST21 transition errors. MTR-020 returns to
+  evidence collection because current and latest NothingOSS tuna both use the
+  existing register; do not transfer the `kera` address.
 - Group RC/VINTF changes by subsystem, but retain one first-failure cause and one
   acceptance matrix per issue.
 
@@ -127,6 +129,8 @@ guesses.
 3. Fresh install-clean `m bacon` succeeds.
 4. VINTF, init, payload, AVB, signing, partition, modem, and artifact audits pass.
 5. ROM/GApps/modem hashes and source revisions are recorded separately.
-6. Target boot, second boot, slot success, snapshot state, Enforcing, encryption,
+6. MTR-028 records recovery's final status independently of host percentage and
+   correlates the automatically selected target slot, update and snapshot state.
+7. Target boot, second boot, slot success, snapshot state, Enforcing, encryption,
    crash/tombstone sweep, and affected real hardware acceptance pass.
-7. GitHub records distinguish verified, unverified, externally blocked, and broken.
+8. GitHub records distinguish verified, unverified, externally blocked, and broken.

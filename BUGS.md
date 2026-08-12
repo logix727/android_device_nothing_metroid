@@ -23,10 +23,11 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-020, MTR-021, MTR-023, MTR-024, MTR-025 |
+| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-021, MTR-023, MTR-024, MTR-025 |
+| Evidence incomplete | MTR-020 |
 | Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022 |
 | External hardware/carrier/policy acceptance | MTR-001, MTR-002, MTR-027, physical SIM/IMS/OMAPI |
-| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-026 |
+| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-026, MTR-028 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -445,16 +446,19 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 
-### MTR-020: CPUSS sleep-residency counter uses a non-stock register address
+### MTR-020: CPUSS sleep-residency counters are absent
 
 - Severity: medium
-- Status: confirmed observability defect
+- Status: evidence incomplete; prior proposed cause disproved
 - Impact: suspend works, but CPU/cluster low-power residency accounting is absent.
 - Evidence: the CPUSS sleep-stats driver fails to map the configured register and
   exposes no residency counters.
 - Source: `kernel/nothing/sm8735/arch/arm64/boot/dts/vendor/qcom/tuna.dtsi:1790-1802`
-- Fix direction: reconcile active `0x178a0098` with stock `0x178b0098` after
-  restoring reproducible kernel staging.
+- Stock comparison: NothingOSS tuna uses `0x178a0098` in both B4.1 `260414` and
+  `260624`. The previously proposed `0x178b0098` belongs to `kera`, a different
+  SoC/device, and must not be copied into metroid.
+- Next action: capture probe/map failure details and compare the driver, resources,
+  permissions, and firmware behavior before defining any kernel change.
 - Acceptance: successful probe and counters increasing over repeated suspend.
 
 ### MTR-021: inherited init inventory contains dangling services and invalid work
@@ -574,6 +578,29 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Policy: retain `UNCERTIFIED-BLOCKED`; do not spoof fingerprints, attestation,
   package state, boot state, or AVB, and do not present private device
   registration as ROM certification.
+
+### MTR-028: recovery ADB sideload progress does not report install completion
+
+- Severity: P0 recurring release gate
+- Status: expected upstream host behavior; install outcome must be correlated
+- User-visible symptom: host progress commonly stops near 47 percent and may
+  print `adb: failed to read command: Success`, making a completed transfer look
+  incomplete.
+- First deterministic divergence: recovery reads the ZIP on demand through FUSE,
+  while host ADB estimates progress as bytes served times 47 divided by package
+  size. Roughly one package-length therefore displays near 47 percent. The EOF
+  warning means the host did not receive the final eight-byte terminal token; it
+  does not establish recovery success or failure.
+- Classification: not a metroid defect. Retained installs through r21 that were
+  accepted after near-47-percent host output completed target-slot activation and
+  coherent boots. No retained evidence shows a partial install caused by this
+  progress display.
+- Gate: record exact ZIP SHA-256, host output, recovery final status, automatically
+  selected target slot, update/snapshot state, slot success, encrypted userdata,
+  Enforcing SELinux, and first and second coherent boots. A transfer that never
+  enters sideload is `NOT STARTED`; host completion without recovery final status
+  is `OUTCOME UNCORRELATED`; only an explicit recovery/update failure, failed
+  merge/slot, rollback, or failed coherent boot is `INSTALL FAILED/INCOMPLETE`.
 
 ## Acceptance gaps
 
