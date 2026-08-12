@@ -6,6 +6,25 @@ next steps. Do not treat a service registration or binder presence as a
 functional acceptance result.
 
 ================================================================
+Latest sealed candidate (r25, offline-verified, not installed)
+================================================================
+- Snapshot: `releases/candidate_20260812_164223_410891256_r25/`
+- OTA: `lineage-23.0-20260812-UNOFFICIAL-metroid.zip`
+- SHA-256: `7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`
+- Device source: `f4c0cc2ff00d8701da03aa0141e33cb11bc7acf7`
+- Private vendor source: `b4772db799e9007deaa817c4366b21ce52a82d59`
+- Kernel source: `ce342da8315a62e6144882faeddbdeccda544f9b`
+- Frameworks base: `52f2ed2334c2a0e0398fe43d58b05913532b8131`
+- AudioFX: `650c0e93148efa69fc196136056524f9473fed96`
+- Settings: `2ba75ba2e13865678c2d28aa383dde311517d37e`
+- Aperture: `ee3d168733fdb6e043fa80bed3e72fdb0246d400`
+- Result: install-clean build, immutable build-state provenance, 16/16 payload
+  equivalence, VINTF compatible, AVB/signing/partition checks passed, vendor
+  ext4, vendor_boot page size `0x1000`, and zero blocking init findings.
+- Status: `OFFLINE-VERIFIED`; never installed. r21 remains accepted and coherent
+  r22 remains live.
+
+================================================================
 Latest recorded seed (historical, non-promotable)
 ================================================================
 - Build label: r24 (historical public test seed; not a T4 candidate)

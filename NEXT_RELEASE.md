@@ -17,6 +17,13 @@ GMS/Play Store processes. Google separately blocks the storefront as Play
 Protect uncertified (MTR-027). r23 was built but not installed; r24 is a
 non-promotable test seed.
 
+r25 is `OFFLINE-VERIFIED` and not installed. Immutable snapshot:
+`releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
+`7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`.
+All 16 payload images match target-files, release signing/AVB/partition/VINTF
+gates pass, and the init classifier reports zero blocking findings. This is not
+an installed or accepted result.
+
 The tested configuration has three independently verified inputs:
 
 1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256

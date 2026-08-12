@@ -15,6 +15,11 @@ r21 remains the accepted baseline unchanged.
   was built install-clean but was not installed.
 - r24 (`50143f9e8481cd0211def4aba5776246f46fa68c0a991fb8961be45608361e98`)
   is a non-promotable test seed, not an accepted candidate.
+- r25 (`7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`)
+  is install-clean and offline-verified in
+  `releases/candidate_20260812_164223_410891256_r25/`. It is not installed or
+  accepted. It carries bounded MTR-019/MTR-021 fixes plus dependency-closed
+  replacements for the rejected r23 MTR-023/MTR-025 implementations.
 
 ## 2026-08-08 maintainer-local candidate (r17, stock-backed eSIM)
 
