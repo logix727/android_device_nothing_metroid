@@ -55,6 +55,10 @@ It carries only the stock-aligned MTR-001/MTR-002 QTI telephony package and Cox
 APN corrections plus the recurring MTR-028 install gate. All 16 payload images
 match target-files, VINTF has no duplicate conflict, and the init audit has no
 blocking finding. It is not installed or functionally accepted.
+T5 is currently blocked: both physical SIM slots are empty, and the exact frozen
+MindTheGapps archive is not present locally for the required recovery sequence.
+Do not spend the device-write budget on a no-SIM installation or substitute a
+different add-on archive. The patched host ADB is built and ready for MTR-028.
 
 The tested configuration has three independently verified inputs:
 
@@ -159,9 +163,10 @@ guesses.
 
 ## Next execution order
 
-1. Use the sanitized historical inserted-SIM result to skip the now-proven UICC
-   and subscription path: install r29 only after approval on the documented modem
-   generation, verify its QTI/IMS processes, and test the first data call. If the
+1. Restore the exact frozen MindTheGapps archive, insert a physical SIM, then use
+   the sanitized historical result to skip the now-proven UICC and subscription
+   path: install r29 on the documented modem generation, verify its QTI/IMS
+   processes, and test the first data call. If the
    historical modem-side `0x1004` rejection persists, compare stock QMI/MCFG
    behavior before any further source or firmware change.
 2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.
