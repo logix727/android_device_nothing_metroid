@@ -202,6 +202,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Residual: proprietary thermal-engine logs dynamic shell-zone name errors and a
   missing FPS virtual sensor; controlled status/cooling/display/charging
   transitions remain unverified.
+- Current disposition: no further source edit is justified. The remaining gate
+  is one bounded unplugged thermal transition with headroom, cooling, display
+  mitigation and recovery evidence; do not reproduce the prolonged heat event.
 - Heat-event evidence: during normal unplugged use in a prior boot session,
   BatteryStats recorded 48 C for about 47 minutes, then 49 C for about 6 minutes
   before a manual reboot. Battery level fell 73% to 58% and charge counter fell
@@ -346,6 +349,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Source: `vendor/qcom/opensource/vibrator/aidl/HapticsPolicy.xml:43-55`
 - Cause: no prebaked effects are advertised and all primitives report zero
   duration; `TEXTURE_TICK` is dropped as unsupported.
+- Evidence boundary: packaged stock policy/configuration defines effects and
+  compositions, but the proprietary running HAL publishes none. Obtain exact
+  stock runtime capabilities and operation output before changing HAL, XML,
+  kernel or DTS; packaged assets and registration alone do not define a fix.
 - Fix direction: map framework effects/compositions onto a working vendor path,
   or advertise only real capabilities with explicit fallbacks.
 - Acceptance: every advertised effect, primitive, composition, amplitude level,
@@ -426,6 +433,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Evidence: `vendor.noth.hardware.sensor.sensor_extension.ISensorExtension/default`
   is absent on the installed build.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/vendor.noth.hardware.sensor.sensor_extension-service.rc:1-7`
+- Evidence boundary: stock starts and declares the service, but Lineage lacks a
+  proven legitimate consumer and the stock framework consumer may be proprietary.
+  Verify consumer identity and binary/ABI equivalence before removing `disabled`
+  or adding a stable-HAL fragment.
 - Fix direction: restore only after identifying actual framework consumers and
   validating the intended stock binary and standalone fragment.
 - Acceptance: extension API, pocket/posture/orientation, UDFPS/display
@@ -463,8 +474,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Evidence: display/UDFPS traces record LHBM requests while the panel is still at
   60 Hz, followed by the 120 Hz vote.
 - Source: `frameworks/base/packages/SystemUI/src/com/android/systemui/biometrics/UdfpsController.java:1059-1075`
+- First divergence: SystemUI exposes the touch overlay without acquiring AOSP's
+  existing pre-authentication max-refresh vote, then notifies the fingerprint HAL
+  before its asynchronous per-touch display-mode request can take effect. Stock
+  HAL/RC/VINTF and the metroid panel driver already agree; no kernel change is
+  justified.
 - Fix direction: hold the maximum-refresh vote for the overlay lifetime before
   accepting touch; an immediate asynchronous reorder alone may still race.
+- Next-batch scope: one default-off, metroid-enabled overlay-lifetime vote,
+  balanced on every hide, cancellation and failed-show path. Hold this R2 change
+  until frozen r29 has an installed disposition.
 - Acceptance: Smooth Display off; 50 screen-on/AOD unlocks and enrollment with
   120 Hz active before LHBM and zero `fps not equal 120`.
 
@@ -619,6 +638,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   the ST21 transport despite successful initialization and tag polling.
 - Cause: unresolved; the unpublished driver appears stock-identical, so timing,
   GPIO, power, and IRQ behavior must be compared before changing code.
+- Evidence boundary: the retained `-107` immediately receives a valid response
+  and success callback in the same screen-state transaction. Current and latest
+  NothingOSS DTS are identical and matching driver source is unpublished. Do not
+  guess delays, retries, GPIOs, IRQ polarity, I2C address or firmware.
 - Fix direction: reproduce against synchronized Lineage/stock transition traces.
 - Acceptance: 100 toggles plus tag, HCE, payment, suspend, and charger-transition
   loops with no user-visible failure or recurring transport error.
