@@ -50,9 +50,9 @@ telephoto and front S5KJN1. Logical SAT exposes 0.6x, 1x and 3x lens points.
 
 | Operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
-| Camera2 maximum-JPEG capture, exposed IDs 0-4 | UNKNOWN | PARTIAL: coherent-r22 sweep captured valid JPEGs from all five IDs; provider PID 1380 stable and no new tombstone | Validate image content, focus, exposure and physical-ID mapping. |
+| Camera2 maximum-JPEG capture, exposed IDs 0-4 | UNKNOWN | PARTIAL: coherent-r28 sweep captured fresh valid 12 MP JPEGs from all five IDs; provider PID 1381 stayed stable and the tombstone inventory did not change | Validate image content, focus, exposure and physical-ID mapping. |
 | Aperture preview and ordinary stills | PARTIAL | PARTIAL | Repeat front/rear and every physical lens on installed system APK. |
-| FHD30 video and flip | PARTIAL: temporary APK finalized 1920x1080/30, route `4 -> 1 -> 4` | UNKNOWN on system APK | Finalized file, audio, zoom and restart matrix. |
+| FHD30 video and flip | PARTIAL: temporary APK finalized 1920x1080/30, route `4 -> 1 -> 4` | PARTIAL: coherent-r28 probe finalized a short MP4 while applying 1x -> 3x zoom; provider stayed stable and no tombstone changed | Validate Aperture UI route/flip, audio, cadence and process restart. |
 | FHD60 video and flip | PARTIAL: temporary APK finalized 1920x1080/60, route `0 -> 1 -> 0` | PARTIAL diagnostic: r22 `/product` APK routes `0 -> 1 -> 0` in mixed boot state | Repeat on a coherent candidate and finalize a fresh clip plus thermal/cadence run. |
 | UHD30 video and flip | PARTIAL: temporary APK finalized 3840x2160/30, route `0 -> 1 -> 0` | PARTIAL diagnostic: r22 `/product` APK routes `0 -> 1 -> 0` and finalized a 3840x2160/30 H.264/AAC clip in mixed boot state; provider stayed PID 1377 and no tombstone changed | Repeat on a coherent candidate; long clip, zoom and thermal run. |
 | Stabilization/EIS | FAIL: intentionally disabled to avoid Morpho crash path | FAIL: feature remains disabled | MTR-012 walking/panning, crop, cadence and zoom matrix before enabling. |
@@ -70,7 +70,7 @@ telephoto and front S5KJN1. Logical SAT exposes 0.6x, 1x and 3x lens points.
 | Built-in microphones | UNKNOWN | UNKNOWN | Front/rear/voice-capture recording, gain, noise suppression and stereo mapping. |
 | Voice-call audio | BLOCKED | BLOCKED | SIM call: handset, speaker, mute and proximity routing. |
 | Media encode/decode | PARTIAL: media-quality lookup fixed; camera AVC/AAC files finalized | PARTIAL | AVC/HEVC/AV1, protected playback, seek, rotation and repeated sessions. |
-| AudioFX | FAIL: MTR-025 nonexistent keepalive binding | FAIL | Fix service discovery; test playback, persistence and client death. |
+| AudioFX | FAIL: MTR-025 nonexistent keepalive binding | PARTIAL on r28: AudioFX process and operational session service survive playback/client restart with no observed crash or bind-failure loop; inert keepalive binding, audible effect and persistence remain unproven | Test exact keepalive binding, perceptible effect, persistence and reboot. |
 | USB-C audio/headset buttons/mic | BLOCKED | BLOCKED | Compatible dongle/headset required. |
 | Bluetooth A2DP/HFP/SCO | BLOCKED | BLOCKED | Headset required; include calls, microphone, volume and fallback. |
 | LE Audio/LC3/HAP/BAP/Auracast | BLOCKED: services initialize only | BLOCKED | Compatible hearing/LE/broadcast hardware required. |

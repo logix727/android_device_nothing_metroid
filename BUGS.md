@@ -644,8 +644,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   exact component. FrameworksServicesTests and AudioFX builds pass; merged
   manifest inspection confirms only the inert service is exported.
 - r28 disposition: exact replacement is installed coherently across two boots;
-  real effect playback, client death, keepalive lifecycle, and persistence remain
-  to be exercised.
+  a normal media probe creates and restarts playback while AudioFX and its private
+  session service remain alive without an observed crash or bind-failure loop.
+  The framework's exact inert keepalive binding, perceptible effect, client-death
+  cleanup, and reboot persistence remain to be accepted.
 - Acceptance: effect open/close, playback, client death, reboot persistence, and
   no bind failures.
 
