@@ -5,13 +5,13 @@ The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
 This records the last accepted release, not the current live state. r21 remains
-accepted unchanged. The device currently runs coherent r22
-(`23.0-20260809-UNOFFICIAL-metroid`) on slot B, with encrypted userdata and
-SELinux Enforcing. Three retained coherent-r22 boots produced no GMS Password
-Checkup fatality or new tombstone; MTR-026's failures were confined to the
-operator-created mixed r21-`init_boot`/r22-images diagnostic state. Google
-independently blocks the Play Store storefront as Play Protect uncertified
-(MTR-027); this is an external certification-policy result, not ROM acceptance.
+accepted unchanged. The device currently runs coherent r28
+(`23.0-20260813-UNOFFICIAL-metroid`) on slot B, with encrypted userdata and
+SELinux Enforcing. Two r28 boots produced no crash-buffer entry, new tombstone,
+pstore record, or MTR-026 Password Checkup fatality. The bounded init cleanup
+passes, and NCM DHCP/DNS/IPv4/HTTPS passes its primary operation. Google still
+redirects Play Store to its uncertified-device activity (MTR-027); this is an
+external certification-policy result, not ROM acceptance.
 
 ## ROM
 

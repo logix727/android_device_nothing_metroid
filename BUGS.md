@@ -1,10 +1,10 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and coherent live state: 2026-08-11
+Last audited against accepted baseline and coherent live state: 2026-08-13
 
 Accepted build: `23.0-20260808-UNOFFICIAL-metroid` (r21)
 
-Live device: `23.0-20260809-UNOFFICIAL-metroid` (r22), coherent slot B; not accepted
+Live device: `23.0-20260813-UNOFFICIAL-metroid` (r28), coherent slot B; not accepted
 
 Accepted OTA SHA-256:
 `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
@@ -23,12 +23,11 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-024 |
-| Installed / successor correction pending | MTR-019, MTR-021, MTR-023, MTR-025 |
+| Active fixes | MTR-001, MTR-002, MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-024 |
+| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022, MTR-023, MTR-025 |
 | Evidence incomplete | MTR-020 |
-| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022 |
-| External hardware/carrier/policy acceptance | MTR-001, MTR-002, MTR-027, physical SIM/IMS/OMAPI |
-| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-026, MTR-028 |
+| External hardware/carrier/policy acceptance | MTR-027, real eSIM profile, OMAPI |
+| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-021, MTR-026, MTR-028 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -41,8 +40,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: closed registration defect; physical-SIM acceptance is an external test
-  gate
+- Status: registration defect closed; public physical-SIM operation fails and is
+  reopened for root-cause evidence
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -54,13 +53,21 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `IQtiRadioConfig/default`, `IImsRadio/imsradio0/1`, and `IQtiRadioStable/slot1/2`
   resolving and registering via servicemanager with no registration denial, and
   `org.codeaurora.ims` binds them under `vendor_qtelephony`.
-- Acceptance remaining: physical-SIM call, SMS, data, IMS, IWLAN, call-audio,
-  DSDS, airplane-mode, and suspend tests.
+- Public failure (XDA posts 24 and 29): active AT&T and Cox/Verizon physical SIMs
+  can see/connect to a network, but data, voice, and text do not work. This proves
+  a functional defect beyond Binder registration and is broader than IMS alone.
+- Evidence boundary: the public installer never required the generation-matched
+  modem/MCFG input. Retained local no-SIM evidence shows emergency LTE camping
+  with `subId=-1`, but cannot be attributed to the tester's inserted SIM. Obtain
+  the tester's private insertion-time radio log, baseband build, UICC card state,
+  and slot-check GPIO result before changing source or firmware.
+- Acceptance: present UICC/subscription, calls, SMS, data, IMS, IWLAN, call-audio,
+  DSDS, airplane-mode, and suspend tests on the documented modem generation.
 
 ### MTR-002: Android IMS implementation and carrier acceptance
 
 - Severity: critical
-- Status: infrastructure closed on r4; carrier-SIM acceptance externally blocked
+- Status: IMS infrastructure closed on r4; public carrier operation fails
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
 - Evidence (base): the installed package/service audit finds no IMS implementation;
@@ -72,8 +79,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   system_ext/priv-app, runs under `vendor_qtelephony`, and `ImsResolver` binds
   MMTEL and EMERGENCY_MMTEL on both slots; `QImsService` receives
   `UNSOL_SRV_STATUS_UPDATE` for both subscriptions.
-- Acceptance remaining: VoLTE/VoWiFi, IMS SMS, incoming/outgoing audio, and
-  LTE/Wi-Fi handover with a carrier SIM.
+- Public result: AT&T and Cox/Verizon physical-SIM data, voice, and text fail, and
+  an eSIM tester reports calls unavailable. MMTEL binding is therefore retained
+  as infrastructure evidence only, not functional acceptance.
+- Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
+  IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 
 ### MTR-003: stock-backed eSIM provisioning
 
@@ -437,7 +447,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: `BUILT-NOT-INSTALLED` for r25
+- Status: installed primary operation passes on r28; regression matrix pending
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
 - First divergence: stock-derived vendor init created `ncm.0` while the selected
   QTI gadget HAL links `ncm.gs6`.
@@ -461,6 +471,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Final source fix: when the active function is NCM, use the NCM matcher directly
   for configured and late-interface paths. Focused overlap/race tests pass. No
   further OTA is allowed in this release train.
+- r28 installed result: `05c6:908c` NCM enumerates with Linux `cdc_ncm`; despite
+  overlapping generic USB and NCM regexes, Tethering adds `IpServer` for `usb0`,
+  assigns `10.20.247.25/24`, serves DHCP/DNS, and starts offload. The host receives
+  `10.20.247.37/24`; phone-gateway, public IPv4, DNS, and HTTPS 204 checks pass.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 
@@ -488,7 +502,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-021: inherited init inventory contains dangling services and invalid work
 
 - Severity: medium
-- Status: `BUILT-NOT-INSTALLED` for the bounded r25 cleanup
+- Status: bounded cleanup closed on installed r28
 - Impact: normal boot attempts missing executables and imports, obscuring real
   failures and advertising unavailable QSPA, CHRE, QCC, factory, and helper paths.
 - Evidence: a static normal-boot audit finds inherited RC entries whose
@@ -513,6 +527,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   Therefore MTR-021 remains open and r25 is rejected for full promotion.
 - r26 correction: remove only those six service stanzas while preserving unrelated
   RC actions; the classifier now treats `nonencrypted` as unconditional reachability.
+- r28 installed result: two coherent boots have no service state or log attempt for
+  `ptt_socket_app`, `vendor.perfservice`, `nqnfcinfo`, `qvop-daemon`,
+  `qseeproxydaemon`, or `wifi_qos_daemon`; the staged audit remains at zero
+  boot-harm, unconditional-dangle, and unknown findings.
 
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
@@ -545,7 +563,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-023: face-enrollment guidance is blank outside English
 
 - Severity: medium
-- Status: confirmed resource defect
+- Status: installed on r28; focused locale/UI acceptance pending
 - Impact: safety, education, and accessibility guidance supplied by the device
   overlay disappears under locales that ship explicit empty Settings strings.
 - Source: device English overlay at
@@ -561,6 +579,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   all dynamic, static, accessibility, and parental-consent consumers are covered.
   Settings and focused framework builds pass. `SettingsUnitTests` is currently
   blocked by unrelated pre-existing `SaveAndFinishWorkerTest` signature errors.
+- r28 disposition: exact replacement is installed coherently across two boots;
+  representative Latin, CJK, RTL, accessibility, and parental-consent UI remains
+  to be exercised.
 - Acceptance: complete enrollment in representative Latin, CJK, and RTL locales;
   all actionable safety/accessibility guidance is visible and appropriate.
 
@@ -581,7 +602,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-025: AudioFX framework binding targets a nonexistent service
 
 - Severity: medium
-- Status: confirmed integration defect
+- Status: installed on r28; focused playback/lifecycle acceptance pending
 - Impact: audio sessions repeatedly fail to bind the MusicFX keepalive service;
   effect lifecycle and persistence may be unreliable.
 - Evidence: repeated audio sessions fail to bind the framework-selected MusicFX
@@ -598,6 +619,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `KeepAliveService` owns no DSP/session state, and framework tests assert the
   exact component. FrameworksServicesTests and AudioFX builds pass; merged
   manifest inspection confirms only the inert service is exported.
+- r28 disposition: exact replacement is installed coherently across two boots;
+  real effect playback, client death, keepalive lifecycle, and persistence remain
+  to be exercised.
 - Acceptance: effect open/close, playback, client death, reboot persistence, and
   no bind failures.
 
@@ -621,17 +645,24 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Status: externally blocked; not a proven ROM defect
 - Evidence: coherent r22 on slot B displays `This device isn't Play Protect
   certified` and blocks access to the Play Store storefront.
+- r28 result: GMS and Phonesky are installed, running, network-capable, and
+  crash-clean, but launching Phonesky deterministically selects
+  `com.google.android.gms.gmscompliance.ui.UncertifiedDeviceActivity` again.
 - First local divergence from stock: custom Lineage build/AVB identity, root
   vbmeta flag `1`, and orange/unlocked verified-boot state. The exact Google
   server-side decision and private registration status are not locally observable.
 - Policy: retain `UNCERTIFIED-BLOCKED`; do not spoof fingerprints, attestation,
   package state, boot state, or AVB, and do not present private device
   registration as ROM certification.
+- Lawful access path: Google's official custom-ROM registration page may grant
+  storefront access to this one device. Record that only as `REGISTERED-DEVICE
+  ACCESS`; it does not certify the ROM or imply any Play Integrity verdict.
 
 ### MTR-028: recovery ADB sideload progress does not report install completion
 
 - Severity: P0 recurring release gate
-- Status: expected upstream host behavior; install outcome must be correlated
+- Status: misleading 47-percent host display fixed in source; real sideload
+  acceptance pending; install outcome must still be correlated
 - User-visible symptom: host progress commonly stops near 47 percent and may
   print `adb: failed to read command: Success`, making a completed transfer look
   incomplete.
@@ -640,16 +671,29 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   size. Roughly one package-length therefore displays near 47 percent. The EOF
   warning means the host did not receive the final eight-byte terminal token; it
   does not establish recovery success or failure.
-- Classification: not a metroid defect. Retained installs through r21 that were
-  accepted after near-47-percent host output completed target-slot activation and
-  coherent boots. No retained evidence shows a partial install caused by this
-  progress display.
+- Classification: upstream host UX defect, not an incomplete-install defect.
+  Retained installs through r28 completed target-slot activation and coherent
+  boots despite near-47-percent output.
+- Host source fix: `packages/modules/adb` now counts first-time coverage of each
+  requested package block. Repeated verification/installation reads do not
+  inflate progress; out-of-order requests remain monotonic; and the partial final
+  block reaches exactly 100 percent. The display no longer uses the 47 multiplier
+  or approximate marker. Linux and Windows host ADB builds pass, including
+  103/103 host tests and focused duplicate/out-of-order/partial-block coverage.
+- Scope: this reports transfer coverage only. It does not claim recovery install
+  progress and does not alter normal-sideload result semantics.
 - Gate: record exact ZIP SHA-256, host output, recovery final status, automatically
   selected target slot, update/snapshot state, slot success, encrypted userdata,
   Enforcing SELinux, and first and second coherent boots. A transfer that never
   enters sideload is `NOT STARTED`; host completion without recovery final status
   is `OUTCOME UNCORRELATED`; only an explicit recovery/update failure, failed
   merge/slot, rollback, or failed coherent boot is `INSTALL FAILED/INCOMPLETE`.
+- r28 result: host display stopped at 47 percent without a terminal token, while
+  recovery's additional-packages prompt established ROM success and the exact
+  GApps sideload returned `Total xfer: 1.00x`. The target then booted coherently
+  twice on slot B. Validate the patched host on the next already-planned sideload.
+  Keep a separate upstream minadbd terminal-token improvement open; do not
+  mislabel byte-serving progress as install progress.
 
 ## Acceptance gaps
 

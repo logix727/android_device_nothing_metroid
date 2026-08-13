@@ -4,6 +4,23 @@
 
 r21 remains the accepted baseline unchanged.
 
+- Live device: coherent r28 `23.0-20260813-UNOFFICIAL-metroid`, slot B,
+  encrypted and SELinux Enforcing across two boots; installed but not accepted.
+- r28 immutable snapshot:
+  `releases/candidate_20260812_224028_708148776_candidate/`, SHA-256
+  `6d1427449128bbd65e64841b2934ea91dae7f68ede51c2557830d827feddb9e9`.
+- MTR-019 passes installed NCM enumeration, DHCP, DNS, IPv4, and HTTPS; reconnect,
+  HAL-restart, standalone-NCM and adjacent-mode regressions remain. The bounded
+  MTR-021 cleanup passes across both boots.
+- MTR-023 and MTR-025 are installed but still require real locale/UI and
+  playback/lifecycle acceptance.
+- Public AT&T and Cox/Verizon physical-SIM reports establish a functional radio
+  blocker: network visibility without data, voice, or text. Root cause is not yet
+  assigned; the public installer omitted the required modem-generation identity.
+- Play Store remains redirected to Google's uncertified-device activity. Google's
+  official custom-ROM registration may provide per-device storefront access but
+  does not certify this ROM.
+
 - Live device: coherent r22 `23.0-20260809-UNOFFICIAL-metroid`, slot B,
   encrypted and SELinux Enforcing; not accepted.
 - MTR-026: coherent-r22 crash gate cleared across three retained boots. The four
@@ -66,13 +83,15 @@ ROM SHA-256:
 
 ## Recovery sideload progress
 
-ADB intentionally scales normal sideload progress by 47 because recovery usually
-requests the package bytes about twice for verification and installation. A
-successful A/B sideload may therefore stop near 47 percent. The message
-`adb: failed to read command: Success` means host ADB did not receive the final
-terminal token; it is not an install verdict. MTR-028 requires recovery's final
-status, automatically selected target slot, update/snapshot state, slot success,
-and two coherent boots before accepting or rejecting the installation.
+Stock ADB scales normal sideload progress by 47 because recovery may reread package
+bytes for verification and installation. The metroid host carry replaces that
+estimate with unique package-block coverage, so transfer reaches 100 percent after
+every ZIP byte has been served once and repeated reads do not inflate it. Focused
+tests and the full 103-test host suite pass; real recovery sideload acceptance is
+pending. The message `adb: failed to read command: Success` remains a separate
+missing-terminal-token condition, not an install verdict. MTR-028 still requires
+recovery's final status, automatically selected target slot, update/snapshot state,
+slot success, and two coherent boots before accepting or rejecting installation.
 
 ## 2026-08-06 maintainer-local candidate (r7, thermal skin)
 

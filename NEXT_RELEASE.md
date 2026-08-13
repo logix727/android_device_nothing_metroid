@@ -10,11 +10,13 @@ r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypte
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
-The live device is coherent r25 on slot A, encrypted and Enforcing. Its two boots
-cleared merge, GApps, native-crash and exact-file gates, but it is rejected for
-promotion by MTR-019/MTR-021 runtime findings. Google separately blocks the
-storefront as Play Protect uncertified (MTR-027). r23 was built but not installed;
-r24 is a non-promotable test seed.
+The live device is coherent r28 (`23.0-20260813-UNOFFICIAL-metroid`) on slot B,
+encrypted and Enforcing. Two boots passed crash, tombstone, pstore, init-cleanup,
+GApps, and core invariant gates. Installed NCM DHCP/DNS/IPv4/HTTPS testing passes
+MTR-019's primary operation; reconnect/HAL and adjacent-mode regressions remain.
+r28 is not promoted because MTR-023/MTR-025 still need real UI/audio
+acceptance and public physical-SIM operation is now a confirmed blocker. Google
+separately blocks the storefront as Play Protect uncertified (MTR-027).
 
 r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
@@ -38,6 +40,13 @@ fails before `IpServer`: `usb0` matches both generic USB and NCM regexes and the
 generic type wins. The final source-only correction prefers NCM classification
 while NCM is active. The release train has reached its third-write stop rule; do
 not install another candidate until a new train is reviewed.
+
+r28 began a new reviewed train and was installed from the `OFFLINE-VERIFIED`
+immutable snapshot `releases/candidate_20260812_224028_708148776_candidate/`;
+OTA SHA-256
+`6d1427449128bbd65e64841b2934ea91dae7f68ede51c2557830d827feddb9e9`.
+It passes MTR-019's primary installed operation and closes the bounded MTR-021
+cleanup on the installed target. It is installed but not accepted.
 
 The tested configuration has three independently verified inputs:
 
@@ -94,8 +103,10 @@ guesses.
 
 ### WP2: Physical SIM, IMS, eSIM, and OMAPI
 
-- MTR-001/MTR-002: insert a physical SIM and test calls, SMS/MMS, data, APNs,
-  VoLTE/VoWiFi, emergency UI, DSDS, handover, airplane mode, and suspend.
+- MTR-001/MTR-002: XDA testers reproduce network visibility with no AT&T or
+  Cox/Verizon data, voice, or text. Public install instructions omitted the exact
+  modem-generation prerequisite. Acquire the private insertion-time log and
+  baseband identity, then localize UICC present/subscription before APN or IMS.
 - MTR-003: use a private activation code to test download, enable/disable, reboot,
   deletion, transfer, and physical-SIM coexistence. Never retain EID/credentials.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
@@ -127,8 +138,8 @@ guesses.
 
 ### WP5: Connectivity, suspend, and cleanup
 
-- MTR-019 NCM and the bounded MTR-021 init cleanup are `BUILT-NOT-INSTALLED` for
-  r25 after fresh staged-image checks. MTR-015 QCC remains a separate atomic
+- MTR-019's primary NCM operation passes and the bounded MTR-021 init cleanup is
+  closed on installed r28. MTR-015 QCC remains a separate atomic
   feature decision; MTR-016 sensor extension and MTR-024 ST21 remain active.
   MTR-020 returns to
   evidence collection because current and latest NothingOSS tuna both use the
@@ -138,13 +149,19 @@ guesses.
 
 ## Next execution order
 
-1. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
-   uncertified-policy gate; re-run both on the next promotable installed candidate.
-2. Complete installed-system Aperture acceptance from the canonical hardware matrix.
-3. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
+1. Obtain and sanitize the XDA inserted-SIM radio capture/baseband, reproduce on
+   the documented modem generation, and fix the first UICC/subscription divergence.
+2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.
+3. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
+   uncertified-policy gate. Test Google's official per-device registration only
+   as storefront access, never as ROM certification.
+4. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
+   already-planned recovery sideload; record recovery's result independently.
+5. Complete installed-system Aperture acceptance from the canonical hardware matrix.
+6. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.
-4. Execute WP2 when a physical SIM and private eSIM activation code are available.
-5. Execute WP3-WP5 in dependency order, using stock/kernel/upstream evidence first.
+7. Execute remaining WP2-WP5 work in dependency order, using stock/kernel/upstream
+   evidence first.
 
 ## Release gate
 

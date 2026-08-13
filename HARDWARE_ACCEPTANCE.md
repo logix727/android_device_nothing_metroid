@@ -16,16 +16,16 @@ actually been exercised.
 | UNKNOWN | No functional result. Enumeration, a Binder service, or absence of a bug is not a pass. |
 | N/A | The inventory shows that the device does not expose this hardware. |
 
-Rows without a specific r21 result are not accepted-release claims. Live
-coherent-r22 observations are diagnostic evidence only until a complete release
-gate passes.
+Rows without a specific r21 result are not accepted-release claims. Live r28
+observations are installed diagnostic evidence only until a complete release gate
+passes.
 
 ## Tested configurations
 
 | Name | Build / slot | State |
 |---|---|---|
 | Accepted baseline | r21 `23.0-20260808`, OTA `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`, slot A | Enforcing, encrypted, two boots, empty crash buffer; accepted |
-| Latest live state | coherent r22 `23.0-20260809`, slot B | Enforcing and encrypted; MTR-026 crash gate clear across three retained coherent boots; Play Store storefront blocked as Play Protect uncertified (MTR-027); not accepted |
+| Latest live state | coherent r28 `23.0-20260813`, slot B | Enforcing and encrypted across two boots; NCM and bounded init cleanup pass; Play Store storefront blocked as Play Protect uncertified (MTR-027); not accepted |
 
 Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
 and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public
@@ -139,9 +139,9 @@ No pressure/barometer sensor is exposed.
 |---|---|---|---|
 | GNSS live fix and raw measurements | PASS: retained indoor fix/raw evidence | Infrastructure only observed | Cold/warm TTFF, outdoor accuracy, screen-off, airplane mode and restart loops. |
 | QCC assisted location | FAIL: MTR-015 incomplete stack | FAIL | Restore coherent stack or remove clients; compare TTFF. |
-| Physical SIM detection | BLOCKED | BLOCKED: both slots report absent | Insert test SIM; PIN/PUK and hotplug. |
-| Cellular voice/SMS/MMS/data | BLOCKED | BLOCKED | Carrier SIM, APN, LTE/5G, handover and airplane-mode matrix. |
-| VoLTE/VoWiFi/emergency/DSDS | BLOCKED | BLOCKED | Carrier support and two SIMs. |
+| Physical SIM detection | BLOCKED | FAIL (public): AT&T and Cox/Verizon SIMs see/connect to a network but no valid operation follows | Capture insertion-time UICC card state, slot GPIO, baseband and subscription on the documented firmware generation. |
+| Cellular voice/SMS/MMS/data | BLOCKED | FAIL (public): no data, voice or text on AT&T and Cox/Verizon | Localize subscription first, then APN/data/SMS/call layers. |
+| VoLTE/VoWiFi/emergency/DSDS | BLOCKED | FAIL/PARTIAL: emergency camping is visible; carrier IMS and calls fail | Establish UICC/subscription before IMS; then test two SIMs and handover. |
 | eSIM UI/QR path | PASS through QR scanner | UNKNOWN | Real profile credentials: download, enable, reboot, delete and transfer. |
 | OMAPI/UICC secure element | BLOCKED | BLOCKED | Physical SIM/reader and applet. |
 
@@ -166,7 +166,7 @@ No pressure/barometer sensor is exposed.
 | USB ADB transport | PASS | PASS: 16 MiB push/pull hashes matched | Cable reconnect, host variation, late HAL start and HAL restart. |
 | MTP/PTP | UNKNOWN | UNKNOWN | File transfer, large files, reconnect and locked state. |
 | RNDIS tethering | UNKNOWN | UNKNOWN | IPv4/IPv6 transport and reconnect. |
-| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | FAIL | Align gadget/HAL names and test both compositions. |
+| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PARTIAL/PASS on r28: `05c6:908c`, `cdc_ncm`, DHCP/DNS, IPv4 and HTTPS through `usb0` | Cable reconnect, HAL restart, standalone NCM, MTP/PTP/RNDIS and host variation remain. |
 | USB OTG/host | BLOCKED | BLOCKED | Storage, HID and powered accessory required. |
 | USB Ethernet/accessory networking | BLOCKED | BLOCKED | Compatible adapter; DHCP, IPv4/IPv6, suspend and unplug. |
 | DisplayPort/video output | BLOCKED | BLOCKED | Compatible adapter/display required; fitted support is not yet proven. |
@@ -218,7 +218,7 @@ No pressure/barometer sensor is exposed.
    certification gate on every promotable successor candidate.
 2. Run the safety-critical unplugged thermal/charging matrix and unplugged suspend.
 3. Complete installed-system Aperture routing, lens, zoom, flash and EIS acceptance.
-4. Fix UDFPS ordering, haptic capability advertising, AudioFX binding, USB NCM,
-   NFC transition errors and CPUSS accounting.
+4. Localize physical-SIM UICC/subscription failure, then fix UDFPS ordering,
+   haptic capability advertising, NFC transition errors and CPUSS accounting.
 5. Execute physical SIM/eSIM, Bluetooth/USB audio, PD/PPS, wireless/reverse
    charging, NFC payment/off-host and external-I/O rows when hardware is available.
