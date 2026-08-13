@@ -1,0 +1,176 @@
+From b39ef1faefe91a7b788d2ec78199c6bf0e8a5420 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Thu, 13 Aug 2026 10:29:41 -0400
+Subject: [PATCH] adb: report complete sideload transfer progress
+
+Change-Id: Ie8bc9721651005c8b287ebca8be6004e5f69270b
+---
+ Android.bp                        |  1 +
+ client/commandline.cpp            | 15 +++++-----
+ client/sideload_progress.h        | 49 +++++++++++++++++++++++++++++++
+ client/sideload_progress_test.cpp | 45 ++++++++++++++++++++++++++++
+ 4 files changed, 102 insertions(+), 8 deletions(-)
+ create mode 100644 client/sideload_progress.h
+ create mode 100644 client/sideload_progress_test.cpp
+
+diff --git a/Android.bp b/Android.bp
+index 2d31fa1..90061aa 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -265,6 +265,7 @@ libadb_test_srcs = [
+     "adb_io_test.cpp",
+     "adb_listeners_test.cpp",
+     "adb_utils_test.cpp",
++    "client/sideload_progress_test.cpp",
+     "fdevent/fdevent_test.cpp",
+     "shell_service_protocol.cpp",
+     "socket_spec_test.cpp",
+diff --git a/client/commandline.cpp b/client/commandline.cpp
+index d7a517f..83e477c 100644
+--- a/client/commandline.cpp
++++ b/client/commandline.cpp
+@@ -64,6 +64,7 @@
+ #include "app_processes.pb.h"
+ #include "bugreport.h"
+ #include "client/file_sync_client.h"
++#include "sideload_progress.h"
+ #include "commandline.h"
+ #include "fastdeploy.h"
+ #include "incremental_server.h"
+@@ -926,6 +927,7 @@ static int adb_sideload_install(const char* filename, bool rescue_mode) {
+     char buf[SIDELOAD_HOST_BLOCK_SIZE];
+ 
+     int64_t xfer = 0;
++    SideloadProgress progress(sb.st_size, SIDELOAD_HOST_BLOCK_SIZE);
+     int last_percent = -1;
+     while (true) {
+         if (!ReadFdExactly(device_fd, buf, 8)) {
+@@ -976,15 +978,12 @@ static int adb_sideload_install(const char* filename, bool rescue_mode) {
+         }
+         xfer += to_write;
+ 
+-        // For normal OTA packages, we expect to transfer every byte
+-        // twice, plus a bit of overhead (one read during
+-        // verification, one read of each byte for installation, plus
+-        // extra access to things like the zip central directory).
+-        // This estimate of the completion becomes 100% when we've
+-        // transferred ~2.13 (=100/47) times the package size.
+-        int percent = static_cast<int>(xfer * 47LL / (sb.st_size ? sb.st_size : 1));
++        // FUSE may request blocks repeatedly while recovery verifies and installs the package.
++        // Report unique package coverage so transfer progress reaches 100% after every byte has
++        // been served once without pretending to measure recovery's separate install progress.
++        int percent = progress.RecordBlock(block);
+         if (percent != last_percent) {
+-            printf("\rserving: '%s'  (~%d%%)    ", filename, percent);
++            printf("\rserving: '%s'  (%d%%)    ", filename, percent);
+             fflush(stdout);
+             last_percent = percent;
+         }
+diff --git a/client/sideload_progress.h b/client/sideload_progress.h
+new file mode 100644
+index 0000000..5e955fc
+--- /dev/null
++++ b/client/sideload_progress.h
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2026 The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#pragma once
++
++#include <stdint.h>
++
++#include <algorithm>
++#include <vector>
++
++class SideloadProgress {
++  public:
++    SideloadProgress(int64_t file_size, int64_t block_size)
++        : file_size_(file_size),
++          block_size_(block_size),
++          served_blocks_((file_size + block_size - 1) / block_size) {}
++
++    int RecordBlock(int64_t block) {
++        if (served_blocks_[block]) {
++            return Percent();
++        }
++
++        served_blocks_[block] = true;
++        const int64_t offset = block * block_size_;
++        unique_bytes_served_ += std::min(block_size_, file_size_ - offset);
++        return Percent();
++    }
++
++  private:
++    int Percent() const { return static_cast<int>(unique_bytes_served_ * 100 / file_size_); }
++
++    const int64_t file_size_;
++    const int64_t block_size_;
++    std::vector<bool> served_blocks_;
++    int64_t unique_bytes_served_ = 0;
++};
+diff --git a/client/sideload_progress_test.cpp b/client/sideload_progress_test.cpp
+new file mode 100644
+index 0000000..98ed466
+--- /dev/null
++++ b/client/sideload_progress_test.cpp
+@@ -0,0 +1,45 @@
++/*
++ * Copyright (C) 2026 The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#include "sideload_progress.h"
++
++#include <gtest/gtest.h>
++
++TEST(SideloadProgressTest, CountsEachBlockOnlyOnce) {
++    SideloadProgress progress(4096, 1024);
++
++    EXPECT_EQ(25, progress.RecordBlock(0));
++    EXPECT_EQ(25, progress.RecordBlock(0));
++    EXPECT_EQ(50, progress.RecordBlock(1));
++    EXPECT_EQ(50, progress.RecordBlock(1));
++}
++
++TEST(SideloadProgressTest, HandlesOutOfOrderRequests) {
++    SideloadProgress progress(4096, 1024);
++
++    EXPECT_EQ(25, progress.RecordBlock(3));
++    EXPECT_EQ(50, progress.RecordBlock(1));
++    EXPECT_EQ(75, progress.RecordBlock(2));
++    EXPECT_EQ(100, progress.RecordBlock(0));
++}
++
++TEST(SideloadProgressTest, CountsPartialFinalBlock) {
++    SideloadProgress progress(2500, 1024);
++
++    EXPECT_EQ(40, progress.RecordBlock(0));
++    EXPECT_EQ(81, progress.RecordBlock(1));
++    EXPECT_EQ(100, progress.RecordBlock(2));
++}
+-- 
+2.43.0
