@@ -55,10 +55,10 @@ It carries only the stock-aligned MTR-001/MTR-002 QTI telephony package and Cox
 APN corrections plus the recurring MTR-028 install gate. All 16 payload images
 match target-files, VINTF has no duplicate conflict, and the init audit has no
 blocking finding. It is not installed or functionally accepted.
-T5 is currently blocked: both physical SIM slots are empty, and the exact frozen
-MindTheGapps archive is not present locally for the required recovery sequence.
-Do not spend the device-write budget on a no-SIM installation or substitute a
-different add-on archive. The patched host ADB is built and ready for MTR-028.
+T5 currently waits only for physical SIM insertion: both slots are empty. The
+exact frozen MindTheGapps archive has been restored from its official release and
+independently matches the recorded size and SHA-256. Do not spend the device-write
+budget on a no-SIM installation. The patched host ADB is built for MTR-028.
 
 The tested configuration has three independently verified inputs:
 
