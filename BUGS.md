@@ -69,9 +69,21 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   default/MMS/DUN/SUPL profiles; generated APN schema and `product.img` pass.
 - Evidence boundary: the public installer never required the generation-matched
   modem/MCFG input. Retained local no-SIM evidence shows emergency LTE camping
-  with `subId=-1`, but cannot be attributed to the tester's inserted SIM. Obtain
-  the tester's private insertion-time radio log, baseband build, UICC card state,
-  and slot-check GPIO result before changing source or firmware.
+  with `subId=-1`, but cannot be attributed to the tester's inserted SIM.
+- Private historical tester capture: a pre-r29 build detects a removable physical
+  SIM in slot 1, brings its USIM and ISIM applications to `READY`, creates the
+  subscription, loads carrier records, and reaches LTE home registration for
+  voice and data. This rules out UICC detection and subscription creation as the
+  first failure in that capture. Repeated data setup attempts select the expected
+  user-configured APN but the modem immediately returns `OEM_DCFAILCAUSE_4`
+  (`0x1004`) before assigning a CID or network interface. The same capture reports
+  no usable IMS service. Its exact ROM identity is absent and its modem build is
+  not the frozen r29 companion build, so it cannot accept or reject r29 and does
+  not justify a firmware change.
+- Evidence disposition: make no additional source or firmware change before r29
+  testing. On the frozen modem generation, verify package/process startup and then
+  capture the first data-call response; if `0x1004` persists, localize it against
+  stock QMI/MCFG behavior rather than reopening UICC detection.
 - Acceptance: present UICC/subscription, calls, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests on the documented modem generation.
 

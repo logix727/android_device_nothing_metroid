@@ -19,6 +19,10 @@ r21 remains the accepted baseline unchanged.
   three omitted stock QTI telephony APKs plus `QtiTelephonyCompat`, stock-equivalent
   SELinux assignment, and seven missing Cox 311/600 APNs. Focused package, policy,
   APN, image and VINTF validation passes; carrier testing remains required.
+- That successor is offline-verified as r29 at
+  `releases/candidate_20260813_115214_637118668_candidate/`, SHA-256
+  `18759452f85d92f45a38a4e276eecb58a119b1d425f9e7a966d91ae5dd0202f8`.
+  It has not been installed; no physical-SIM or IMS fix is claimed yet.
 - Play Store remains redirected to Google's uncertified-device activity. Google's
   official custom-ROM registration may provide per-device storefront access but
   does not certify this ROM.

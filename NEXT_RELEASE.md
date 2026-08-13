@@ -48,6 +48,14 @@ OTA SHA-256
 It passes MTR-019's primary installed operation and closes the bounded MTR-021
 cleanup on the installed target. It is installed but not accepted.
 
+r29 is `OFFLINE-VERIFIED` in
+`releases/candidate_20260813_115214_637118668_candidate/`; OTA SHA-256
+`18759452f85d92f45a38a4e276eecb58a119b1d425f9e7a966d91ae5dd0202f8`.
+It carries only the stock-aligned MTR-001/MTR-002 QTI telephony package and Cox
+APN corrections plus the recurring MTR-028 install gate. All 16 payload images
+match target-files, VINTF has no duplicate conflict, and the init audit has no
+blocking finding. It is not installed or functionally accepted.
+
 The tested configuration has three independently verified inputs:
 
 1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256
@@ -151,8 +159,11 @@ guesses.
 
 ## Next execution order
 
-1. Obtain and sanitize the XDA inserted-SIM radio capture/baseband, reproduce on
-   the documented modem generation, and fix the first UICC/subscription divergence.
+1. Use the sanitized historical inserted-SIM result to skip the now-proven UICC
+   and subscription path: install r29 only after approval on the documented modem
+   generation, verify its QTI/IMS processes, and test the first data call. If the
+   historical modem-side `0x1004` rejection persists, compare stock QMI/MCFG
+   behavior before any further source or firmware change.
 2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.
 3. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
    uncertified-policy gate. Test Google's official per-device registration only
