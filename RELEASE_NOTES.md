@@ -15,8 +15,10 @@ r21 remains the accepted baseline unchanged.
 - MTR-023 and MTR-025 are installed but still require real locale/UI and
   playback/lifecycle acceptance.
 - Public AT&T and Cox/Verizon physical-SIM reports establish a functional radio
-  blocker: network visibility without data, voice, or text. Root cause is not yet
-  assigned; the public installer omitted the required modem-generation identity.
+  blocker: network visibility without data, voice, or text. The successor restores
+  three omitted stock QTI telephony APKs plus `QtiTelephonyCompat`, stock-equivalent
+  SELinux assignment, and seven missing Cox 311/600 APNs. Focused package, policy,
+  APN, image and VINTF validation passes; carrier testing remains required.
 - Play Store remains redirected to Google's uncertified-device activity. Google's
   official custom-ROM registration may provide per-device storefront access but
   does not certify this ROM.

@@ -139,9 +139,9 @@ No pressure/barometer sensor is exposed.
 |---|---|---|---|
 | GNSS live fix and raw measurements | PASS: retained indoor fix/raw evidence | Infrastructure only observed | Cold/warm TTFF, outdoor accuracy, screen-off, airplane mode and restart loops. |
 | QCC assisted location | FAIL: MTR-015 incomplete stack | FAIL | Restore coherent stack or remove clients; compare TTFF. |
-| Physical SIM detection | BLOCKED | FAIL (public): AT&T and Cox/Verizon SIMs see/connect to a network but no valid operation follows | Capture insertion-time UICC card state, slot GPIO, baseband and subscription on the documented firmware generation. |
-| Cellular voice/SMS/MMS/data | BLOCKED | FAIL (public): no data, voice or text on AT&T and Cox/Verizon | Localize subscription first, then APN/data/SMS/call layers. |
-| VoLTE/VoWiFi/emergency/DSDS | BLOCKED | FAIL/PARTIAL: emergency camping is visible; carrier IMS and calls fail | Establish UICC/subscription before IMS; then test two SIMs and handover. |
+| Physical SIM detection | BLOCKED | FAIL on r28 (public); stock QTI phone package restoration is built for successor | Install successor and capture UICC card state, slot GPIO, baseband and subscription. |
+| Cellular voice/SMS/MMS/data | BLOCKED | FAIL on r28 (public); QTI package and Cox APN fixes are built for successor | Test AT&T and Cox data, SMS/MMS and calls on matching modem firmware. |
+| VoLTE/VoWiFi/emergency/DSDS | BLOCKED | FAIL/PARTIAL on r28; stock QTI phone services are built for successor | Validate MMTEL registration, calls, SMS, two SIMs and handover. |
 | eSIM UI/QR path | PASS through QR scanner | UNKNOWN | Real profile credentials: download, enable, reboot, delete and transfer. |
 | OMAPI/UICC secure element | BLOCKED | BLOCKED | Physical SIM/reader and applet. |
 

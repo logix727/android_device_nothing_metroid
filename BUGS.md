@@ -40,8 +40,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: registration defect closed; public physical-SIM operation fails and is
-  reopened for root-cause evidence
+- Status: stock-aligned successor fix built, not installed; carrier acceptance
+  pending
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -56,6 +56,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Public failure (XDA posts 24 and 29): active AT&T and Cox/Verizon physical SIMs
   can see/connect to a network, but data, voice, and text do not work. This proves
   a functional defect beyond Binder registration and is broader than IMS alone.
+- First divergence: r28 omitted stock `QtiTelephony`, `QtiTelephonyService`, and
+  `qcrilmsgtunnel` while retaining stock package maps, permissions, sysconfig,
+  libraries, properties, and SELinux policy that reference them. Stock 260414,
+  stock 260624, and Qualcomm references ship the complete package set.
+- Successor source fix: restore the three stock-signed APKs and Lineage's
+  `QtiTelephonyCompat`; assign all stock-signed QTI phone packages to
+  `vendor_qtelephony` without relying on the ROM platform certificate. Focused
+  package/policy builds and assembled `system_ext.img` pass.
+- Independent Cox data divergence: Lineage had no MCC 311/MNC 600 profiles while
+  stock has seven Cox profiles. The successor adds the exact IMS, FOTA,
+  default/MMS/DUN/SUPL profiles; generated APN schema and `product.img` pass.
 - Evidence boundary: the public installer never required the generation-matched
   modem/MCFG input. Retained local no-SIM evidence shows emergency LTE camping
   with `subId=-1`, but cannot be attributed to the tester's inserted SIM. Obtain
@@ -67,7 +78,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-002: Android IMS implementation and carrier acceptance
 
 - Severity: critical
-- Status: IMS infrastructure closed on r4; public carrier operation fails
+- Status: stock-aligned successor fix built, not installed; carrier IMS
+  acceptance pending
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
 - Evidence (base): the installed package/service audit finds no IMS implementation;

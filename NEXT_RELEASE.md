@@ -104,9 +104,11 @@ guesses.
 ### WP2: Physical SIM, IMS, eSIM, and OMAPI
 
 - MTR-001/MTR-002: XDA testers reproduce network visibility with no AT&T or
-  Cox/Verizon data, voice, or text. Public install instructions omitted the exact
-  modem-generation prerequisite. Acquire the private insertion-time log and
-  baseband identity, then localize UICC present/subscription before APN or IMS.
+  Cox/Verizon data, voice, or text. The successor restores stock `QtiTelephony`,
+  `QtiTelephonyService`, `qcrilmsgtunnel`, `QtiTelephonyCompat`, stock-equivalent
+  SELinux domains, and seven missing Cox 311/600 APNs. Focused package, policy,
+  APN-schema, image, and VINTF checks pass. Install and exercise present-UICC,
+  subscription, data, SMS, calls, and IMS on the documented modem generation.
 - MTR-003: use a private activation code to test download, enable/disable, reboot,
   deletion, transfer, and physical-SIM coexistence. Never retain EID/credentials.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace

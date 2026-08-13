@@ -1,3 +1,6 @@
-# The extracted IMS APK retains its stock signature, so it does not receive the
-# platform seinfo selector used by Qualcomm's generic rule.
+# The extracted QTI telephony APKs retain their stock signature, so they do not
+# receive the platform seinfo selector used by Qualcomm's generic rules.
 user=_app isPrivApp=true name=org.codeaurora.ims domain=vendor_qtelephony type=app_data_file levelFrom=all
+user=_app name=com.qualcomm.qti.telephonyservice domain=vendor_qtelephony type=app_data_file levelFrom=all
+user=_app isPrivApp=true name=com.qti.phone domain=vendor_qtelephony type=app_data_file levelFrom=all
+user=_app isPrivApp=true name=com.qualcomm.qcrilmsgtunnel domain=vendor_qtelephony type=app_data_file levelFrom=all
