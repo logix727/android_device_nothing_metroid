@@ -1,0 +1,34 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-028"
+  ],
+  "affected_test_union": [
+    "two coherent boots with crash, tombstone, pstore, AVC, encryption, slot and snapshot checks",
+    "QtiTelephonyService, QtiTelephony, qcrilmsgtunnel, QtiTelephonyCompat and org.codeaurora.ims package and process startup",
+    "vendor_qtelephony SELinux assignment with zero package-startup or radio AVCs",
+    "physical UICC detection, subscription creation, slot hotplug, PIN and airplane-mode recovery",
+    "AT&T and Cox Mobile APN selection, IPv4 and IPv6 data, DNS, MMS and tethering",
+    "outgoing and incoming voice, SMS, IMS SMS, VoLTE, VoWiFi and call audio",
+    "default-data and primary-card selection, DSDS, LTE-Wi-Fi handover and suspend resume",
+    "NCM plus ADB primary operation and MTP, PTP and RNDIS regression",
+    "face locale and AudioFX acceptance carried from installed r28",
+    "Aperture coherent-system FHD30, FHD60 and UHD30 routing regression",
+    "MTR-026 coherent crash gate and unchanged MTR-027 uncertified classification",
+    "MTR-028 patched host transfer reaches 100 percent while recovery result, automatic slot, snapshot merge and second boot are recorded independently"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "f523478ef92889a7d5018ae4e80dfa65eb91f6f7352c21fb58a2bc5ca0f24b58"
+    }
+  }
+}
