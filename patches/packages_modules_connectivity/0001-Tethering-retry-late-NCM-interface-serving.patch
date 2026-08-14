@@ -1,5 +1,5 @@
 From 21cd27ce4704930902c2468e5b979c314d4eb550 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <mbstober@gmail.com>
 Date: Wed, 12 Aug 2026 18:57:32 -0400
 Subject: [PATCH] Tethering: retry late NCM interface serving
 
@@ -53,4 +53,3 @@ index 40a673d..12b2597 100644
          failingLocalOnlyHotspotLegacyApBroadcast(true);
 -- 
 2.43.0
-

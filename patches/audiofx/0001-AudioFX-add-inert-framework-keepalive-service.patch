@@ -1,5 +1,5 @@
 From 650c0e93148efa69fc196136056524f9473fed96 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <mbstober@gmail.com>
 Date: Wed, 12 Aug 2026 14:21:49 -0400
 Subject: [PATCH] AudioFX: add inert framework keepalive service
 
@@ -56,4 +56,3 @@ index 0000000..5ee14bf
 +}
 -- 
 2.43.0
-

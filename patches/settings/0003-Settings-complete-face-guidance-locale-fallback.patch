@@ -1,5 +1,5 @@
 From 2ba75ba2e13865678c2d28aa383dde311517d37e Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
+From: logix727 <mbstober@gmail.com>
 Date: Wed, 12 Aug 2026 14:21:49 -0400
 Subject: [PATCH] Settings: complete face guidance locale fallback
 
@@ -222,4 +222,3 @@ index 0000000..4f0dd59
 +}
 -- 
 2.43.0
-

@@ -8,8 +8,10 @@ official build eligibility.
 
 - Replace personal or local carry dependencies with LineageOS-hosted forks or
   reviewed upstream changes. `lineage.dependencies` is not submission-ready.
-- Publish and pin every required public source revision; keep proprietary vendor
-  source, signing material, raw logs, and credentials private.
+- Publish a sanitized immutable r29 Repo manifest and source tag. Required public
+  bases, ordered carries, device revision and kernel revision are already public;
+  keep proprietary vendor source, signing material, raw logs and credentials
+  private.
 - Make the kernel and module build reproducible from the Android build graph or
   an accepted public prebuilt workflow. Resolve the two stock GPL NFC modules
   that currently lack matching published source.
@@ -27,8 +29,9 @@ official build eligibility.
   frozen modem generation.
 - Complete camera/video, UDFPS, audio, Bluetooth, Wi-Fi hotspot, USB/MTP,
   mandatory sensor, NFC/payment, suspend, and thermal/charging acceptance.
-- Complete real eSIM, OMAPI, and accessory rows when credentials or hardware are
-  available; retain blocked status until then.
+- Complete native eSIM profile management, OMAPI, and accessory rows when
+  credentials or hardware are available; historical removable-eUICC active-profile
+  LTE/SMS is only partial evidence.
 
 ## Submission gate
 

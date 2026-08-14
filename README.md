@@ -10,12 +10,16 @@ Unofficial LineageOS 23 (Android 16) bring-up for the Nothing Phone (3), codenam
 There is currently no supported public OTA or recovery bootstrap download. Do
 not follow old mirrors, mix artifacts, or treat this repository as an official
 LineageOS release. The latest accepted build is a maintainer-local candidate;
-its source and artifact lock is not yet completely public or reproducible.
+the connected target runs coherent r28 but is not accepted. r29 is
+offline-verified and not installed; no carrier fix is claimed until its full
+target-device matrix passes.
 
-The current maintainer baseline has working radio/IMS infrastructure, Power HAL,
+The current maintainer baseline has radio/IMS infrastructure, Power HAL,
 framework thermal skin/headroom, corrected launch/security metadata, and native
-eSIM provisioning UI with matching stock modem firmware. Physical carrier/eSIM
-profile acceptance, thermal/charging behavior, camera, Bluetooth/audio, haptics,
+eSIM provisioning UI with matching stock modem firmware. Historical physical-SIM
+and removable-eUICC captures reach LTE registration and SMS but fail data at an
+opaque modem response; r29 carries the next stock-aligned telephony correction.
+Carrier/IMS, eSIM management, thermal/charging, camera, Bluetooth/audio, haptics,
 and accessory coverage remain. See [`BUGS.md`](BUGS.md).
 
 ## Repo coverage
@@ -56,7 +60,16 @@ documented files from their own stock image; see
 This is a pinned public-source reconstruction recipe. Proprietary inputs remain
 builder-supplied and are verified separately.
 
-1. Initialize the immutable source candidate:
+The current public branch contains the device revision used to freeze r29 and all
+33 ordered public carry patches. Every declared pre-patch revision is reachable
+from its public upstream, and the expected result trees match the maintained
+checkout. A sanitized immutable r29 Repo manifest and source tag are still
+required before claiming clean external reconstruction.
+
+The following sequence reconstructs the older immutable r4 source lock. It is
+retained as a provenance example, not the current candidate.
+
+1. Initialize the historical immutable source candidate:
 
    ```bash
    repo init \
@@ -67,9 +80,9 @@ builder-supplied and are verified separately.
    device/nothing/metroid/patches/apply-series.sh "$PWD"
    ```
 
-   The manifest pins all platform projects to public pre-patch revisions. The
-   application script verifies every resulting project tree. `manifest/metroid.xml`
-   remains the moving development manifest and is not a release lock.
+   The manifest pins that historical platform state. The application script
+   verifies every resulting project tree. `manifest/metroid.xml` remains the
+   moving development manifest and is not a release lock.
 2. Extract proprietary userspace files from your own documented B4.1 stock dump:
 
    ```bash
@@ -119,9 +132,11 @@ The accepted maintainer baseline is recorded in [`BASELINE.md`](BASELINE.md).
 The exhaustive per-operation hardware status is recorded in
 [`HARDWARE_ACCEPTANCE.md`](HARDWARE_ACCEPTANCE.md); service registration alone
 does not satisfy that matrix.
-The current public reconstruction record is
-[`release/20260806-source-lock.json`](release/20260806-source-lock.json); it is a
-source candidate, not a claim that a matching OTA has passed device validation.
+The historical public reconstruction record is
+[`release/20260806-source-lock.json`](release/20260806-source-lock.json). The
+current frozen-candidate scope is
+[`release/20260813-r29-candidate.json`](release/20260813-r29-candidate.json); it is
+not a claim that r29 has passed target-device validation.
 
 The Android local manifest and `lineage.dependencies` use the maintainer kernel fork
 while this bring-up remains unofficial. An official submission must use
