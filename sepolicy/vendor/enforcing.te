@@ -40,6 +40,10 @@ add_service(hal_camera_default, vendor_nothing_camera_postproc_service)
 # vendor.goodix...IGoodixFingerprintDaemon — same reasoning.
 add_service(hal_fingerprint_default, vendor_goodix_fingerprint_service)
 allow hal_fingerprint_default proc:file rw_file_perms;
+# The stock Goodix shim opens /proc/touchpanel/fod_mode on pointer down to pass
+# the physical FOD state into the touch controller before image capture.
+allow hal_fingerprint_default vendor_proc_touchpanel:dir r_dir_perms;
+allow hal_fingerprint_default vendor_proc_touchpanel:file rw_file_perms;
 # gf.debug.fp_serial, persist.vendor.overlay.fp_{model,vendor} — given their own type in
 # property_contexts. Allowing default_prop/overlay_prop here instead trips an AOSP neverallow.
 set_prop(hal_fingerprint_default, vendor_fingerprint_prop)
