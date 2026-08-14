@@ -1,5 +1,24 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## 2026-08-14 unofficial physical-SIM test candidate (r30)
+
+- Exact OTA: `lineage-23.0-20260814-UNOFFICIAL-metroid.zip`, SHA-256
+  `40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4`.
+- Immutable snapshot: `releases/candidate_20260814_141135_911532683_r30/`.
+- r30 fixes r29's two installed boot blockers: Android 16 rejected the new
+  name-only seapp rules, and stock-signed QtiTelephonyService lacked its required
+  `MODIFY_AUDIO_ROUTING` privileged-permission allowlist.
+- Installed through Android update_engine with `kSuccess (0)` on automatically
+  selected slot A. Slot A is successful, snapshot state is `none`, userdata is
+  encrypted, SELinux is Enforcing, and GApps/addon.d were preserved.
+- Repeated boots pass with one system_server start, empty crash buffer, no new
+  tombstone or pstore record, and no recurrence of either r29 fatal signature.
+- QtiTelephony and org.codeaurora.ims run in `vendor_qtelephony`; QTI radio and
+  IMS services register and the required audio permission is granted.
+- No physical SIM is present in the maintainer target. Carrier data, voice, SMS,
+  APN, IMS, VoLTE, VoWiFi, and DSDS remain external tester acceptance items.
+- Tester instructions: `release/XDA_TESTER_20260814_R30.txt`.
+
 ## Post-r21 retained status
 
 r21 remains the accepted baseline unchanged.

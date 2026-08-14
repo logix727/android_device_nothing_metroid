@@ -40,8 +40,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: stock-aligned successor fix built, not installed; carrier acceptance
-  pending
+- Status: r30 installed and boot/startup validated; physical-SIM and carrier
+  acceptance pending
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -64,6 +64,18 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `QtiTelephonyCompat`; assign all stock-signed QTI phone packages to
   `vendor_qtelephony` without relying on the ROM platform certificate. Focused
   package/policy builds and assembled `system_ext.img` pass.
+- r29 install finding: four name-only seapp rules were invalid on Android 16 and
+  invalidated the combined seapp table, so zygote could not assign system_server.
+  After correcting that, PackageManager rejected stock-signed
+  `QtiTelephonyService` because `MODIFY_AUDIO_ROUTING` lacked an explicit
+  privileged-permission allowlist. r30 scopes a dedicated seinfo to the Nothing
+  certificate plus four package names and adds only that required allowlist.
+- r30 installed evidence: exact sealed OTA SHA-256
+  `40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4`
+  boots repeatedly on successful slot A with encrypted data, Enforcing SELinux,
+  one system_server start, QtiTelephony and IMS in `vendor_qtelephony`, registered
+  QTI radio/IMS services, no relevant AVC/fatal, and empty crash/tombstone/pstore
+  gates. No SIM is present, so this is startup evidence only.
 - Independent Cox data divergence: Lineage had no MCC 311/MNC 600 profiles while
   stock has seven Cox profiles. The successor adds the exact IMS, FOTA,
   default/MMS/DUN/SUPL profiles; generated APN schema and `product.img` pass.
@@ -89,7 +101,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   SMS transport, and missing AT&T APNs as the shared first failure. Neither older
   ROM/modem generation is frozen r29, so the captures cannot accept or reject r29;
   the opaque OEM code does not justify a firmware change by itself.
-- Evidence disposition: make no additional source or firmware change before r29
+- Evidence disposition: make no additional source or firmware change before r30
   testing. On the frozen modem generation, verify package/process startup and then
   capture the first data-call response; if `0x1004` persists, localize it against
   stock QMI/MCFG behavior rather than reopening UICC detection.
@@ -99,7 +111,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-002: Android IMS implementation and carrier acceptance
 
 - Severity: critical
-- Status: stock-aligned successor fix built, not installed; carrier IMS
+- Status: r30 installed with IMS process/service startup validated; carrier IMS
   acceptance pending
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
@@ -117,6 +129,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   both have IMS unregistered while circuit-switched SMS works; data independently
   fails with modem `0x1004`. MMTEL binding is therefore infrastructure evidence
   only, not functional acceptance.
+- r30 local result: `org.codeaurora.ims` remains stable in `vendor_qtelephony`,
+  both vendor IMS-radio instances and QTI IMS factory/data/CM/UCE services
+  register across repeated boots, with no SIM available for MMTEL acceptance.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 
@@ -769,6 +784,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   twice on slot B. Validate the patched host on the next already-planned sideload.
   Keep a separate upstream minadbd terminal-token improvement open; do not
   mislabel byte-serving progress as install progress.
+- r29/r30 result: the patched host transfer reached 100 percent during the r29
+  recovery sideload. The exact sealed r30 OTA then installed through Android
+  update_engine with `kSuccess (0)`, automatically activated slot A, preserved
+  GApps, reached snapshot state `none`, marked slot A successful, and booted
+  coherently more than twice.
 
 ## Acceptance gaps
 

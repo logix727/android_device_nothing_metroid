@@ -1,0 +1,64 @@
+[ROM][UNOFFICIAL][TESTING][16] LineageOS 23 for Nothing Phone (3) [metroid] r30
+
+This is an unofficial physical-SIM test build. Back up data and keep a stock
+restore path. Do not install it on another device.
+
+DOWNLOAD
+- File: lineage-23.0-20260814-UNOFFICIAL-metroid.zip
+- Size: 4095646913 bytes
+- SHA-256: 40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4
+- Required modem generation on both slots:
+  MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2
+
+UPDATE FROM AN EARLIER METROID BUILD
+1. Verify the ZIP SHA-256 before installation.
+2. Use Lineage Updater or the normal Android update_engine path where available.
+3. Existing MindTheGapps installations are preserved by addon.d.
+4. Do not force a target slot or disable AVB verification.
+
+FRESH INSTALL / RECOVERY SIDELOAD
+1. Use only recovery/bootstrap images from this exact r30 snapshot.
+2. In recovery, select Apply update -> Apply from ADB.
+3. Run `adb sideload lineage-23.0-20260814-UNOFFICIAL-metroid.zip`.
+4. Confirm recovery reports success. Host transfer percentage alone is not an
+   install result.
+5. Before first Android boot, reboot to the new-slot recovery and sideload
+   MindTheGapps 16 ARM64 if Google apps are wanted. Its expected SHA-256 is
+   a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28.
+6. A third-party GApps signature warning is expected; verify the GApps hash before
+   accepting it.
+
+MAINTAINER-VERIFIED
+- Install-clean signed A/B OTA and immutable offline audit pass.
+- All 16 payload images match target-files; AVB verification remains enabled.
+- Installed exact ZIP on slot A through update_engine; slot is successful and
+  snapshot state is none.
+- Multiple coherent boots, encrypted userdata, SELinux Enforcing, one stable
+  system_server start, empty crash buffer, and no tombstone or pstore record.
+- GApps/addon.d preservation, GMS, and Play Store package presence pass.
+- QtiTelephony and org.codeaurora.ims start in vendor_qtelephony; QTI IMS/radio
+  services register and the required audio-routing permission is granted.
+- No physical SIM was available on the maintainer device. Calls, SMS, data, APN,
+  IMS, VoLTE, VoWiFi, DSDS, and carrier acceptance are NOT maintainer-verified.
+
+PHYSICAL-SIM TEST REQUEST
+1. Record carrier, SIM slot, whether the SIM is physical or removable eUICC, and
+   whether the install was clean or an update.
+2. Verify card detection, subscription creation, carrier name, signal, and LTE/5G.
+3. Test outgoing/incoming SMS and calls.
+4. Test mobile data, DNS, IPv4/IPv6, MMS, hotspot, and the selected APN.
+5. Record IMS registration, VoLTE, VoWiFi, IMS SMS, and call audio.
+6. Toggle airplane mode, reboot once, and repeat data plus one call/SMS.
+7. For two SIMs, test default-data switching and DSDS.
+8. Report the exact failing operation and sanitized logs. Remove phone numbers,
+   IMSI/ICCID/EID, Wi-Fi credentials, account data, and other personal data.
+
+KNOWN LIMITATIONS
+- Play Store may report the unlocked custom-ROM device as uncertified.
+- Physical-SIM and carrier operation are the purpose of this test seed and remain
+  unaccepted until tester evidence is reviewed.
+- This build is unofficial and is not supported by the LineageOS project.
+
+SOURCES
+- Device: https://github.com/logix727/android_device_nothing_metroid
+- Kernel: https://github.com/logix727/android_kernel_nothing_sm8735

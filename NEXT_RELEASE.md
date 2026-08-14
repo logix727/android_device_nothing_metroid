@@ -10,13 +10,15 @@ r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypte
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
-The live device is coherent r28 (`23.0-20260813-UNOFFICIAL-metroid`) on slot B,
-encrypted and Enforcing. Two boots passed crash, tombstone, pstore, init-cleanup,
-GApps, and core invariant gates. Installed NCM DHCP/DNS/IPv4/HTTPS testing passes
-MTR-019's primary operation; reconnect/HAL and adjacent-mode regressions remain.
-r28 is not promoted because MTR-023/MTR-025 still need real UI/audio
-acceptance and public physical-SIM operation is now a confirmed blocker. Google
-separately blocks the storefront as Play Protect uncertified (MTR-027).
+The live device is r30 (`23.0-20260814-UNOFFICIAL-metroid`) on successful slot A,
+installed from the immutable snapshot
+`releases/candidate_20260814_141135_911532683_r30/`; OTA SHA-256
+`40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4`.
+It is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
+passes repeated boots with one system_server start and empty crash, tombstone,
+and pstore gates. QTI/IMS package admission, process domains, permission grant,
+and service startup pass. No physical SIM is present, so carrier operation is
+still blocked on external tester evidence and r21 remains the accepted baseline.
 
 r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
@@ -48,17 +50,20 @@ OTA SHA-256
 It passes MTR-019's primary installed operation and closes the bounded MTR-021
 cleanup on the installed target. It is installed but not accepted.
 
-r29 is `OFFLINE-VERIFIED` in
+r29 is rejected after installation. It was `OFFLINE-VERIFIED` in
 `releases/candidate_20260813_115214_637118668_candidate/`; OTA SHA-256
 `18759452f85d92f45a38a4e276eecb58a119b1d425f9e7a966d91ae5dd0202f8`.
-It carries only the stock-aligned MTR-001/MTR-002 QTI telephony package and Cox
+It carried only the stock-aligned MTR-001/MTR-002 QTI telephony package and Cox
 APN corrections plus the recurring MTR-028 install gate. All 16 payload images
 match target-files, VINTF has no duplicate conflict, and the init audit has no
-blocking finding. It is not installed or functionally accepted.
-T5 currently waits only for physical SIM insertion: both slots are empty. The
+blocking finding, but installed diagnostics exposed two boot blockers: invalid
+name-only Android 16 seapp rules and a missing QtiTelephonyService privileged
+permission allowlist. r30 fixes both and is installed as described above.
+Physical-SIM T5 still waits on external testers: both local slots are empty. The
 exact frozen MindTheGapps archive has been restored from its official release and
 independently matches the recorded size and SHA-256. Do not spend the device-write
-budget on a no-SIM installation. The patched host ADB is built for MTR-028.
+budget on another no-SIM recovery install. The patched host ADB reached 100
+percent during the r29 recovery transfer; r30 installed through update_engine.
 
 The tested configuration has three independently verified inputs:
 

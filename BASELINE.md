@@ -5,13 +5,15 @@ The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
 This records the last accepted release, not the current live state. r21 remains
-accepted unchanged. The device currently runs coherent r28
-(`23.0-20260813-UNOFFICIAL-metroid`) on slot B, with encrypted userdata and
-SELinux Enforcing. Two r28 boots produced no crash-buffer entry, new tombstone,
-pstore record, or MTR-026 Password Checkup fatality. The bounded init cleanup
-passes, and NCM DHCP/DNS/IPv4/HTTPS passes its primary operation. Google still
-redirects Play Store to its uncertified-device activity (MTR-027); this is an
-external certification-policy result, not ROM acceptance.
+accepted unchanged. The device currently runs installed r30
+(`23.0-20260814-UNOFFICIAL-metroid`) on successful slot A from snapshot
+`releases/candidate_20260814_141135_911532683_r30/`, OTA SHA-256
+`40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4`.
+r30 is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
+passes repeated boot, system_server, QTI/IMS startup, crash-buffer, tombstone,
+and pstore gates. It is installed but not accepted because no physical SIM is
+available for carrier data, voice, SMS, and IMS testing. Google certification
+remains an external policy result (MTR-027).
 
 ## ROM
 
