@@ -116,9 +116,9 @@ guesses.
 ### WP2: Physical SIM, IMS, eSIM, and OMAPI
 
 - MTR-001/MTR-002: XDA testers reproduce network visibility with no AT&T or
-  Cox/Verizon data or IMS. Sanitized captures now cover both a conventional
-  physical SIM and a removable eUICC active profile: LTE registration and SMS
-  pass, but both data paths receive modem `0x1004`. The successor restores stock
+  Cox/Verizon data or IMS. A fresh-wipe r24 physical-SIM capture and an earlier
+  removable-eUICC active-profile capture show LTE registration and SMS passing,
+  but both data paths receive modem `0x1004`. The successor restores stock
   `QtiTelephony`, `QtiTelephonyService`, `qcrilmsgtunnel`, `QtiTelephonyCompat`,
   stock-equivalent SELinux domains, and seven missing Cox 311/600 APNs. Focused
   package, policy, APN-schema, image, and VINTF checks pass. Install and exercise
@@ -169,7 +169,7 @@ guesses.
 ## Next execution order
 
 1. Provide an active physical SIM or eUICC test path, then use both sanitized
-   historical results to skip the now-proven card, subscription, registration and
+   tester results to skip the now-proven card, subscription, registration and
    APN-selection paths: install r29 on the documented modem generation, verify its
    QTI/IMS processes, and test the first data call. If the historical modem-side
    `0x1004` rejection persists, compare stock QMI/MCFG behavior before any further

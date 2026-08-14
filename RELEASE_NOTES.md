@@ -19,10 +19,10 @@ r21 remains the accepted baseline unchanged.
   three omitted stock QTI telephony APKs plus `QtiTelephonyCompat`, stock-equivalent
   SELinux assignment, and seven missing Cox 311/600 APNs. Focused package, policy,
   APN, image and VINTF validation passes; carrier testing remains required.
-- Sanitized historical captures cover both a conventional physical SIM and a
-  removable eUICC active profile. Both reach LTE registration and SMS, both fail
-  data at modem response `0x1004`, and IMS remains unregistered. The eUICC capture
-  also fails profile refresh/embedded metadata. These are pre-r29 results.
+- A sanitized fresh-wipe r24 capture covers a conventional physical SIM; an
+  earlier capture covers a removable eUICC active profile. Both reach LTE
+  registration and SMS, both fail data at modem response `0x1004`, and IMS remains
+  unregistered. The eUICC capture also fails profile refresh/embedded metadata.
 - That successor is offline-verified as r29 at
   `releases/candidate_20260813_115214_637118668_candidate/`, SHA-256
   `18759452f85d92f45a38a4e276eecb58a119b1d425f9e7a966d91ae5dd0202f8`.

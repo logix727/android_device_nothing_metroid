@@ -70,9 +70,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Evidence boundary: the public installer never required the generation-matched
   modem/MCFG input. Retained local no-SIM evidence shows emergency LTE camping
   with `subId=-1`, but cannot be attributed to the tester's inserted SIM.
-- Private historical tester captures cover both card types. The longer physical-
-  SIM record identifies r24 by build timestamp and supersedes its shorter boot-
-  only record. A conventional removable card in slot 0 reaches USIM/ISIM `READY`,
+- Private tester captures cover both card types. The longer physical-SIM record
+  was collected immediately after a fresh wipe/flash of the newest XDA seed on
+  2026-08-13. `Build.VERSION.INCREMENTAL` identifies that seed as r24; the initial
+  August 11 log timestamps are the r24 build clock before current time sync, not
+  stale retained logs. It supersedes the shorter boot-only record. A conventional
+  removable card in slot 0 reaches USIM/ISIM `READY`,
   subscription creation, carrier-record load, LTE home registration, and outgoing
   non-IMS SMS. Both selected AT&T APN families are then rejected by the modem as
   `OEM_DCFAILCAUSE_4` (`0x1004`) before CID/interface assignment.
@@ -109,7 +112,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   system_ext/priv-app, runs under `vendor_qtelephony`, and `ImsResolver` binds
   MMTEL and EMERGENCY_MMTEL on both slots; `QImsService` receives
   `UNSOL_SRV_STATUS_UPDATE` for both subscriptions.
-- Historical functional result: the physical SIM and removable-eUICC captures
+- Functional tester result: the fresh-wipe r24 physical SIM and earlier
+  removable-eUICC captures
   both have IMS unregistered while circuit-switched SMS works; data independently
   fails with modem `0x1004`. MMTEL binding is therefore infrastructure evidence
   only, not functional acceptance.

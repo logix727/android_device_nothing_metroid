@@ -139,9 +139,9 @@ No pressure/barometer sensor is exposed.
 |---|---|---|---|
 | GNSS live fix and raw measurements | PASS: retained indoor fix/raw evidence | Infrastructure only observed | Cold/warm TTFF, outdoor accuracy, screen-off, airplane mode and restart loops. |
 | QCC assisted location | FAIL: MTR-015 incomplete stack | FAIL | Restore coherent stack or remove clients; compare TTFF. |
-| Physical SIM detection | BLOCKED | PASS on historical r24 XDA capture: slot-0 card, USIM/ISIM and subscription load; no SIM is present in the maintainer target | Repeat on r29 with matching modem firmware and capture slot recovery. |
+| Physical SIM detection | BLOCKED | PASS on fresh-wipe r24 XDA capture: slot-0 card, USIM/ISIM and subscription load; no SIM is present in the maintainer target | Repeat on r29 with matching modem firmware and capture slot recovery. |
 | Removable eUICC active profile | BLOCKED | PARTIAL/FAIL on historical early build: eUICC/EID, subscription, LTE and bidirectional SMS pass; profile refresh/embedded metadata and data fail | Repeat active-profile, management and coexistence tests on r29. |
-| Cellular voice/SMS/MMS/data | BLOCKED | PARTIAL/FAIL on two historical paths: physical SIM and removable eUICC reach LTE and SMS, but independent data profiles receive modem `0x1004`; r29 remains uninstalled | Test data, SMS/MMS and calls on r29 with matching modem firmware. |
+| Cellular voice/SMS/MMS/data | BLOCKED | PARTIAL/FAIL on fresh-wipe r24 physical SIM and an earlier removable eUICC: LTE and SMS pass, but independent data profiles receive modem `0x1004`; r29 remains uninstalled | Test data, SMS/MMS and calls on r29 with matching modem firmware. |
 | VoLTE/VoWiFi/emergency/DSDS | BLOCKED | FAIL/PARTIAL on r28; stock QTI phone services are built for successor | Validate MMTEL registration, calls, SMS, two SIMs and handover. |
 | eSIM UI/QR path | PASS through QR scanner | PARTIAL: external removable eUICC proves active-profile use, not native download; profile refresh fails | Real profile credentials: download, enable, reboot, delete and transfer. |
 | OMAPI/UICC secure element | BLOCKED | BLOCKED | Physical SIM/reader and applet. |
