@@ -529,6 +529,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   overlapping generic USB and NCM regexes, Tethering adds `IpServer` for `usb0`,
   assigns `10.20.247.25/24`, serves DHCP/DNS, and starts offload. The host receives
   `10.20.247.37/24`; phone-gateway, public IPv4, DNS, and HTTPS 204 checks pass.
+- Additional r28 result: standalone `ncm` again enumerates as `05c6:908c` and
+  creates the host CDC interface. The timed autonomous return to ADB exposed a
+  host udev/test-harness permission issue; manual gadget reset restored plain ADB
+  as `18d1:4e11`, with both USB HALs running. Do not count reconnect/HAL restart
+  complete from this attempt.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
 
@@ -636,6 +641,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - r28 disposition: exact replacement is installed coherently across two boots;
   representative Latin, CJK, RTL, accessibility, and parental-consent UI remains
   to be exercised.
+- French acceptance attempt: the installed Settings APK contains the complete
+  fallback implementation and default English text while French resources are
+  explicitly empty. Launching face enrollment under a temporary Settings-only
+  French locale correctly reached the credential gate, but this target has no
+  screen lock; no credential was created. The locale override was restored and
+  visible enrollment guidance remains unaccepted.
 - Acceptance: complete enrollment in representative Latin, CJK, and RTL locales;
   all actionable safety/accessibility guidance is visible and appropriate.
 

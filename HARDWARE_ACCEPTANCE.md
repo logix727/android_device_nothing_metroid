@@ -167,7 +167,7 @@ No pressure/barometer sensor is exposed.
 | USB ADB transport | PASS | PASS: 16 MiB push/pull hashes matched | Cable reconnect, host variation, late HAL start and HAL restart. |
 | MTP/PTP | UNKNOWN | UNKNOWN | File transfer, large files, reconnect and locked state. |
 | RNDIS tethering | UNKNOWN | UNKNOWN | IPv4/IPv6 transport and reconnect. |
-| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PARTIAL/PASS on r28: `05c6:908c`, `cdc_ncm`, DHCP/DNS, IPv4 and HTTPS through `usb0` | Cable reconnect, HAL restart, standalone NCM, MTP/PTP/RNDIS and host variation remain. |
+| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PARTIAL/PASS on r28: `05c6:908c`, `cdc_ncm`, DHCP/DNS, IPv4 and HTTPS through `usb0`; standalone NCM enumerates, then plain ADB restores after gadget reset | Cable reconnect, HAL restart, standalone traffic, MTP/PTP/RNDIS and host variation remain. |
 | USB OTG/host | BLOCKED | BLOCKED | Storage, HID and powered accessory required. |
 | USB Ethernet/accessory networking | BLOCKED | BLOCKED | Compatible adapter; DHCP, IPv4/IPv6, suspend and unplug. |
 | DisplayPort/video output | BLOCKED | BLOCKED | Compatible adapter/display required; fitted support is not yet proven. |
