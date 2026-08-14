@@ -21,6 +21,13 @@ prebuilt_etc {
     product_specific: true,
 }
 
+prebuilt_etc {
+    name: "privapp-permissions-qti-telephony-service.xml",
+    src: "configs/permissions/privapp-permissions-qti-telephony-service.xml",
+    sub_dir: "permissions",
+    system_ext_specific: true,
+}
+
 install_symlink {
     name: "firmware_wlanmdsp.otaupdate_symlink",
     vendor: true,
