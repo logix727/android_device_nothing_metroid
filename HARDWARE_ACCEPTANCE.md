@@ -139,8 +139,8 @@ No pressure/barometer sensor is exposed.
 |---|---|---|---|
 | GNSS live fix and raw measurements | PASS: retained indoor fix/raw evidence | Infrastructure only observed | Cold/warm TTFF, outdoor accuracy, screen-off, airplane mode and restart loops. |
 | QCC assisted location | FAIL: MTR-015 incomplete stack | FAIL | Restore coherent stack or remove clients; compare TTFF. |
-| Physical SIM detection | BLOCKED | FAIL on r28 (public); stock QTI phone package restoration is built for successor | Install successor and capture UICC card state, slot GPIO, baseband and subscription. |
-| Cellular voice/SMS/MMS/data | BLOCKED | FAIL on r28 (public); QTI package and Cox APN fixes are built for successor | Test AT&T and Cox data, SMS/MMS and calls on matching modem firmware. |
+| Physical SIM detection | BLOCKED | PASS on historical r24 XDA capture: slot-0 card, USIM/ISIM and subscription load; no SIM is present in the maintainer target | Repeat on r29 with matching modem firmware and capture slot recovery. |
+| Cellular voice/SMS/MMS/data | BLOCKED | PARTIAL/FAIL on historical r24: LTE home registration and non-IMS SMS pass, but both AT&T data profiles receive modem `0x1004`; r29 fixes remain uninstalled | Test AT&T and Cox data, SMS/MMS and calls on r29 with matching modem firmware. |
 | VoLTE/VoWiFi/emergency/DSDS | BLOCKED | FAIL/PARTIAL on r28; stock QTI phone services are built for successor | Validate MMTEL registration, calls, SMS, two SIMs and handover. |
 | eSIM UI/QR path | PASS through QR scanner | UNKNOWN | Real profile credentials: download, enable, reboot, delete and transfer. |
 | OMAPI/UICC secure element | BLOCKED | BLOCKED | Physical SIM/reader and applet. |

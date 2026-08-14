@@ -163,10 +163,10 @@ guesses.
 
 ## Next execution order
 
-1. Restore the exact frozen MindTheGapps archive, insert a physical SIM, then use
-   the sanitized historical result to skip the now-proven UICC and subscription
-   path: install r29 on the documented modem generation, verify its QTI/IMS
-   processes, and test the first data call. If the
+1. Insert a physical SIM, then use the sanitized r24 result to skip the now-proven
+   UICC, subscription, registration and APN-selection paths: install r29 on the
+   documented modem generation, verify its QTI/IMS processes, and test the first
+   data call. If the
    historical modem-side `0x1004` rejection persists, compare stock QMI/MCFG
    behavior before any further source or firmware change.
 2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.

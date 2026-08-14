@@ -70,16 +70,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Evidence boundary: the public installer never required the generation-matched
   modem/MCFG input. Retained local no-SIM evidence shows emergency LTE camping
   with `subId=-1`, but cannot be attributed to the tester's inserted SIM.
-- Private historical tester capture: a pre-r29 build detects a removable physical
-  SIM in slot 1, brings its USIM and ISIM applications to `READY`, creates the
-  subscription, loads carrier records, and reaches LTE home registration for
-  voice and data. This rules out UICC detection and subscription creation as the
-  first failure in that capture. Repeated data setup attempts select the expected
-  user-configured APN but the modem immediately returns `OEM_DCFAILCAUSE_4`
-  (`0x1004`) before assigning a CID or network interface. The same capture reports
-  no usable IMS service. Its exact ROM identity is absent and its modem build is
-  not the frozen r29 companion build, so it cannot accept or reject r29 and does
-  not justify a firmware change.
+- Private historical tester captures: the longer record identifies r24 by build
+  timestamp and supersedes the shorter boot-only record. A removable physical SIM
+  in slot 0 reaches USIM/ISIM `READY`, subscription creation, carrier-record load,
+  and LTE home registration for voice and data. Non-IMS SMS submission succeeds.
+  This rules out UICC detection, subscription creation, radio registration and
+  missing AT&T APNs as the first failure in that capture. With mobile data enabled,
+  both selected AT&T APN families are immediately rejected by the modem as
+  `OEM_DCFAILCAUSE_4` (`0x1004`) before a CID or network interface is assigned.
+  MMTEL is framework-ready but IMS remains unregistered. The r24 modem build is
+  not the frozen r29 companion build, so this cannot accept or reject r29 and the
+  opaque OEM code does not justify a firmware change by itself.
 - Evidence disposition: make no additional source or firmware change before r29
   testing. On the frozen modem generation, verify package/process startup and then
   capture the first data-call response; if `0x1004` persists, localize it against
