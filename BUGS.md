@@ -70,17 +70,22 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Evidence boundary: the public installer never required the generation-matched
   modem/MCFG input. Retained local no-SIM evidence shows emergency LTE camping
   with `subId=-1`, but cannot be attributed to the tester's inserted SIM.
-- Private historical tester captures: the longer record identifies r24 by build
-  timestamp and supersedes the shorter boot-only record. A removable physical SIM
-  in slot 0 reaches USIM/ISIM `READY`, subscription creation, carrier-record load,
-  and LTE home registration for voice and data. Non-IMS SMS submission succeeds.
-  This rules out UICC detection, subscription creation, radio registration and
-  missing AT&T APNs as the first failure in that capture. With mobile data enabled,
-  both selected AT&T APN families are immediately rejected by the modem as
-  `OEM_DCFAILCAUSE_4` (`0x1004`) before a CID or network interface is assigned.
-  MMTEL is framework-ready but IMS remains unregistered. The r24 modem build is
-  not the frozen r29 companion build, so this cannot accept or reject r29 and the
-  opaque OEM code does not justify a firmware change by itself.
+- Private historical tester captures cover both card types. The longer physical-
+  SIM record identifies r24 by build timestamp and supersedes its shorter boot-
+  only record. A conventional removable card in slot 0 reaches USIM/ISIM `READY`,
+  subscription creation, carrier-record load, LTE home registration, and outgoing
+  non-IMS SMS. Both selected AT&T APN families are then rejected by the modem as
+  `OEM_DCFAILCAUSE_4` (`0x1004`) before CID/interface assignment.
+- A separate earlier capture contains a removable eUICC in slot 1 with an active
+  carrier profile. Hardware eUICC/EID detection, USIM/ISIM readiness, subscription,
+  LTE home registration, and incoming/outgoing non-IMS SMS pass. Profile refresh
+  fails and the active subscription is incorrectly exposed as non-embedded. Its
+  selected data profile receives the same immediate modem `0x1004` rejection.
+  IMS is unavailable/unregistered in both captures.
+- These results rule out card detection, subscription creation, LTE registration,
+  SMS transport, and missing AT&T APNs as the shared first failure. Neither older
+  ROM/modem generation is frozen r29, so the captures cannot accept or reject r29;
+  the opaque OEM code does not justify a firmware change by itself.
 - Evidence disposition: make no additional source or firmware change before r29
   testing. On the frozen modem generation, verify package/process startup and then
   capture the first data-call response; if `0x1004` persists, localize it against
@@ -104,9 +109,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   system_ext/priv-app, runs under `vendor_qtelephony`, and `ImsResolver` binds
   MMTEL and EMERGENCY_MMTEL on both slots; `QImsService` receives
   `UNSOL_SRV_STATUS_UPDATE` for both subscriptions.
-- Public result: AT&T and Cox/Verizon physical-SIM data, voice, and text fail, and
-  an eSIM tester reports calls unavailable. MMTEL binding is therefore retained
-  as infrastructure evidence only, not functional acceptance.
+- Historical functional result: the physical SIM and removable-eUICC captures
+  both have IMS unregistered while circuit-switched SMS works; data independently
+  fails with modem `0x1004`. MMTEL binding is therefore infrastructure evidence
+  only, not functional acceptance.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 
@@ -160,6 +166,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   stack, `EuiccManager.isEnabled()` is true across two boots and Google SIM
   Manager reaches the native **Set up an eSIM** chooser and QR scanner without a
   platform telephony compatibility patch.
+- Historical external result: an already-provisioned removable eUICC is detected
+  with an EID and its active profile reaches LTE registration plus bidirectional
+  SMS. This validates active-profile radio use, not native profile download: eUICC
+  profile refresh fails and framework subscription metadata says non-embedded.
 - Acceptance remaining: real activation-code download, profile enable/disable,
   reboot persistence, deletion, transfer, and physical-SIM coexistence. Never
   print or publish the device EID or activation credentials.

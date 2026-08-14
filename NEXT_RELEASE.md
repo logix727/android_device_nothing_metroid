@@ -116,13 +116,18 @@ guesses.
 ### WP2: Physical SIM, IMS, eSIM, and OMAPI
 
 - MTR-001/MTR-002: XDA testers reproduce network visibility with no AT&T or
-  Cox/Verizon data, voice, or text. The successor restores stock `QtiTelephony`,
-  `QtiTelephonyService`, `qcrilmsgtunnel`, `QtiTelephonyCompat`, stock-equivalent
-  SELinux domains, and seven missing Cox 311/600 APNs. Focused package, policy,
-  APN-schema, image, and VINTF checks pass. Install and exercise present-UICC,
-  subscription, data, SMS, calls, and IMS on the documented modem generation.
-- MTR-003: use a private activation code to test download, enable/disable, reboot,
-  deletion, transfer, and physical-SIM coexistence. Never retain EID/credentials.
+  Cox/Verizon data or IMS. Sanitized captures now cover both a conventional
+  physical SIM and a removable eUICC active profile: LTE registration and SMS
+  pass, but both data paths receive modem `0x1004`. The successor restores stock
+  `QtiTelephony`, `QtiTelephonyService`, `qcrilmsgtunnel`, `QtiTelephonyCompat`,
+  stock-equivalent SELinux domains, and seven missing Cox 311/600 APNs. Focused
+  package, policy, APN-schema, image, and VINTF checks pass. Install and exercise
+  present-UICC, subscription, data, SMS, calls, and IMS on the documented modem
+  generation.
+- MTR-003: the external removable-eUICC capture proves active-profile LTE/SMS but
+  fails profile refresh and embedded metadata. Use a private activation code to
+  test native download, enable/disable, reboot, deletion, transfer, and physical-
+  SIM coexistence. Never retain EID/credentials.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 
@@ -163,12 +168,12 @@ guesses.
 
 ## Next execution order
 
-1. Insert a physical SIM, then use the sanitized r24 result to skip the now-proven
-   UICC, subscription, registration and APN-selection paths: install r29 on the
-   documented modem generation, verify its QTI/IMS processes, and test the first
-   data call. If the
-   historical modem-side `0x1004` rejection persists, compare stock QMI/MCFG
-   behavior before any further source or firmware change.
+1. Provide an active physical SIM or eUICC test path, then use both sanitized
+   historical results to skip the now-proven card, subscription, registration and
+   APN-selection paths: install r29 on the documented modem generation, verify its
+   QTI/IMS processes, and test the first data call. If the historical modem-side
+   `0x1004` rejection persists, compare stock QMI/MCFG behavior before any further
+   source or firmware change.
 2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.
 3. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
    uncertified-policy gate. Test Google's official per-device registration only
