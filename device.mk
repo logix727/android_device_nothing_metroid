@@ -346,6 +346,7 @@ DEVICE_PACKAGE_OVERLAYS += device/nothing/metroid/overlay
 PRODUCT_PACKAGES += \
     MetroidWifiOverlay \
     MetroidTetheringOverlay \
+    MetroidConnectivityOverlay \
     NTSystemUIResTarget
 
 # Essential Key (gpio-keys scancode 250): keylayout + system_server KeyHandler that
