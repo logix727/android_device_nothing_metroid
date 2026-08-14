@@ -17,6 +17,20 @@
   IMS services register and the required audio permission is granted.
 - No physical SIM is present in the maintainer target. Carrier data, voice, SMS,
   APN, IMS, VoLTE, VoWiFi, and DSDS remain external tester acceptance items.
+- Post-release acceptance found two source defects for the next candidate:
+  Ethernet IpClient also claims NCM `usb0` and clears its gateway (MTR-019), and
+  enabled QTI mapper debug logging dereferences a freed buffer handle (MTR-029).
+  r30 remains the exact XDA SIM test artifact, but camera stability and NCM local
+  transport are not promoted as passing.
+- r30 fingerprint enrollment fails despite correct UI/illumination. The stock
+  Goodix shim is blocked by SELinux from `/proc/touchpanel/fod_mode`, and the
+  existing UDFPS refresh vote still arrives after pointer-down. Stock-equivalent
+  policy access and a metroid-only overlay-lifetime 120 Hz vote are built for the
+  next candidate; no r30 fingerprint-function claim remains.
+- r30 AudioFX real-session open/close, client-death cleanup and reboot persistence
+  pass. Spanish/Japanese/Arabic face-education rendering passes without blank UI.
+  r30 Aperture finalized FHD30/FHD60/UHD30 with correct routes, but MTR-029's
+  sampled tombstone blocks camera stability acceptance despite successful retries.
 - Tester instructions: `release/XDA_TESTER_20260814_R30.txt`.
 
 ## Post-r21 retained status

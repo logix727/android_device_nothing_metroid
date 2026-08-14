@@ -1,10 +1,10 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and coherent live state: 2026-08-13
+Last audited against accepted baseline and coherent live state: 2026-08-14
 
 Accepted build: `23.0-20260808-UNOFFICIAL-metroid` (r21)
 
-Live device: `23.0-20260813-UNOFFICIAL-metroid` (r28), coherent slot B; not accepted
+Live device: `23.0-20260814-UNOFFICIAL-metroid` (r30), coherent slot A; not accepted
 
 Accepted OTA SHA-256:
 `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
@@ -23,8 +23,8 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-001, MTR-002, MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-024 |
-| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022, MTR-023, MTR-025 |
+| Active fixes | MTR-001, MTR-002, MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-024, MTR-029 |
+| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022, MTR-023 |
 | Evidence incomplete | MTR-020 |
 | External hardware/carrier/policy acceptance | MTR-027, real eSIM profile, OMAPI |
 | Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-021, MTR-026, MTR-028 |
@@ -499,7 +499,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-018: UDFPS refresh vote occurs after pointer-down notification
 
 - Severity: high
-- Status: latent deterministic race
+- Status: r30 enrollment failure confirmed; two source fixes built, installed
+  acceptance pending
 - Impact: LHBM authentication can fail if the panel begins at 60 Hz.
 - Evidence: display/UDFPS traces record LHBM requests while the panel is still at
   60 Hz, followed by the 120 Hz vote.
@@ -509,10 +510,28 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   before its asynchronous per-touch display-mode request can take effect. Stock
   HAL/RC/VINTF and the metroid panel driver already agree; no kernel change is
   justified.
+- r30 functional result: the enrollment UI, UDFPS overlay, illumination, and
+  60-to-120 Hz touch vote appear, but repeated physical touches produce no
+  enrollment progress and sensor-0 counters remain zero. The proprietary Nothing
+  AIDL service, stock-identical `fingerprint.default.so`, `libgf_hal.so`, Goodix
+  daemon, `/dev/goodix_fp`, QSEE buffers, and TEE handles are all active.
+- First capture-path divergence: the stock Goodix shim opens
+  `/proc/touchpanel/fod_mode` before sending physical finger-down. r30 logs
+  `avc: denied { search }` from `hal_fingerprint_default` to the labeled
+  `vendor_proc_touchpanel` directory, followed by `fod_mode_fd <0`; no Goodix
+  capture/progress event follows. Stock compiled policy grants the exact directory
+  and file permissions.
+- Source fixes: restore stock-equivalent `vendor_proc_touchpanel` directory/file
+  access for `hal_fingerprint_default`; add a default-off SystemUI overlay-lifetime
+  max-refresh vote and enable it only for metroid before touch becomes reachable.
+  SystemUI, device overlay, SELinux policy, and vendor image focused builds pass.
+  Aggregate SystemUI test targets remain blocked by unrelated pre-existing test
+  compile failures; production modules compile.
 - Fix direction: hold the maximum-refresh vote for the overlay lifetime before
   accepting touch; an immediate asynchronous reorder alone may still race.
-- Next-batch scope: one default-off, metroid-enabled overlay-lifetime vote,
-  balanced on every hide, cancellation and failed-show path. Hold this R2 change
+- Next-batch scope: install the stock-equivalent policy plus the default-off,
+  metroid-enabled overlay-lifetime vote, balanced on every hide and failed-show
+  path. Hold this R2 change
   until frozen r29 has an installed disposition.
 - Acceptance: Smooth Display off; 50 screen-on/AOD unlocks and enrollment with
   120 Hz active before LHBM and zero `fps not equal 120`.
@@ -520,7 +539,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: installed primary operation passes on r28; regression matrix pending
+- Status: r30 dual-ownership failure confirmed; source fix built, installed
+  acceptance pending
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
 - First divergence: stock-derived vendor init created `ncm.0` while the selected
   QTI gadget HAL links `ncm.gs6`.
@@ -548,6 +568,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   overlapping generic USB and NCM regexes, Tethering adds `IpServer` for `usb0`,
   assigns `10.20.247.25/24`, serves DHCP/DNS, and starts offload. The host receives
   `10.20.247.37/24`; phone-gateway, public IPv4, DNS, and HTTPS 204 checks pass.
+- r30 regression result: NCM+ADB enumerates as `05c6:908c`, Linux loads `cdc_ncm`,
+  the host receives DHCP, and a 16 MiB ADB push/pull matches all hashes. Tethering
+  assigns `10.20.183.224/24`, but EthernetTracker also claims `usb0`; client
+  IpClient then disables IPv6 and clears all addresses, removing the gateway.
+  Host ARP cannot resolve the phone. No Wi-Fi/SIM upstream exists after the clean
+  wipe, but null upstream does not justify clearing the downstream address.
+- r30 source correction: a metroid ServiceConnectivityResources RRO excludes only
+  `usb0` from Ethernet's `(usb|eth)\d+` matcher while preserving `usb1+` and
+  `ethN`. The compiled overlay targets the correct overlayable and retains the
+  expected regex. Installed acceptance waits for the next coherent candidate.
 - Additional r28 result: standalone `ncm` again enumerates as `05c6:908c` and
   creates the host CDC interface. The timed autonomous return to ADB exposed a
   host udev/test-harness permission issue; manual gadget reset restored plain ADB
@@ -641,7 +671,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-023: face-enrollment guidance is blank outside English
 
 - Severity: medium
-- Status: installed on r28; focused locale/UI acceptance pending
+- Status: r30 static and education-UI fallback accepted; full enrollment,
+  accessibility, and parental-consent acceptance pending
 - Impact: safety, education, and accessibility guidance supplied by the device
   overlay disappears under locales that ship explicit empty Settings strings.
 - Source: device English overlay at
@@ -666,6 +697,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   French locale correctly reached the credential gate, but this target has no
   screen lock; no credential was created. The locale override was restored and
   visible enrollment guidance remains unaccepted.
+- r30 result: the installed Settings APK matches the sealed candidate and contains
+  12 shared-resolver call sites. Spanish, Japanese, and Arabic education UI renders
+  non-empty localized titles/actions; Arabic mirrors the action order for RTL.
+  The Settings-only locale override was restored. Direct root launch proves
+  rendering but does not replace normal credential/enrollment acceptance.
 - Acceptance: complete enrollment in representative Latin, CJK, and RTL locales;
   all actionable safety/accessibility guidance is visible and appropriate.
 
@@ -690,7 +726,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-025: AudioFX framework binding targets a nonexistent service
 
 - Severity: medium
-- Status: installed on r28; focused playback/lifecycle acceptance pending
+- Status: r30 real-session lifecycle and reboot persistence accepted; perceptible
+  effect remains pending
 - Impact: audio sessions repeatedly fail to bind the MusicFX keepalive service;
   effect lifecycle and persistence may be unreliable.
 - Evidence: repeated audio sessions fail to bind the framework-selected MusicFX
@@ -712,6 +749,15 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   session service remain alive without an observed crash or bind-failure loop.
   The framework's exact inert keepalive binding, perceptible effect, client-death
   cleanup, and reboot persistence remain to be accepted.
+- r30 result: the maintained probe created real AudioTrack sessions. With AudioFX
+  in its normal non-stopped persistent state, framework receiver discovery and
+  UID/session tracking pass; QTI/NXP Equalizer, BassBoost, Virtualizer, and Preset
+  Reverb chains attach to the exact sessions. Explicit CLOSE removes all effects.
+  Force-stopping the probe triggers `MSG_EFFECT_CLIENT_GONE`, closes all sessions,
+  and removes the chain. Speaker preferences remain byte-identical across reboot,
+  and a post-reboot session/death cycle passes. The probe was removed and media
+  volume restored. AudioFX's persistent procState means inert keepalive binding is
+  correctly unnecessary in this live state; audible change remains unmeasured.
 - Acceptance: effect open/close, playback, client death, reboot persistence, and
   no bind failures.
 
@@ -789,6 +835,30 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   update_engine with `kSuccess (0)`, automatically activated slot A, preserved
   GApps, reached snapshot state `none`, marked slot A successful, and booted
   coherently more than twice.
+
+### MTR-029: QTI Mapper5 debug logging reads freed buffer handles
+
+- Severity: high
+- Status: confirmed on r30; source fix built, installed acceptance pending
+- Impact: sampled GWP-ASan detection can terminate Aperture while Codec2 submits
+  camera video buffers, leaving a native tombstone despite otherwise successful
+  FHD/UHD recording.
+- Evidence: r30 Aperture tombstone at 2026-08-14 15:13 reports a use-after-free
+  56 bytes into a handle in `QtiMapper5::freeBuffer`, followed by
+  `GetHdrMetadataFromGralloc4Handle`, `C2NodeImpl::submitBuffer`, and
+  `GraphicBufferSource`. Later retries finalized FHD30, FHD60, and UHD30, so the
+  crash is sampled and is not cleared by successful reruns.
+- First divergence: metroid sets `vendor.gralloc.enable_logs=1` while Nothing
+  stock sets `0`. `QtiMapper5::freeBuffer` calls `snap_helper_->Free(buffer)` and
+  then the enabled debug log dereferences `QTI_HANDLE_CONST(buffer)->id`.
+  Installed mapper/gralloc binaries are stock-identical; no Aperture, Codec2,
+  camera HAL, kernel, or blob replacement is justified.
+- Source fix: restore stock `vendor.gralloc.enable_logs=0`; retain the source
+  upstreaming opportunity to capture the ID before `Free` or avoid the post-free
+  dereference.
+- Acceptance: two coherent boots, property `0`, ten ordered FHD30/FHD60/UHD30
+  Aperture cycles with rear/front/rear routing and finalized H.264/AAC clips,
+  stable camera services, and no new crash, tombstone, AVC, or pstore record.
 
 ## Acceptance gaps
 

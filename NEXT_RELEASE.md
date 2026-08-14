@@ -141,29 +141,38 @@ guesses.
 - MTR-010 fix installed: eight false profile gates were removed and stock
   hearing-aid/allow-list values restored. Accepted r21 starts all profile
   services across two boots; test real LC3/Auracast hardware.
-- MTR-025: align MusicFX service discovery with installed AudioFX.
+- MTR-025 lifecycle and reboot persistence pass on r30; only perceptible effect
+  remains for listening or loopback measurement.
 - Validate USB-C audio, HFP/SCO, A2DP fallback, volume coordination, and suspend.
 
 ### WP4: Camera, biometrics, and haptics
 
-- MTR-022 temporary-APK acceptance passed for FHD30/FHD60/UHD30 routing,
+- MTR-022 r30 system-Aperture acceptance passed FHD30/FHD60/UHD30 routing,
   finalized files, process restart, provider stability, and tombstone monitoring.
   Audited r22 is now running coherently on slot B. Its crash gate is clear, and
   retained coherent-r22 camera evidence covers all five camera IDs, SAT
   0.6x/1x/3x/10x zoom, torch, zoom while recording, and system-APK
   FHD30/FHD60/UHD30 evidence. Complete the remaining cadence, long-run,
-  front-screen-flash, stabilization, and UI acceptance rows. MTR-012 still requires
+  front-screen-flash, stabilization, and UI acceptance rows. MTR-029 now blocks
+  camera stability promotion until stock `vendor.gralloc.enable_logs=0` is
+  installed and the ten-cycle matrix is clean. MTR-012 still requires
   measured stabilization, crop, cadence, zoom-transition, and motion acceptance.
-- MTR-018: compare UDFPS refresh/LHBM ordering with stock and upstream, then run
-  50 screen-on/AOD unlocks and enrollment at Smooth Display off.
+- MTR-018 r30 enrollment failure is reproduced. The stock Goodix shim cannot open
+  `/proc/touchpanel/fod_mode` because metroid omitted stock SELinux access, and
+  SystemUI still sends pointer-down before its 120 Hz vote. Both source fixes are
+  built; install them together, then run fresh enrollment plus 50 screen-on/AOD
+  unlocks and cancellation/retry with Smooth Display off.
 - MTR-011: recover actual stock effect/primitive mappings before advertising or
   changing any haptic capability.
-- MTR-023: locale-safe face-enrollment guidance.
+- MTR-023 Spanish/Japanese/Arabic education rendering passes; complete the normal
+  accessibility, parental-consent, enrollment and authentication flows.
 
 ### WP5: Connectivity, suspend, and cleanup
 
-- MTR-019's primary NCM operation passes and the bounded MTR-021 init cleanup is
-  closed on installed r28. MTR-015 QCC remains a separate atomic
+- MTR-019 r30 acceptance exposed Ethernet IpClient clearing the NCM `usb0`
+  gateway. The metroid Connectivity RRO exclusion is source-fixed and awaits the
+  next coherent candidate. The bounded MTR-021 init cleanup remains closed.
+  MTR-015 QCC remains a separate atomic
   feature decision; MTR-016 sensor extension and MTR-024 ST21 remain active.
   MTR-020 returns to
   evidence collection because current and latest NothingOSS tuna both use the
