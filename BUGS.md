@@ -40,8 +40,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: r30 installed and boot/startup validated; physical-SIM and carrier
-  acceptance pending
+- Status: r34 installed and boot/startup validated; APN checksum-migration fix
+  built but not installed; physical-SIM and carrier acceptance pending
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -76,6 +76,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   one system_server start, QtiTelephony and IMS in `vendor_qtelephony`, registered
   QTI radio/IMS services, no relevant AVC/fatal, and empty crash/tombstone/pstore
   gates. No SIM is present, so this is startup evidence only.
+- r34 APN migration divergence: stock, current source, and the installed
+  `/product/etc/apns-conf.xml` contain carrier-ID `10028` `nrphone`, IMS,
+  hotspot, and XCAP rows. The retained provider database has zero `10028` rows
+  because r30 and r34 share `ro.build.id=BP2A.250805.005` and
+  `TelephonyProvider.onCreate()` only invoked its existing checksum refresh when
+  that build ID changed.
+- Successor APN migration fix: `packages/providers/TelephonyProvider` commit
+  `80ea349` invokes the existing updater when either the build ID or packaged
+  APN checksum changes. The updater preserves user/carrier/DPC entries and
+  replaces only unedited rows. Production and test APK builds pass; install and
+  physical-SIM acceptance remain pending.
 - Independent Cox data divergence: Lineage had no MCC 311/MNC 600 profiles while
   stock has seven Cox profiles. The successor adds the exact IMS, FOTA,
   default/MMS/DUN/SUPL profiles; generated APN schema and `product.img` pass.
