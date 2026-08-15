@@ -206,6 +206,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   passes install-clean build, source-state, companion-input, payload-equivalence,
   signing/AVB, partition, VINTF, and init audits. Status remains
   built-not-installed.
+- Online verification against official Lineage APN main and AOSP/Lineage
+  CarrierConfig/carrier-ID sources found and integrated the only safe current US
+  drift: Google Fi, FreedomPop, Docomo Pacific, AirFire and Mosaic APN typing,
+  plus obsolete AT&T activation-row removal. No current safe CarrierConfig or
+  carrier-ID database delta remains for this branch.
+- r33 offline result: immutable snapshot
+  `releases/candidate_20260815_091437_165511465_candidate/`, OTA SHA-256
+  `fb2c2c294a7dc2d76499fdce8018211d5bfbd3f7792fc0094561d0547187833b`,
+  passes all offline release gates and supersedes r32. Status remains
+  built-not-installed.
 - Fix boundary: this removes Android's deterministic voice-MMTEL disable and,
   together with `vendor/apn` commit `ed04060`, supplies the stock `ims` and
   `nrphone` profiles. It does not prove carrier registration or explain the

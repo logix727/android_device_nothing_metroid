@@ -59,6 +59,15 @@ lack a `10028` asset, causing canonical AT&T `1187` selection before the metroid
 vendor overlay. Therefore r32 remains preserved but is superseded for install by
 the forthcoming r33 source state.
 
+r33 is `OFFLINE-VERIFIED` and supersedes r32 for installation. Immutable
+snapshot: `releases/candidate_20260815_091437_165511465_candidate/`; OTA SHA-256
+`fb2c2c294a7dc2d76499fdce8018211d5bfbd3f7792fc0094561d0547187833b`.
+All offline release gates pass. Remaining cellular gates are intrinsically live:
+active modem MCFG selection, carrier account/IMS provisioning, IMEI/TAC acceptance,
+registration, calls, SMS, data, emergency-domain behavior, and carrier handover.
+Remaining eSIM gates are EID, SM-DP+ download, enable, reboot persistence,
+disable/delete, and physical-SIM coexistence.
+
 r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
 `7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`.
@@ -248,7 +257,7 @@ guesses.
 
 ## Next execution order
 
-1. Obtain approval to install exact offline-verified r32, then test
+1. Obtain approval to install exact offline-verified r33, then test
    on the frozen `...1.126608.2.134544.2` modem generation with explicit ROM
    identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
    `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call
