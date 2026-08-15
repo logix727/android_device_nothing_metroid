@@ -200,6 +200,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   carrier-specific WFC and VT policy remains unchanged. Schema validation,
   CarrierConfig module compilation, product-image generation, and generated
   per-carrier profile-count checks pass. Hardware behavior remains untested.
+- r32 offline result: immutable snapshot
+  `releases/candidate_20260815_005128_749949780_candidate/`, OTA SHA-256
+  `919fe65976707c55b509a4cc823eecc64abb26f02f506a44a24ee9a758579629`,
+  passes install-clean build, source-state, companion-input, payload-equivalence,
+  signing/AVB, partition, VINTF, and init audits. Status remains
+  built-not-installed.
 - Fix boundary: this removes Android's deterministic voice-MMTEL disable and,
   together with `vendor/apn` commit `ed04060`, supplies the stock `ims` and
   `nrphone` profiles. It does not prove carrier registration or explain the

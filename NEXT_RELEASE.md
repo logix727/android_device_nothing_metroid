@@ -42,6 +42,13 @@ leaving WFC and VT carrier-specific. Focused schema, module, product-image, and
 generated-output checks pass; no carrier is claimed working until physical SIM
 acceptance.
 
+r32 is now `OFFLINE-VERIFIED` and supersedes r31. Immutable snapshot:
+`releases/candidate_20260815_005128_749949780_candidate/`; OTA SHA-256
+`919fe65976707c55b509a4cc823eecc64abb26f02f506a44a24ee9a758579629`.
+The install-clean build and source-state, companion-input, payload-equivalence,
+signing/AVB, partition, VINTF, and init audits pass. It is not installed and no
+US carrier has gained a hardware acceptance claim from these static results.
+
 r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
 `7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`.
@@ -231,8 +238,7 @@ guesses.
 
 ## Next execution order
 
-1. Freeze and offline-audit the US multi-carrier successor, then obtain approval
-   to install that exact artifact and test
+1. Obtain approval to install exact offline-verified r32, then test
    on the frozen `...1.126608.2.134544.2` modem generation with explicit ROM
    identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
    `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call
