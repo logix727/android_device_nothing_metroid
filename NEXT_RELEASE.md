@@ -20,6 +20,17 @@ and pstore gates. QTI/IMS package admission, process domains, permission grant,
 and service startup pass. No physical SIM is present, so carrier operation is
 still blocked on external tester evidence and r21 remains the accepted baseline.
 
+r31 is `OFFLINE-VERIFIED` and not installed. Its immutable snapshot is
+`releases/candidate_20260814_233610_118108082_candidate/`; OTA SHA-256
+`b702dc7b119e8e91180c49fc59c3f8b0bbc4c0c75ecbfe373ac8dd06cf70def3`.
+It carries only the stock-backed AT&T 5G SA APN and VoLTE carrier-policy fixes
+over the existing source state, plus the recurring MTR-028 install gate. The
+install-clean build, payload equivalence, signing/AVB, partition, VINTF, init,
+source-state, and companion-input audits pass. It remains
+`BUILT-NOT-INSTALLED`; no data, call, SMS, or IMS fix is closed until this exact
+artifact is installed with the frozen modem generation and passes the physical-
+SIM matrix.
+
 r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
 `7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`.
@@ -209,8 +220,7 @@ guesses.
 
 ## Next execution order
 
-1. Build the next coherent candidate with `vendor/apn` commit `ed04060` and the
-   metroid AT&T CarrierConfig RRO, then test
+1. Obtain approval to install exact offline-verified r31, then test
    on the frozen `...1.126608.2.134544.2` modem generation with explicit ROM
    identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
    `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call

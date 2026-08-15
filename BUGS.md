@@ -182,6 +182,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   VoLTE disabled, enhanced-4G editing disabled, and stock APN filtering/IMS
   controls. The focused RRO and CarrierConfig test modules compile, and the built
   APK retains the expected raw MCC/MNC values.
+- r31 offline result: immutable snapshot
+  `releases/candidate_20260814_233610_118108082_candidate/`, OTA SHA-256
+  `b702dc7b119e8e91180c49fc59c3f8b0bbc4c0c75ecbfe373ac8dd06cf70def3`,
+  passes install-clean build, payload-equivalence, signing/AVB, partition,
+  VINTF, init, source-state, and companion-input audits. The target-files contain
+  both the four carrier-ID 10028 APNs and `CarrierConfigOverlayMetroid.apk`.
+  Status remains built-not-installed.
 - Fix boundary: this removes Android's deterministic voice-MMTEL disable and,
   together with `vendor/apn` commit `ed04060`, supplies the stock `ims` and
   `nrphone` profiles. It does not prove carrier registration or explain the
