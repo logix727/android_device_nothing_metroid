@@ -49,6 +49,16 @@ The install-clean build and source-state, companion-input, payload-equivalence,
 signing/AVB, partition, VINTF, and init audits pass. It is not installed and no
 US carrier has gained a hardware acceptance claim from these static results.
 
+Post-r32 online verification compared the source against official Lineage
+`android_vendor_apn` main at `05ceef76016fb07f5f22591247b07eb78fd4a092`.
+The six current US deltas are now integrated: Google Fi data/MMS typing on both
+T-Mobile identities, FreedomPop, Docomo Pacific, AirFire, Mosaic, and removal of
+obsolete AT&T `lwaactivate`. AOSP/Lineage CarrierConfig and carrier-ID data have
+no newer safe US delta for this branch. Stock and Lineage both intentionally
+lack a `10028` asset, causing canonical AT&T `1187` selection before the metroid
+vendor overlay. Therefore r32 remains preserved but is superseded for install by
+the forthcoming r33 source state.
+
 r25 was installed from the `OFFLINE-VERIFIED` immutable snapshot:
 `releases/candidate_20260812_164223_410891256_r25/`; OTA SHA-256
 `7d20dd544a8ea58d6bde3bac8f6ef3641ffd4a94f71c0fda16094ccc7f5ae23b`.
