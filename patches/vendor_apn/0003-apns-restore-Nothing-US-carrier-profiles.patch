@@ -1,0 +1,224 @@
+From ee6de027eddd0736c826d87cf453cd39f0caca76 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sat, 15 Aug 2026 00:23:31 -0400
+Subject: [PATCH] apns: restore Nothing US carrier profiles
+
+Change-Id: I4bb0aef1d12456aeabfe37aef9e1e6d688ba165a
+---
+ US.xml | 182 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 181 insertions(+), 1 deletion(-)
+
+diff --git a/US.xml b/US.xml
+index ea46b99..c9da208 100644
+--- a/US.xml
++++ b/US.xml
+@@ -1385,7 +1385,7 @@
+         mnc="280"
+         carrier="ATT 5G SA IMS"
+         apn="ims"
+-        bearer_bitmask="3|8|9|10|13|15|18|20"
++        network_type_bitmask="3|8|9|10|13|15|18|20"
+         carrier_id="10028"
+         protocol="IPV4V6"
+         roaming_protocol="IPV4V6"
+@@ -1487,6 +1487,7 @@
+         carrier="ATT IMS"
+         apn="ims"
+         carrier_id="10021"
++        network_type_bitmask="3|8|9|10|13|15|18|20"
+         mvno_match_data="53FF"
+         mvno_type="gid"
+         protocol="IPV4V6"
+@@ -1494,6 +1495,17 @@
+         type="ims"
+         user_visible="false"
+     />
++    <apn
++        mcc="310"
++        mnc="280"
++        carrier="ATT 5G NSA XCAP"
++        apn="enhancedphone"
++        carrier_id="10021"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="xcap"
++        user_visible="false"
++    />
+     <apn
+         mcc="310"
+         mnc="280"
+@@ -4978,4 +4990,172 @@
+         roaming_protocol="IPV4V6"
+         type="mms"
+     />
++    <!-- Nothing stock carrier-ID profiles absent from the upstream US catalog. -->
++    <apn carrier="Cricket internet" carrier_id="1779" apn="endo"
++        type="default,mms,supl,fota" mmsc="http://mmsc.aiowireless.net"
++        mmsproxy="proxy.aiowireless.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Cricket IMS" carrier_id="1779" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Cricket Hotspot" carrier_id="1779" apn="mht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Cricket XCAP" carrier_id="1779" apn="endo" type="xcap"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++
++    <apn carrier="Pure Talk internet" carrier_id="2025" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Pure Talk IMS" carrier_id="2025" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Pure Talk Hotspot" carrier_id="2025" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Airvoice internet" carrier_id="2027" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Airvoice IMS" carrier_id="2027" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Airvoice Hotspot" carrier_id="2027" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Ztar internet" carrier_id="2028" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Ztar IMS" carrier_id="2028" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Ztar Hotspot" carrier_id="2028" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Kore internet" carrier_id="2031" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Kore IMS" carrier_id="2031" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Kore Hotspot" carrier_id="2031" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++
++    <apn carrier="ATT FirstNet-Phone" carrier_id="2119" apn="firstnet-phone"
++        type="default,mms,supl,fota" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="ATT FirstNet IMS" carrier_id="2119" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="ATT FirstNet Hotspot" carrier_id="2119" apn="firstnet-hotspot"
++        type="dun" protocol="IPV4V6" roaming_protocol="IPV4V6"
++        user_visible="false" />
++    <apn carrier="ATT FirstNet XCAP" carrier_id="2119" apn="firstnet-phone"
++        type="xcap" protocol="IPV4V6" roaming_protocol="IPV4V6"
++        user_visible="false" />
++
++    <apn carrier="Liberty Internet" carrier_id="2504" apn="internet"
++        type="default,ia,supl,fota,xcap" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Liberty MMS" carrier_id="2504" apn="mms" type="mms"
++        mmsc="http://mmsc.mobilecore.lla.com" mmsproxy="proxy.mobilecore.lla.com"
++        mmsport="80" protocol="IPV4V6" roaming_protocol="IPV4V6"
++        user_editable="false" />
++    <apn carrier="Liberty IMS" carrier_id="2504" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Liberty Hotspot" carrier_id="2504" apn="hotspot" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++
++    <apn carrier="Dish-ATT internet" carrier_id="2525" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Dish-ATT IMS" carrier_id="2525" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT Hotspot" carrier_id="2525" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT internet" carrier_id="2526" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Dish-ATT IMS" carrier_id="2526" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT Hotspot" carrier_id="2526" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT internet" carrier_id="2527" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Dish-ATT IMS" carrier_id="2527" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT Hotspot" carrier_id="2527" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT internet" carrier_id="2534" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Dish-ATT IMS" carrier_id="2534" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT Hotspot" carrier_id="2534" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT internet" carrier_id="2538" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Dish-ATT IMS" carrier_id="2538" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT Hotspot" carrier_id="2538" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT internet" carrier_id="2539" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Dish-ATT IMS" carrier_id="2539" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Dish-ATT Hotspot" carrier_id="2539" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++
++    <apn carrier="MVNx #T Internet" carrier_id="2575" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="MVNx #T IMS" carrier_id="2575" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="MVNx #T Hotspot" carrier_id="2575" apn="resellermht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++
++    <apn carrier="Tracfone AT&amp;T" carrier_id="10000" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Tracfone AT&amp;T IMS" carrier_id="10000" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Tracfone AT&amp;T Hotspot" carrier_id="10000" apn="resellermht"
++        type="dun" protocol="IPV4V6" roaming_protocol="IPV4V6"
++        user_visible="false" />
++
++    <apn carrier="Red Pocket-ATT internet" carrier_id="10012" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Red Pocket-ATT IMS" carrier_id="10012" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Red Pocket-ATT Hotspot" carrier_id="10012" apn="resellermht"
++        type="dun" protocol="IPV4V6" roaming_protocol="IPV4V6"
++        user_visible="false" />
++
++    <apn carrier="Consumer Cellular internet" carrier_id="10022" apn="ereseller"
++        type="default,mms,supl,fota,xcap" mmsc="http://mmsc.mobile.att.net"
++        mmsproxy="proxy.mobile.att.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Consumer Cellular IMS" carrier_id="10022" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Consumer Cellular Hotspot" carrier_id="10022" apn="resellermht"
++        type="dun" protocol="IPV4V6" roaming_protocol="IPV4V6"
++        user_visible="false" />
++
++    <apn carrier="Cricket internet" carrier_id="10029" apn="endo"
++        type="default,mms,supl,fota" mmsc="http://mmsc.aiowireless.net"
++        mmsproxy="proxy.aiowireless.net" mmsport="80" protocol="IPV4V6"
++        roaming_protocol="IPV4V6" user_editable="false" />
++    <apn carrier="Cricket IMS" carrier_id="10029" apn="ims" type="ims"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Cricket Hotspot" carrier_id="10029" apn="mht" type="dun"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
++    <apn carrier="Cricket XCAP" carrier_id="10029" apn="endo" type="xcap"
++        protocol="IPV4V6" roaming_protocol="IPV4V6" user_visible="false" />
+ </apns>
+-- 
+2.43.0

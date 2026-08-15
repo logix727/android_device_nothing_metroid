@@ -189,6 +189,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   VINTF, init, source-state, and companion-input audits. The target-files contain
   both the four carrier-ID 10028 APNs and `CarrierConfigOverlayMetroid.apk`.
   Status remains built-not-installed.
+- US parity follow-up: stock/APN audit found T-Mobile and Verizon core profiles
+  already complete, but Lineage omitted 56 stock carrier-ID profiles across
+  FirstNet, Cricket, Dish/Boost AT&T variants, Liberty, MVNx, Tracfone AT&T,
+  Red Pocket, Consumer Cellular, Pure Talk, Airvoice, Ztar, and Kore. The source
+  now restores those profiles, corrects AT&T SA/NSA IMS to use
+  `network_type_bitmask`, and adds the missing NSA XCAP profile.
+- Nothing stock also admits VoLTE by default while AOSP defaults it off. The
+  metroid RRO now reproduces that admission only for US MCCs 310 through 316;
+  carrier-specific WFC and VT policy remains unchanged. Schema validation,
+  CarrierConfig module compilation, product-image generation, and generated
+  per-carrier profile-count checks pass. Hardware behavior remains untested.
 - Fix boundary: this removes Android's deterministic voice-MMTEL disable and,
   together with `vendor/apn` commit `ed04060`, supplies the stock `ims` and
   `nrphone` profiles. It does not prove carrier registration or explain the
