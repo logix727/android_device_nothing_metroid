@@ -65,6 +65,24 @@ independently matches the recorded size and SHA-256. Do not spend the device-wri
 budget on another no-SIM recovery install. The patched host ADB reached 100
 percent during the r29 recovery transfer; r30 installed through update_engine.
 
+An external 2026-08-14 physical-SIM capture now proves USIM/ISIM readiness, LTE
+home registration, and outbound non-IMS SMS delivery to the recipient. Replies are
+not received. Both selected AT&T default APNs receive the same immediate modem
+`0x1004` rejection. A circuit-switched call reaches `DIALING` but is rejected with
+modem cause 252. Framework IMS remains unregistered despite contradictory
+QImsService telemetry. The capture identifies
+baseband `...1.150609.3.152387.2`, not r30's required
+`...1.126608.2.134544.2`, and contains no independent ROM build property, so it is
+useful localization evidence but not r30 acceptance. Repeat only on the documented
+ROM and modem pair before changing source or firmware.
+
+The capture also exposes an actionable APN-source defect: CarrierResolver selects
+specific carrier ID `10028` (`AT&T 5G SA`), but Lineage lacked its profiles and
+fell back to generic `nxtgenphone` and legacy `wap.cingular`. `vendor/apn` commit
+`ed04060` restores Nothing stock's exact `nrphone`, `ims`, `nrhotspot`, and XCAP
+set. XSD and Soong `apns-conf.xml` builds pass. Calls and inbound SMS remain
+separate acceptance results.
+
 The tested configuration has three independently verified inputs:
 
 1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256
@@ -182,12 +200,13 @@ guesses.
 
 ## Next execution order
 
-1. Provide an active physical SIM or eUICC test path, then use both sanitized
-   tester results to skip the now-proven card, subscription, registration and
-   APN-selection paths: install r29 on the documented modem generation, verify its
-   QTI/IMS processes, and test the first data call. If the historical modem-side
-   `0x1004` rejection persists, compare stock QMI/MCFG behavior before any further
-   source or firmware change.
+1. Build the next coherent candidate with `vendor/apn` commit `ed04060`, then test
+   on the frozen `...1.126608.2.134544.2` modem generation with explicit ROM
+   identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
+   `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call
+   response. Separately test inbound SMS, framework IMS capabilities, and calls.
+   If `0x1004` persists on `nrphone` or call cause 252 persists, compare stock
+   QMI/MCFG behavior and a same-device stock/carrier control before another edit.
 2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.
 3. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
    uncertified-policy gate. Test Google's official per-device registration only

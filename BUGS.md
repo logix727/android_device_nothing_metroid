@@ -101,10 +101,39 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   SMS transport, and missing AT&T APNs as the shared first failure. Neither older
   ROM/modem generation is frozen r29, so the captures cannot accept or reject r29;
   the opaque OEM code does not justify a firmware change by itself.
-- Evidence disposition: make no additional source or firmware change before r30
-  testing. On the frozen modem generation, verify package/process startup and then
-  capture the first data-call response; if `0x1004` persists, localize it against
+- Evidence disposition: include `vendor/apn` commit `ed04060` in the next coherent
+  candidate. Verify that carrier ID `10028` selects `nrphone` for initial attach
+  and the first data call. If `0x1004` persists on `nrphone`, localize it against
   stock QMI/MCFG behavior rather than reopening UICC detection.
+- New external capture (2026-08-14): the successor QTI package stack reaches
+  physical-SIM USIM/ISIM readiness, subscription load, LTE home registration with
+  voice/SMS/data service, and repeated successful non-IMS SMS submissions. The
+  tester confirms those outbound messages reached the recipient, but replies were
+  not received on the device. After mobile data is enabled, both selected AT&T
+  default APNs (`nxtgenphone` and
+  `wap.cingular`) receive immediate modem `OEM_DCFAILCAUSE_4` (`0x1004`) responses
+  with no CID or interface. An outgoing circuit-switched call is accepted by the
+  RIL, enters `DIALING`, then receives last-call cause 252, `Explicit network
+  reject`. This confirms that the first data failure remains below Android APN
+  selection and before interface assignment.
+- First source divergence: the SIM resolves to carrier ID `1187` with specific
+  carrier ID `10028` (`AT&T 5G SA`), but Lineage had no `10028` profiles. Android
+  therefore fell back to generic `1187`, selected `nxtgenphone` as initial attach
+  and default, and later retried legacy `wap.cingular`. Nothing stock defines the
+  missing set as `nrphone` default, `ims`, `nrhotspot`, and `nrphone` XCAP.
+- Source fix: `vendor/apn` commit `ed04060` adds that exact four-profile stock
+  block to `US.xml`. XSD validation and the real `apns-conf.xml` Soong build pass,
+  and generated output contains all four `10028` rows. A broader audit confirms
+  source and output match at 419 US records and 86 carrier-ID records; unrelated
+  legacy stock catalog entries were not imported.
+- Fix boundary: this corrects initial-attach, default-data, IMS, hotspot, and XCAP
+  selection for this SIM. It does not explain or close inbound SMS or modem call
+  cause 252; those remain separate installed acceptance results.
+- Capture boundary: the files do not contain an independently verifiable ROM build
+  property, and they identify baseband
+  `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.150609.3.152387.2`, not r30's frozen
+  `...1.126608.2.134544.2` generation. They therefore strengthen the external
+  functional evidence but cannot accept or reject r30 on its required modem input.
 - Acceptance: present UICC/subscription, calls, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests on the documented modem generation.
 
@@ -132,6 +161,15 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - r30 local result: `org.codeaurora.ims` remains stable in `vendor_qtelephony`,
   both vendor IMS-radio instances and QTI IMS factory/data/CM/UCE services
   register across repeated boots, with no SIM available for MMTEL acceptance.
+- New external capture (2026-08-14): QImsService starts and briefly reports
+  `VOLTE ims registered`, but framework registration remains
+  `REGISTRATION_STATE_NOT_REGISTERED`, MMTEL voice/SMS capabilities remain false,
+  outbound SMS uses the non-IMS RIL path, inbound SMS fails, and the attempted call
+  uses the circuit-switched RIL path before modem rejection. Treat the vendor
+  message as contradictory infrastructure telemetry, not IMS acceptance. The
+  capture uses the mismatched
+  `...1.150609.3.152387.2` baseband and does not independently identify the ROM
+  build, so repeat on r30 with its frozen modem generation before source changes.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 
