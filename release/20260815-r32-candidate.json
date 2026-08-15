@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-028"
+  ],
+  "affected_test_union": [
+    "two coherent boots with crash, tombstone, pstore, AVC, encryption, slot and snapshot checks",
+    "QTI telephony and org.codeaurora.ims package, process, service and permission startup regression",
+    "physical UICC and eSIM detection, subscription creation, carrier and specific-carrier ID resolution",
+    "AT&T, FirstNet and Cricket default data, IMS, MMS, XCAP and hotspot profile selection",
+    "T-Mobile, Metro, Mint and T-Mobile-hosted MVNO default data, IMS, MMS and hotspot regression",
+    "Verizon, Visible and Verizon-hosted MVNO default data, IMS, MMS and hotspot regression",
+    "Dish and Boost SIM identity-specific default data, IMS, MMS and hotspot selection",
+    "Tracfone, Consumer Cellular, Red Pocket and available US prepaid or MVNO profile selection",
+    "effective US CarrierConfig reports VoLTE available while preserving carrier-specific WFC and VT policy",
+    "IPv4 and IPv6 transport, DNS, MMS, tethering, outgoing and incoming calls and SMS",
+    "framework IMS registration and voice, SMS and UT MMTEL capabilities",
+    "airplane-mode, SIM refresh, DSDS, suspend-resume and LTE-Wi-Fi transition recovery",
+    "MTR-028 transfer result, automatic target slot, snapshot merge and second boot recorded independently"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "287d393bae66c8231bd50f3f5486b76f0feb1480bba143427f885210c6660b71"
+    }
+  }
+}
