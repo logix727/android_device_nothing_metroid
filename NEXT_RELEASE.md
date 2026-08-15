@@ -83,6 +83,15 @@ fell back to generic `nxtgenphone` and legacy `wap.cingular`. `vendor/apn` commi
 set. XSD and Soong `apns-conf.xml` builds pass. Calls and inbound SMS remain
 separate acceptance results.
 
+The same capture exposes a second stock-backed divergence after carrier config
+loads: framework reports VoLTE `available=false` and disables voice MMTEL despite
+provisioning and user enablement being true. Nothing stock enables VoLTE for
+AT&T `310280` and `310410`, while Lineage's carrier-ID 1187 file leaves the
+framework default false. `CarrierConfigOverlayMetroid` restores the stock-effective
+AT&T policy without enabling stock-disabled VT or WFC. Its focused module and
+CarrierConfig test builds pass. Install it with `ed04060` in one coherent
+candidate; do not treat CS cause 252 or missing non-IMS inbound SMS as closed.
+
 The tested configuration has three independently verified inputs:
 
 1. ROM OTA: `releases/candidate_20260808_192539_leaudio-r21/`, SHA-256
@@ -200,11 +209,13 @@ guesses.
 
 ## Next execution order
 
-1. Build the next coherent candidate with `vendor/apn` commit `ed04060`, then test
+1. Build the next coherent candidate with `vendor/apn` commit `ed04060` and the
+   metroid AT&T CarrierConfig RRO, then test
    on the frozen `...1.126608.2.134544.2` modem generation with explicit ROM
    identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
    `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call
-   response. Separately test inbound SMS, framework IMS capabilities, and calls.
+   response. Confirm effective VoLTE availability and voice/SMS MMTEL capability,
+   then separately test inbound SMS, IMS registration, and calls.
    If `0x1004` persists on `nrphone` or call cause 252 persists, compare stock
    QMI/MCFG behavior and a same-device stock/carrier control before another edit.
 2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.

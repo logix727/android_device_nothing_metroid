@@ -170,6 +170,23 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   capture uses the mismatched
   `...1.150609.3.152387.2` baseband and does not independently identify the ROM
   build, so repeat on r30 with its frozen modem generation before source changes.
+- First carrier-policy divergence: after the AT&T subscription resolves, framework
+  logs `available = false` and sets `voLteFeatureOn = false` even though user
+  enablement, TTY, and provisioning are true. Lineage's carrier-ID 1187 config
+  does not set `carrier_volte_available_bool`, whose framework default is false.
+  Nothing's validated stock CarrierConfig overlay enables VoLTE for both AT&T
+  PLMNs used by this SIM (`310280` home and `310410` serving), then disables only
+  VT and WFC in its carrier-ID 1187/10028 policy.
+- Successor source fix: add a metroid-scoped CarrierConfig RRO reproducing the
+  stock-effective AT&T policy: VoLTE available, VT/WFC unavailable, TTY over
+  VoLTE disabled, enhanced-4G editing disabled, and stock APN filtering/IMS
+  controls. The focused RRO and CarrierConfig test modules compile, and the built
+  APK retains the expected raw MCC/MNC values.
+- Fix boundary: this removes Android's deterministic voice-MMTEL disable and,
+  together with `vendor/apn` commit `ed04060`, supplies the stock `ims` and
+  `nrphone` profiles. It does not prove carrier registration or explain the
+  circuit-switched cause 252 and absent non-IMS inbound indication; those remain
+  installed fallback-path acceptance results.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 

@@ -344,6 +344,7 @@ PRODUCT_PACKAGES += \
 DEVICE_PACKAGE_OVERLAYS += device/nothing/metroid/overlay
 
 PRODUCT_PACKAGES += \
+    CarrierConfigOverlayMetroid \
     MetroidWifiOverlay \
     MetroidTetheringOverlay \
     MetroidConnectivityOverlay \
