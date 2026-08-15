@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-028"
+  ],
+  "affected_test_union": [
+    "two coherent boots with crash, tombstone, pstore, AVC, encryption, slot and snapshot checks",
+    "QTI telephony and org.codeaurora.ims package, process, service and permission startup regression",
+    "physical UICC detection, subscription creation, carrier ID 1187 and specific carrier ID 10028 resolution",
+    "AT&T 5G SA nrphone initial attach and default data plus ims, nrhotspot and XCAP profile selection",
+    "effective AT&T CarrierConfig reports VoLTE available with VT and WFC unavailable and voice MMTEL enabled",
+    "first data-call response, IPv4 and IPv6 transport, DNS, MMS and tethering",
+    "framework IMS registration and voice, SMS and UT MMTEL capabilities",
+    "outgoing and incoming VoLTE calls, call audio and IMS SMS",
+    "independent outgoing and incoming circuit-switched calls and non-IMS SMS fallback including cause and unsolicited indication capture",
+    "airplane-mode, SIM refresh, suspend-resume and LTE-Wi-Fi transition recovery",
+    "MTR-028 transfer result, automatic target slot, snapshot merge and second boot recorded independently"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "287d393bae66c8231bd50f3f5486b76f0feb1480bba143427f885210c6660b71"
+    }
+  }
+}
