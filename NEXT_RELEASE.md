@@ -37,13 +37,17 @@ signature. This is a bounded idle-stability result, not unplugged deep suspend
 or drain acceptance. The installed result is summarized in
 `release/20260817-r35-installed.md`.
 
-r36 is frozen for offline verification only in
+r36 is `OFFLINE-VERIFIED` in
 `release/20260817-r36-candidate.json`. It contains the stock-backed framework IMS
 capability gates, complete 3 Sweden carrier-ID 1691 APN family, and CND/DPM AIDL
 manifest plus framework-matrix contracts. It does not claim to resolve the
 separate pre-network `0x1004` data failure. Do not install it on the no-SIM
 maintainer device merely to prove service registration; physical carrier
 acceptance and the vendor-RIL/QMI comparison remain required.
+Immutable snapshot: `releases/candidate_20260817_193603_796382843_candidate/`;
+OTA SHA-256 `ca8390590270e325650057eac21d480d82c5453e2f96e57415ee0c7503cfb647`.
+The install-clean build, source/companion provenance, all 16 payload-image
+equivalence, signing/AVB, partition, VINTF, init, and duplicate audits pass.
 
 r31 is `OFFLINE-VERIFIED` and not installed. Its immutable snapshot is
 `releases/candidate_20260814_233610_118108082_candidate/`; OTA SHA-256
