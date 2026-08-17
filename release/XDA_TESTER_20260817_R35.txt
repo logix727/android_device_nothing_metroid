@@ -1,0 +1,92 @@
+[ROM][UNOFFICIAL][TESTING][16] LineageOS 23 for Nothing Phone (3) [metroid] r35
+
+This is an unofficial hardware-acceptance build for Nothing Phone (3) only. Back
+up data and keep a verified stock restore path. Do not use it if this phone is
+required for emergency service.
+
+ARTIFACT
+- File: lineage-23.0-20260815-UNOFFICIAL-metroid.zip
+- Size: 4095645190 bytes
+- SHA-256: d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6
+- Snapshot: releases/candidate_20260815_192053_709386797_candidate/
+- Required modem on both slots:
+  MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2
+- Optional GApps: MindTheGapps-16.0.0-arm64-20260409_073023.zip
+- GApps SHA-256:
+  a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28
+
+CHANGELOG SINCE r30
+- Restores the stock-backed AT&T 5G SA APN family and broader current US carrier
+  profiles, then migrates retained TelephonyProvider data when packaged APNs
+  change without a build-ID change.
+- Restores stock-effective US VoLTE admission while preserving carrier-specific
+  Wi-Fi Calling and video-calling policy.
+- Adds stock-equivalent Goodix UDFPS access and votes 120 Hz for the fingerprint
+  overlay lifetime.
+- Prevents Ethernet from claiming NCM usb0.
+- Restores stock vendor.gralloc.enable_logs=0 to avoid the Mapper5 debug
+  use-after-free path.
+
+MAINTAINER-VERIFIED
+- Install-clean offline audit, all 16 payload images equivalent to target-files,
+  signed AVB chain with verification enabled, partition/VINTF/init checks pass.
+- Installed through update_engine with kSuccess (0) on automatically selected
+  slot B; snapshot state none, userdata encrypted and SELinux Enforcing.
+- Two coherent boots with one system_server and no new crash, tombstone or pstore.
+- GApps preserved; QTI telephony/IMS startup and APN migration pass.
+- Fresh UDFPS enrollment plus four unlocks, NCM local IPv4, bounded haptic/NFC,
+  and camera preview stability pass.
+
+REQUIRED TESTS
+1. Physical SIM/eSIM: exact carrier and modem identity, card/subscription,
+   carrier IDs, selected APNs, LTE/5G, IPv4/IPv6 data, DNS, MMS, hotspot, incoming
+   and outgoing SMS/calls, IMS/VoLTE/VoWiFi, airplane mode, reboot and DSDS.
+2. UDFPS: fresh enrollment, 50 screen-on/AOD unlocks, cancellation and retry with
+   Smooth Display disabled; report HAL/SystemUI death, AVC or crash.
+3. Camera: ten ordered FHD30/FHD60/UHD30 rear-front-rear cycles with finalized
+   H.264/AAC files; test stills, all lenses, zoom while recording and a third-party
+   Camera2 client.
+4. USB: NCM plus ADB IPv4/IPv6 and upstream, reconnect, gadget-HAL restart, then
+   ADB, MTP and RNDIS regressions.
+5. Audio/face: perceptible AudioFX result and normal accessible face enrollment
+   and authentication flow.
+6. Thermal/charging: controlled unplugged use only; stop and report unexpected
+   heat rather than extending the run.
+
+PLAY STORE
+- First distinguish a missing/unresolved launcher from certification. If the Play
+  Store icon is absent or will not open, use Settings -> Apps -> Google Play Store
+  -> Open/Enable once. Do not clear data or remove updates for this test.
+- If Google shows "This device isn't Play Protect certified", report
+  UNCERTIFIED-BLOCKED. This is expected external policy for the unofficial custom
+  build and is not a package crash.
+- If the storefront opens, record the exact Settings -> About certification text,
+  install one small app and one app larger than 200 MB, reboot and repeat.
+- Official private per-device registration may provide REGISTERED-DEVICE ACCESS;
+  it does not certify the ROM. Never post Android/GSF ID or account details.
+
+KNOWN LIMITATIONS
+- No physical carrier, camera-finalization, full UDFPS, USB-adjacency,
+  thermal/charging, AudioFX-perception or complete face-flow result is claimed.
+- Play Protect certification is externally blocked for the unofficial build.
+- Unlocked custom-ROM trust state does not provide stock Widevine/Play Integrity
+  or HDCP trust.
+
+INSTALLATION
+1. Verify the ZIP SHA-256.
+2. Existing metroid users should use Lineage Updater/update_engine where available.
+3. For recovery sideload, use only this snapshot's bootstrap images, confirm
+   recovery success, reboot to the new-slot recovery and sideload the exact GApps
+   archive before first Android boot if Google apps are wanted.
+4. Do not force a slot, mix images or firmware generations, disable AVB
+   verification, or relock around custom images.
+
+REPORTING
+- Include exact ZIP hash, build, modem, slot, update/fresh-install path, first
+  failing operation and timestamp.
+- Keep raw logs private. Remove serial, IMEI, IMSI, ICCID, EID, phone numbers,
+  account data, Wi-Fi credentials and precise location.
+- Stop on unexpected heat, reboot, encryption, boot, slot, AVB, data-loss or
+  emergency-service behavior.
+- This build is not official LineageOS and carries no Google or carrier
+  certification claim.

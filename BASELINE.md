@@ -5,15 +5,19 @@ The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
 This records the last accepted release, not the current live state. r21 remains
-accepted unchanged. The device currently runs installed r30
-(`23.0-20260814-UNOFFICIAL-metroid`) on successful slot A from snapshot
-`releases/candidate_20260814_141135_911532683_r30/`, OTA SHA-256
-`40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4`.
-r30 is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
-passes repeated boot, system_server, QTI/IMS startup, crash-buffer, tombstone,
-and pstore gates. It is installed but not accepted because no physical SIM is
-available for carrier data, voice, SMS, and IMS testing. Google certification
-remains an external policy result (MTR-027).
+accepted unchanged. The device currently runs installed r35
+(`23.0-20260815-UNOFFICIAL-metroid`) on successful slot B from snapshot
+`releases/candidate_20260815_192053_709386797_candidate/`, OTA SHA-256
+`d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6`.
+r35 is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
+passes two coherent boot, system_server, QTI/IMS startup, crash-buffer,
+tombstone, and pstore gates. The packaged APN checksum migrated and persisted,
+UDFPS enrollment plus four unlocks passed, and bounded NCM, haptic, NFC, and
+camera-preview checks passed. It remains installed but not accepted: no physical
+SIM is available, the UDFPS 50-unlock matrix is incomplete, USB adjacent-mode
+regressions remain, and camera still/video finalization was not accepted. Google
+Play launches after package-state normalization, but certification remains an
+external policy result (MTR-027).
 
 ## ROM
 
@@ -84,8 +88,9 @@ remains an external policy result (MTR-027).
 - Physical SIM calls, SMS/MMS, data, IMS features, emergency UI, DSDS, and OMAPI.
 - Controlled thermal severity/cooling/display behavior after the retained 48-49 C
   unplugged-use event.
-- Aperture stabilization/routing, LE Audio, haptic parity, NFC payment/off-host,
-  USB-C audio, and long-duration suspend drain.
+- Aperture stabilization and full r35 finalized-video stability, LE Audio,
+  haptic parity, NFC tag/payment/off-host, USB-C audio, physical-SIM operation,
+  and long-duration suspend drain.
 
 ## Source revisions
 
@@ -102,6 +107,6 @@ revisions:
 | `packages/apps/Aperture` | `db454eb0525be0b59bee2c32030df3fd7d553eb5` |
 
 Post-r21 workflow/record commits and newer builds are not part of the accepted
-OTA. r23 was built but not installed; r24 is a non-promotable test seed. Update
-this baseline only after another audited OTA and all required companion inputs
-are installed and accepted.
+OTA. r35 is installed coherent evidence, not an accepted baseline. Update the
+accepted ROM section only after all required companion inputs and release gates
+are accepted.

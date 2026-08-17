@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-XXX"
+  ],
+  "affected_test_union": [
+    "two coherent boots with exact artifact, slot, snapshot, encryption, SELinux, crash, tombstone, pstore and boot-critical AVC checks",
+    "replace with the real affected operation and adjacent regression matrix"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-YYYYMMDD_HHMMSS.zip",
+      "sha256": "REPLACE_WITH_64_HEX_CHARACTERS"
+    },
+    "modem": {
+      "build": "REPLACE_WITH_EXACT_MODEM_BUILD",
+      "sha256": "REPLACE_WITH_64_HEX_CHARACTERS"
+    }
+  }
+}

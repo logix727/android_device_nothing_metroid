@@ -12,7 +12,7 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
   release. `org.codeaurora.ims` runs as `vendor_qtelephony` with MMTEL bound on
   both slots and no IMS/radio AVCs across two boots.
 - Accepted r21 state: slot A, boot complete across two boots, SELinux Enforcing,
-  encrypted data, slot marked successful. The current live device is coherent r28
+  encrypted data, slot marked successful. The current live device is coherent r35
   on slot B, Enforcing and encrypted, but not accepted. Both modem slots use the
   matching A16 stock modem build and MindTheGapps was separately supplied. See
   `BASELINE.md` before changing either companion input.
@@ -180,15 +180,16 @@ Before sideloading, distributing a candidate, or making a functional claim:
 
 ## Current priorities
 
-1. Preserve the offline-verified r29 source/artifact identity and install it only
-   through the approved coherent OTA path after exact preflight.
-2. Complete installed-r28 MTR-023 face guidance, MTR-025 AudioFX, NCM/USB, and
-   camera acceptance before spending another device write.
-3. Accept r29 MTR-001/MTR-002 against the matching modem generation, starting at
-   QTI/IMS process startup and the first data-call response; do not reopen UICC
-   detection unless r29 evidence diverges there.
-4. Close evidence-ready MTR-018, MTR-011, and MTR-024 in safe dependency order;
-   do not change MTR-020 without metroid stock-backed evidence.
+1. Preserve installed r35 source/artifact identity and complete its acceptance-
+   only UDFPS, camera, USB, Play package-state, face, AudioFX and thermal rows
+   before spending another device write.
+2. Hold MTR-001/MTR-002 source work until a same-device stock control on the
+   matching modem generation and QMI/QXDM comparison establish the next data-path
+   divergence.
+3. Keep MTR-027 externally blocked: distinguish package launch from Google's
+   certification decision and do not spoof identity, attestation or AVB.
+4. Close evidence-ready MTR-011 and MTR-024 in safe dependency order; do not
+   change MTR-020 without metroid stock-backed evidence.
 5. Execute physical-SIM, eSIM, OMAPI, LE Audio, and accessory matrices when the
    required hardware or credentials are available.
 6. Replace temporary carry patches with reviewed public forks/upstream changes,

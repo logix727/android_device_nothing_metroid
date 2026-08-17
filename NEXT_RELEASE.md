@@ -10,15 +10,32 @@ r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypte
 userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
 tombstones, and two successful boots.
 
-The live device is r30 (`23.0-20260814-UNOFFICIAL-metroid`) on successful slot A,
+The live device is r35 (`23.0-20260815-UNOFFICIAL-metroid`) on successful slot B,
 installed from the immutable snapshot
-`releases/candidate_20260814_141135_911532683_r30/`; OTA SHA-256
-`40fb1b4178836482e2f0f349a092541d1a1f5820c81d8e3503546b49411e08b4`.
+`releases/candidate_20260815_192053_709386797_candidate/`; OTA SHA-256
+`d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6`.
 It is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
-passes repeated boots with one system_server start and empty crash, tombstone,
-and pstore gates. QTI/IMS package admission, process domains, permission grant,
-and service startup pass. No physical SIM is present, so carrier operation is
-still blocked on external tester evidence and r21 remains the accepted baseline.
+passes two coherent boots with one system_server start and no new crash,
+tombstone, or pstore record. QTI/IMS startup passes; the APN checksum migration
+materialized all four carrier-ID 10028 rows and persisted across reboot. No
+physical SIM is present, and camera/USB/UDFPS matrices are incomplete, so r21
+remains the accepted baseline.
+
+r35 also passes bounded installed checks for fresh UDFPS enrollment and four
+unlocks with no HAL death, NCM local IPv4 transport with `usb0` excluded from
+Ethernet, haptic one-shot/prebaked/primitive delivery to the driver, and one NFC
+disable/enable cycle with a stable service PID. `vendor.gralloc.enable_logs=0`
+is installed and camera preview exercised the provider without Mapper5,
+GWP-ASan, or tombstone failure, but capture-intent automation did not produce a
+trustworthy finalized still or video. These results do not close the remaining
+functional matrices.
+
+A 14-minute-26-second USB-powered screen-off no-SIM observation retained the
+same boot ID, boot count, and system_server PID with an empty crash buffer, no
+new tombstone or pstore record, and no interval fatal/SSR/modem-crash/panic/AVC
+signature. This is a bounded idle-stability result, not unplugged deep suspend
+or drain acceptance. The installed result is summarized in
+`release/20260817-r35-installed.md`.
 
 r31 is `OFFLINE-VERIFIED` and not installed. Its immutable snapshot is
 `releases/candidate_20260814_233610_118108082_candidate/`; OTA SHA-256
@@ -232,11 +249,9 @@ guesses.
   camera stability promotion until stock `vendor.gralloc.enable_logs=0` is
   installed and the ten-cycle matrix is clean. MTR-012 still requires
   measured stabilization, crop, cadence, zoom-transition, and motion acceptance.
-- MTR-018 r30 enrollment failure is reproduced. The stock Goodix shim cannot open
-  `/proc/touchpanel/fod_mode` because metroid omitted stock SELinux access, and
-  SystemUI still sends pointer-down before its 120 Hz vote. Both source fixes are
-  built; install them together, then run fresh enrollment plus 50 screen-on/AOD
-  unlocks and cancellation/retry with Smooth Display off.
+- MTR-018's source fixes are installed on r35. Fresh enrollment and four unlocks
+  pass with no fingerprint HAL death. Complete the remaining 46 screen-on/AOD
+  unlocks plus cancellation/retry with Smooth Display off before closure.
 - MTR-011: recover actual stock effect/primitive mappings before advertising or
   changing any haptic capability.
 - MTR-023 Spanish/Japanese/Arabic education rendering passes; complete the normal
@@ -244,9 +259,10 @@ guesses.
 
 ### WP5: Connectivity, suspend, and cleanup
 
-- MTR-019 r30 acceptance exposed Ethernet IpClient clearing the NCM `usb0`
-  gateway. The metroid Connectivity RRO exclusion is source-fixed and awaits the
-  next coherent candidate. The bounded MTR-021 init cleanup remains closed.
+- MTR-019's Connectivity RRO is installed on r35. NCM assigns
+  `10.205.201.184/24`, the host receives `10.205.201.209/24`, bidirectional local
+  ping passes, and Ethernet excludes `usb0`. Complete IPv6/upstream, reconnect,
+  HAL-restart, MTP and RNDIS regressions. The bounded MTR-021 cleanup remains closed.
   MTR-015 QCC remains a separate atomic
   feature decision; MTR-016 sensor extension and MTR-024 ST21 remain active.
   MTR-020 returns to
@@ -257,18 +273,25 @@ guesses.
 
 ## Next execution order
 
-1. Obtain approval to install exact offline-verified r33, then test
-   on the frozen `...1.126608.2.134544.2` modem generation with explicit ROM
+1. Test installed r35 on the frozen `...1.126608.2.134544.2` modem generation
+   with explicit ROM
    identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
    `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call
    response. Confirm effective VoLTE availability and voice/SMS MMTEL capability,
    then separately test inbound SMS, IMS registration, and calls.
-   If `0x1004` persists on `nrphone` or call cause 252 persists, compare stock
-   QMI/MCFG behavior and a same-device stock/carrier control before another edit.
-2. Complete r28 MTR-023 face-locale and MTR-025 AudioFX acceptance.
-3. Preserve MTR-026 as a cleared recurring crash gate and MTR-027 as an external
-   uncertified-policy gate. Test Google's official per-device registration only
-   as storefront access, never as ROM certification.
+   The 2026-08-16 3/Hallon SE capture shows `0x1004` repeating while the device is
+   home-registered on LTE 24002 with the correct `data.tre.se` rows on r35.
+   Because `0x1004` now persists on a second, unrelated carrier with the APN
+   fixes in place, treat those fixes as validated-but-insufficient: before another
+   data-path source edit, run the same-device stock control on the matching modem
+   generation and compare stock QMI/MCFG behavior with QXDM/QMI-level capture.
+2. Complete r35 UDFPS repetitions, camera finalization, and USB adjacent-mode
+   regressions, then complete MTR-023 and perceptible AudioFX acceptance.
+3. Preserve MTR-026 as a cleared recurring crash gate. For MTR-027, first record
+   whether Phonesky is stopped and launcher-resolvable; r35 required package-state
+   normalization before a crash-free launch reached Google's uncertified-device
+   activity. Keep certification externally blocked. Test official per-device
+   registration only as storefront access, never as ROM certification.
 4. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
    already-planned recovery sideload; record recovery's result independently.
 5. Complete installed-system Aperture acceptance from the canonical hardware matrix.

@@ -1,0 +1,47 @@
+[ROM][UNOFFICIAL][TESTING][16] LineageOS 23 for Nothing Phone (3) [metroid] REVISION
+
+This is an unofficial test build for Nothing Phone (3) only. Back up data and
+keep a verified stock restore path. Do not use it if this phone is required for
+emergency service.
+
+ARTIFACT
+- File: REPLACE
+- Size: REPLACE bytes
+- SHA-256: REPLACE
+- Immutable snapshot: REPLACE
+- Required modem generation on both slots: REPLACE
+- Optional GApps archive and SHA-256: REPLACE
+
+CHANGELOG
+- REPLACE with evidence-backed changes only.
+
+MAINTAINER-VERIFIED
+- REPLACE with exact offline and installed results.
+
+NOT VERIFIED / KNOWN BROKEN
+- REPLACE. Do not convert package presence or service registration into a
+  functional claim.
+
+INSTALLATION
+1. Verify the ZIP SHA-256.
+2. Use only the documented update or recovery path for this exact candidate.
+3. Do not force a slot, mix images, disable AVB verification or relock around
+   custom images.
+4. Treat recovery's final result as authoritative; host percentage is transfer
+   reporting only.
+5. On a fresh/recovery install, sideload the frozen optional GApps archive from
+   the new-slot recovery before first Android boot.
+
+REQUIRED TESTS
+1. Record exact build, ZIP hash, slot, modem build and update/fresh-install path.
+2. Complete two boots, slot/snapshot, encryption, SELinux, crash, tombstone,
+   pstore and boot-critical AVC checks.
+3. Run the candidate's affected operation and adjacent regression matrix.
+4. Report the first failing operation and timestamp, not only downstream errors.
+
+REPORTING
+- Keep raw logs private. Remove serial, IMEI, IMSI, ICCID, EID, phone numbers,
+  account data, Wi-Fi credentials, precise location and other personal data.
+- Stop on unexpected heat, reboot, encryption, boot, slot, AVB, data-loss or
+  emergency-service behavior.
+- This build is not official LineageOS and carries no certification claim.

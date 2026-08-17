@@ -1,6 +1,6 @@
 # MTR-027 Play Protect certification evidence
 
-Audited: 2026-08-11. This record is sanitized: it contains no account name,
+Audited: 2026-08-17. This record is sanitized: it contains no account name,
 Android/GSF ID, device serial, or registration credential.
 
 ## Result
@@ -18,6 +18,15 @@ lists an unlocked bootloader and a modified Android OS among the common
 certification-failure reasons. The exact server-side rule or rollout that
 selected this device is not observable locally.
 
+The r35 investigation separates an earlier package-launch failure from this
+certification result. The updated Phonesky 52.6.26 package was installed and
+enabled but had `stopped=true`, and the launcher intent did not resolve. After
+the package/component state was normalized, the launcher resolved without a
+crash and Google selected `UncertifiedDeviceActivity`. The setter of the stopped
+state is not established and the same update was previously observed running, so
+there is no eligible ROM source fix for that state. Track a recurrence from an
+untouched coherent install as an evidence gap, not as MTR-027 certification.
+
 ## Evidence matrix
 
 | Layer | Installed / retained evidence | Stock, upstream, or reference evidence | Finding |
@@ -30,6 +39,8 @@ selected this device is not observable locally.
 | Package chronology | Base Phonesky is 45.7.17. The active 52.6.26 update records `lastUpdateTime=2026-08-08 10:35:37`, before both r21 and r22 builds and before the retained policy event. | Stock Phonesky 47.3.29 and 48.9.30 and MindTheGapps Phonesky 45.7.17 all contain `com.google.android.gms.gmscompliance.ui.UncertifiedDeviceActivity`. | The activity is normal Google package content, not evidence of APK corruption. The update cannot establish a new r21-to-r22 ROM divergence. |
 | Historical acceptance | Coherent-r22 crash evidence proves GMS/package/account retention and zero Password Checkup fatalities. No retained r21/r22 capture proves successful storefront entry or a certified status before the block. | A functional gate must exercise the storefront and an install, not only resolve the package or Binder services. | Earlier "intact" and "policy pass" wording was overstated. |
 | Kernel / hardware | No kernel crash, AVC, missing service, package-signature failure, or transport failure precedes the blocking activity. | Certification is a Google compatibility/licensing and server-policy decision. | No kernel or device-source fix is indicated. |
+| r35 package launch | Updated Phonesky 52.6.26 was installed/enabled but stopped and initially had no resolvable launcher. Normalizing package/component state restored a crash-free launch. | Stock requests `com.android.vending` with `stopped=false`; the same update had previously run on Lineage. | Separate package-state evidence gap; not a certification result and not yet a ROM defect. |
+| r35 certification | A valid launcher request selects `com.google.android.gms.gmscompliance.ui.UncertifiedDeviceActivity`. | Google's documented certification policy remains server-controlled. | Confirms `UNCERTIFIED-BLOCKED` after package launch is restored. |
 
 ## Classification
 
@@ -76,15 +87,20 @@ For every candidate promoted with a Google add-on test claim:
 
 1. Boot one coherent slot twice with exact ROM and add-on hashes recorded.
 2. Record only build identity, boot state, and Google package versions.
-3. Open Play Store. If Google's blocking activity appears, record its exact
-   headline without any device identifier and label `UNCERTIFIED-BLOCKED`.
-4. Otherwise open `profile > Settings > About`, record the exact Play Protect
+3. Resolve and open the Play Store launcher.
+4. If the launcher is absent or unresolved, label `PACKAGE-LAUNCH-BLOCKED` and
+   record installed/enabled/stopped/suspended state before using Settings -> Apps
+   -> Google Play Store -> Open/Enable once, then relaunch. Do not clear data or
+   remove updates.
+5. If Google's blocking activity appears, record its exact headline without any
+   device identifier and label `UNCERTIFIED-BLOCKED`.
+6. Otherwise open `profile > Settings > About`, record the exact Play Protect
    certification text, and confirm the real storefront is visible.
-5. Install/update one small app and one app larger than 200 MB.
-6. Reboot and repeat storefront entry; sweep GMS fatalities and tombstones.
-7. Label the result `CERTIFIED`, `REGISTERED-DEVICE ACCESS`,
-   `UNCERTIFIED-BLOCKED`, or `NOT TESTED`. Per-device registration must never be
-   reported as ROM certification.
+7. Install/update one small app and one app larger than 200 MB.
+8. Reboot and repeat storefront entry; sweep GMS fatalities and tombstones.
+9. Label the result `PACKAGE-LAUNCH-BLOCKED`, `CERTIFIED`,
+   `REGISTERED-DEVICE ACCESS`, `UNCERTIFIED-BLOCKED`, or `NOT TESTED`.
+   Per-device registration must never be reported as ROM certification.
 
 Package presence, account retention, Play Protect scanning being enabled, or a
 running GMS process is not a pass. MTR-027 remains externally blocked until the

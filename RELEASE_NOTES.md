@@ -1,5 +1,26 @@
 # LineageOS 23 for Nothing Phone (3) (`metroid`)
 
+## 2026-08-17 unofficial hardware-acceptance seed (r35)
+
+- Exact OTA: `lineage-23.0-20260815-UNOFFICIAL-metroid.zip`, SHA-256
+  `d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6`.
+- Immutable snapshot:
+  `releases/candidate_20260815_192053_709386797_candidate/`.
+- Installed through update_engine with `kSuccess (0)` on automatically selected
+  slot B. Snapshot state is `none`, userdata is encrypted, SELinux is Enforcing,
+  and two coherent boots have one system_server and no new crash, tombstone or
+  pstore record.
+- APN migration, QTI/IMS startup, fresh UDFPS enrollment plus four unlocks, NCM
+  local IPv4, and bounded haptic, NFC and camera-preview checks pass.
+- Full physical-SIM/eSIM, remaining UDFPS repetition, camera finalization, USB
+  adjacency, thermal/charging, AudioFX and face-flow acceptance remain open.
+- Play Store package launch and certification are separate. Updated Phonesky
+  initially had a stopped/unresolved launcher state; after package-state
+  normalization it launched crash-free and Google selected the uncertified-device
+  activity. MTR-027 remains `UNCERTIFIED-BLOCKED`; no identity, attestation,
+  Google-package or AVB bypass is included.
+- Tester instructions: `release/XDA_TESTER_20260817_R35.txt`.
+
 ## 2026-08-14 unofficial physical-SIM test candidate (r30)
 
 - Exact OTA: `lineage-23.0-20260814-UNOFFICIAL-metroid.zip`, SHA-256

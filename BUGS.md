@@ -1,10 +1,10 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and coherent live state: 2026-08-14
+Last audited against accepted baseline and coherent live state: 2026-08-17
 
 Accepted build: `23.0-20260808-UNOFFICIAL-metroid` (r21)
 
-Live device: `23.0-20260814-UNOFFICIAL-metroid` (r30), coherent slot A; not accepted
+Live device: `23.0-20260815-UNOFFICIAL-metroid` (r35), coherent slot B; not accepted
 
 Accepted OTA SHA-256:
 `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
@@ -23,8 +23,8 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-001, MTR-002, MTR-005, MTR-011, MTR-015, MTR-016, MTR-018, MTR-019, MTR-024, MTR-029 |
-| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-022, MTR-023 |
+| Active fixes | MTR-001, MTR-002, MTR-005, MTR-011, MTR-015, MTR-016, MTR-024 |
+| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-018, MTR-019, MTR-022, MTR-023, MTR-029 |
 | Evidence incomplete | MTR-020 |
 | External hardware/carrier/policy acceptance | MTR-027, real eSIM profile, OMAPI |
 | Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-021, MTR-026, MTR-028 |
@@ -40,8 +40,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: r34 installed and boot/startup validated; APN checksum-migration fix
-  built but not installed; physical-SIM and carrier acceptance pending
+- Status: r35 APN checksum migration installed and validated; physical-SIM and
+  carrier acceptance pending
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -85,8 +85,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Successor APN migration fix: `packages/providers/TelephonyProvider` commit
   `80ea349` invokes the existing updater when either the build ID or packaged
   APN checksum changes. The updater preserves user/carrier/DPC entries and
-  replaces only unedited rows. Production and test APK builds pass; install and
-  physical-SIM acceptance remain pending.
+  replaces only unedited rows. Production and test APK builds pass.
+- r35 installed result: the retained checksum changed from `2991848244` to
+  `3646330062`; all four carrier-ID 10028 `nrphone`, `nrhotspot`, `ims`, and
+  `xcap` rows materialized and persisted across reboot. This closes the stale
+  database migration defect only; both SIM slots are absent, so carrier data,
+  voice, SMS, and IMS remain blocked.
 - Independent Cox data divergence: Lineage had no MCC 311/MNC 600 profiles while
   stock has seven Cox profiles. The successor adds the exact IMS, FOTA,
   default/MMS/DUN/SUPL profiles; generated APN schema and `product.img` pass.
@@ -145,13 +149,32 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.150609.3.152387.2`, not r30's frozen
   `...1.126608.2.134544.2` generation. They therefore strengthen the external
   functional evidence but cannot accept or reject r30 on its required modem input.
+- New external capture (2026-08-16, r35): a 3/Hallon SE physical SIM
+  (240/02, carrier ID 1691, slot 2/PHONE1) on the installed r35 build shows the
+  `3 SE` (`data.tre.se`, 2935) and `3 SE MMS` (2934) rows materialized and
+  selected with the correct DNN and TrafficDescriptor. Registration flaps between
+  `REG_DENIED_EM` on Telia SE 24001 EDGE/GSM and brief `REG_HOME` LTE 24002
+  windows. Within a HOME/IN_SERVICE LTE 24002 window (B20, PCI 120, CS+PS in
+  service), `SETUP_DATA_CALL` for `data.tre.se` still receives an immediate
+  `OEM_DCFAILCAUSE_4` (`0x1004`, retry=-1, no CID). This is a second, unrelated
+  carrier repeating the identical OEM cause while the device is home-registered
+  with correct APN rows; it removes APN content, carrier-ID fallback, and
+  registration state from the shared first failure and points at the modem/RIL
+  data-path configuration. The OTA does not embed the modem, and no baseband
+  version string is present in these captures, so the frozen
+  `...1.126608.2.134544.2` generation cannot be confirmed from them.
+- Evidence disposition: the checksum-migration and US `10028` APN fixes are
+  validated as installed (rows materialize and persist), but they do not change
+  the 0x1004 response on either carrier. Before any further data-path source
+  edit, run the documented same-device stock control on the matching modem
+  generation and compare stock QMI/MCFG behavior with QXDM/QMI-level capture.
 - Acceptance: present UICC/subscription, calls, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests on the documented modem generation.
 
 ### MTR-002: Android IMS implementation and carrier acceptance
 
 - Severity: critical
-- Status: r30 installed with IMS process/service startup validated; carrier IMS
+- Status: r35 installed with IMS process/service startup validated; carrier IMS
   acceptance pending
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
@@ -232,6 +255,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `nrphone` profiles. It does not prove carrier registration or explain the
   circuit-switched cause 252 and absent non-IMS inbound indication; those remain
   installed fallback-path acceptance results.
+- New external capture (2026-08-16, r35, 3/Hallon SE 24002): QImsService
+  repeatedly reports `ImsServiceSub ... registered = 2` (NOT_REGISTERED) with
+  `restrictCause = 0` for both network modes 0 and 14; `ImsConfigImpl:
+  onSubscriptionsChanged unable to process due to SubscriptionInfo is null`;
+  `LteVopsSupportInfo` shows `mVopsSupport = 2` (VoLTE NOT_SUPPORTED) and
+  `mEmcBearerSupport = 2` on the serving 24002 LTE cell. This matches the
+  tester-reported IMS registration error codes 4001 and 4002 (not present in
+  these three captures; they were observed at other times). The repeated
+  `service not connected. Domain = PS` line also appears while registered, so it
+  is not the first divergence. No IMS PDN is established, consistent with the
+  cell declaring VoPS unsupported and the separate 0x1004 data failure.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 
@@ -483,6 +517,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   compositions, but the proprietary running HAL publishes none. Obtain exact
   stock runtime capabilities and operation output before changing HAL, XML,
   kernel or DTS; packaged assets and registration alone do not define a fix.
+- r35 bounded result: one-shot, prebaked, and primitive shell requests reached
+  the stable HAL and AW8693x kernel path. This proves output plumbing only; it
+  does not establish advertised capability completeness, perceived parity, or a
+  source fix.
 - Fix direction: map framework effects/compositions onto a working vendor path,
   or advertise only real capabilities with explicit fallbacks.
 - Acceptance: every advertised effect, primitive, composition, amplitude level,
@@ -599,8 +637,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-018: UDFPS refresh vote occurs after pointer-down notification
 
 - Severity: high
-- Status: r30 enrollment failure confirmed; two source fixes built, installed
-  acceptance pending
+- Status: source fixes installed on r35; enrollment and four unlocks pass,
+  repetition/cancellation acceptance pending
 - Impact: LHBM authentication can fail if the panel begins at 60 Hz.
 - Evidence: display/UDFPS traces record LHBM requests while the panel is still at
   60 Hz, followed by the 120 Hz vote.
@@ -627,6 +665,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   SystemUI, device overlay, SELinux policy, and vendor image focused builds pass.
   Aggregate SystemUI test targets remain blocked by unrelated pre-existing test
   compile failures; production modules compile.
+- r35 installed result: fresh enrollment completes and four captured fingerprint
+  unlocks succeed with zero fingerprint HAL deaths. The screen credential was
+  subsequently removed, invalidating enrollments as expected. Complete a fresh
+  enrollment, 46 additional screen-on/AOD unlocks, and cancellation/retry before
+  closure.
 - Fix direction: hold the maximum-refresh vote for the overlay lifetime before
   accepting touch; an immediate asynchronous reorder alone may still race.
 - Next-batch scope: install the stock-equivalent policy plus the default-off,
@@ -639,8 +682,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: r30 dual-ownership failure confirmed; source fix built, installed
-  acceptance pending
+- Status: primary r35 NCM local transport passes; adjacent regressions pending
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
 - First divergence: stock-derived vendor init created `ncm.0` while the selected
   QTI gadget HAL links `ncm.gs6`.
@@ -678,6 +720,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `usb0` from Ethernet's `(usb|eth)\d+` matcher while preserving `usb1+` and
   `ethN`. The compiled overlay targets the correct overlayable and retains the
   expected regex. Installed acceptance waits for the next coherent candidate.
+- r35 installed result: NCM is active as gadget function `0x400`; the phone owns
+  `10.205.201.184/24`, the host owns `10.205.201.209/24`, and bidirectional local
+  ping passes. Ethernet's installed matcher is `(?!usb0$)(usb|eth)\\d+`, so it
+  no longer claims `usb0`. Plain charging plus ADB was restored and `usb0` is
+  down. IPv6/upstream, reconnect, HAL restart, MTP and RNDIS remain pending.
 - Additional r28 result: standalone `ncm` again enumerates as `05c6:908c` and
   creates the host CDC interface. The timed autonomous return to ADB exposed a
   host udev/test-harness permission issue; manual gadget reset restored plain ADB
@@ -819,6 +866,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   and success callback in the same screen-state transaction. Current and latest
   NothingOSS DTS are identical and matching driver source is unpublished. Do not
   guess delays, retries, GPIOs, IRQ polarity, I2C address or firmware.
+- r35 bounded result: one disable/enable cycle returned to `mState=on` with the
+  same NFC service PID. Transitional ST21 reads/writes again returned `-107`, so
+  the cycle neither reproduces a user-visible failure nor clears the issue.
 - Fix direction: reproduce against synchronized Lineage/stock transition traces.
 - Acceptance: 100 toggles plus tag, HCE, payment, suspend, and charger-transition
   loops with no user-visible failure or recurring transport error.
@@ -884,6 +934,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - r28 result: GMS and Phonesky are installed, running, network-capable, and
   crash-clean, but launching Phonesky deterministically selects
   `com.google.android.gms.gmscompliance.ui.UncertifiedDeviceActivity` again.
+- r35 split result: updated Phonesky 52.6.26 was installed and enabled but had
+  `stopped=true`, so no launcher resolved. After normal package/component-state
+  normalization, launch was crash-free and Google selected the same uncertified
+  activity. The stopped-state setter remains unknown and is a separate evidence
+  gap, not a certification result or an eligible ROM fix.
 - First local divergence from stock: custom Lineage build/AVB identity, root
   vbmeta flag `1`, and orange/unlocked verified-boot state. The exact Google
   server-side decision and private registration status are not locally observable.
@@ -893,6 +948,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Lawful access path: Google's official custom-ROM registration page may grant
   storefront access to this one device. Record that only as `REGISTERED-DEVICE
   ACCESS`; it does not certify the ROM or imply any Play Integrity verdict.
+- Acceptance: record package launch state first. Use `PACKAGE-LAUNCH-BLOCKED` for
+  an absent/unresolved launcher and `UNCERTIFIED-BLOCKED` only after a valid
+  launch reaches Google's policy activity. Do not clear data or remove updates
+  as part of the initial test.
 
 ### MTR-028: recovery ADB sideload progress does not report install completion
 
@@ -939,7 +998,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-029: QTI Mapper5 debug logging reads freed buffer handles
 
 - Severity: high
-- Status: confirmed on r30; source fix built, installed acceptance pending
+- Status: property fix installed on r35; preview stability passes, finalized
+  ten-cycle acceptance pending
 - Impact: sampled GWP-ASan detection can terminate Aperture while Codec2 submits
   camera video buffers, leaving a native tombstone despite otherwise successful
   FHD/UHD recording.
@@ -956,6 +1016,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Source fix: restore stock `vendor.gralloc.enable_logs=0`; retain the source
   upstreaming opportunity to capture the ID before `Free` or avoid the post-free
   dereference.
+- r35 installed result: the property is `0`; Aperture preview and multi-camera
+  processing ran with stable camera-service PIDs and no Mapper5/GWP-ASan crash or
+  new tombstone. Intent automation did not create a trustworthy finalized still
+  or clip, so this bounded result does not satisfy the ten-cycle acceptance gate.
 - Acceptance: two coherent boots, property `0`, ten ordered FHD30/FHD60/UHD30
   Aperture cycles with rear/front/rear routing and finalized H.264/AAC clips,
   stable camera services, and no new crash, tombstone, AVC, or pstore record.

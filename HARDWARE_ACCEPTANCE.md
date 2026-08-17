@@ -16,7 +16,7 @@ actually been exercised.
 | UNKNOWN | No functional result. Enumeration, a Binder service, or absence of a bug is not a pass. |
 | N/A | The inventory shows that the device does not expose this hardware. |
 
-Rows without a specific r21 result are not accepted-release claims. Live r28
+Rows without a specific r21 result are not accepted-release claims. Live r35
 observations are installed diagnostic evidence only until a complete release gate
 passes.
 
@@ -25,7 +25,7 @@ passes.
 | Name | Build / slot | State |
 |---|---|---|
 | Accepted baseline | r21 `23.0-20260808`, OTA `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`, slot A | Enforcing, encrypted, two boots, empty crash buffer; accepted |
-| Latest live state | coherent r28 `23.0-20260813`, slot B | Enforcing and encrypted across two boots; NCM and bounded init cleanup pass; Play Store storefront blocked as Play Protect uncertified (MTR-027); not accepted |
+| Latest live state | coherent r35 `23.0-20260815`, slot B, OTA `d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6` | Enforcing and encrypted across two boots; APN migration and bounded UDFPS/NCM/NFC/haptic/camera checks pass; Play Store remains uncertified (MTR-027); not accepted |
 
 Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
 and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public
@@ -51,7 +51,7 @@ telephoto and front S5KJN1. Logical SAT exposes 0.6x, 1x and 3x lens points.
 | Operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
 | Camera2 maximum-JPEG capture, exposed IDs 0-4 | UNKNOWN | PARTIAL: coherent-r28 sweep captured fresh valid 12 MP JPEGs from all five IDs; provider PID 1381 stayed stable and the tombstone inventory did not change | Validate image content, focus, exposure and physical-ID mapping. |
-| Aperture preview and ordinary stills | PARTIAL | PARTIAL | Repeat front/rear and every physical lens on installed system APK. |
+| Aperture preview and ordinary stills | PARTIAL | PARTIAL on r35: preview exercised multi-camera processing with stable service PIDs and no Mapper5/GWP-ASan/tombstone; automated capture did not produce a trustworthy finalized still | Repeat front/rear and every physical lens on installed system APK and verify finalized files. |
 | FHD30 video and flip | PARTIAL: temporary APK finalized 1920x1080/30, route `4 -> 1 -> 4` | r30 finalized system-Aperture H.264/AAC 1920x1080/30 with route `4 -> 1 -> 4`, but the camera batch produced MTR-029's sampled mapper UAF tombstone | Repeat ten cycles with the MTR-029 property fix installed. |
 | FHD60 video and flip | PARTIAL: temporary APK finalized 1920x1080/60, route `0 -> 1 -> 0` | r30 finalized system-Aperture H.264/AAC 1920x1080/60 with route `0 -> 1 -> 0`; MTR-029 prevents stability acceptance | Repeat ten cycles with the MTR-029 property fix installed plus thermal/cadence run. |
 | UHD30 video and flip | PARTIAL: temporary APK finalized 3840x2160/30, route `0 -> 1 -> 0` | r30 finalized system-Aperture H.264/AAC 3840x2160 nominal-30 with route `0 -> 1 -> 0`; MTR-029 prevents stability acceptance | Repeat ten cycles with the MTR-029 property fix installed; retain long clip, zoom and thermal rows. |
@@ -80,8 +80,8 @@ telephoto and front S5KJN1. Logical SAT exposes 0.6x, 1x and 3x lens points.
 
 | Hardware / operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
-| RichTap/AW haptic device | PARTIAL: service/config initializes | PARTIAL | Perceived output, calibration and Nothing OS parity. |
-| Standard effects/primitives | FAIL: effects absent, primitive durations zero, `TEXTURE_TICK` silent | FAIL | MTR-011 stock effect/primitive recovery. |
+| RichTap/AW haptic device | PARTIAL: service/config initializes | PARTIAL on r35: one-shot command reached stable HAL and AW8693x driver | Perceived output, calibration and Nothing OS parity. |
+| Standard effects/primitives | FAIL: effects absent, primitive durations zero, `TEXTURE_TICK` silent | PARTIAL on r35: bounded prebaked and primitive commands reached HAL/kernel; capability completeness remains unresolved | MTR-011 stock effect/primitive recovery and perceived-output sweep. |
 | Amplitude/composition | UNKNOWN | UNKNOWN | API and perceived-output sweep. |
 | Power key | PARTIAL: normal use | PARTIAL | Short/long press, emergency gesture and reboot combinations. |
 | Volume up/down | PARTIAL: input nodes exposed | PARTIAL | Media/call/camera/recovery behavior. |
@@ -94,10 +94,10 @@ telephoto and front S5KJN1. Logical SAT exposes 0.6x, 1x and 3x lens points.
 |---|---|---|---|
 | Face enrollment/authentication, English | PASS | UNKNOWN | Re-run enrollment, auth and failure recovery. |
 | Face guidance, non-English | FAIL: MTR-023 blank guidance | PARTIAL/PASS on r30: exact fallback wiring is installed; Spanish, Japanese and Arabic education UI renders without blank title/actions and Arabic mirrors action order; locale restoration passes | Scroll all safety/accessibility guidance, parental consent, and complete real enrollment/authentication. |
-| UDFPS enrollment | UNKNOWN | FAIL on r30: UI/illumination and touch callbacks occur but no progress; SELinux blocks the stock HAL from `/proc/touchpanel/fod_mode` and touch refresh begins at 60 Hz | Install both source fixes; fresh two-stage enrollment plus cancellation/retry. |
-| UDFPS screen-on unlock | UNKNOWN | UNKNOWN | 50 unlocks, geometry, ripple and failed attempts. |
+| UDFPS enrollment | UNKNOWN | PASS on r35: fresh enrollment completed with the policy and refresh-vote fixes installed; zero HAL deaths | Repeat after credential removal and exercise cancellation/retry. |
+| UDFPS screen-on unlock | UNKNOWN | PARTIAL on r35: four captured fingerprint unlocks passed; credential removal later invalidated enrollment as expected | Fresh enrollment and 46 more screen-on/AOD unlocks, geometry, ripple and failed attempts. |
 | UDFPS AOD unlock | UNKNOWN | UNKNOWN | 50 unlocks and proximity/pocket cases. |
-| UDFPS refresh/LHBM ordering | FAIL: MTR-018 race | FAIL on r30: pointer reaches the HAL at 60 Hz before asynchronous 120 Hz vote | Install overlay-lifetime max-refresh vote; require 120 Hz before pointer/LHBM notification. |
+| UDFPS refresh/LHBM ordering | FAIL: MTR-018 race | PARTIAL on r35: overlay-lifetime vote is installed and bounded enrollment/unlock succeeds | Retain ordering trace across the full 50-unlock matrix with Smooth Display off. |
 | UDFPS while charging | UNKNOWN | UNKNOWN | Indication clearance, wired/wireless transitions and unlock. |
 
 ## Sensors
@@ -139,11 +139,11 @@ No pressure/barometer sensor is exposed.
 |---|---|---|---|
 | GNSS live fix and raw measurements | PASS: retained indoor fix/raw evidence | Infrastructure only observed | Cold/warm TTFF, outdoor accuracy, screen-off, airplane mode and restart loops. |
 | QCC assisted location | FAIL: MTR-015 incomplete stack | FAIL | Restore coherent stack or remove clients; compare TTFF. |
-| Physical SIM detection | BLOCKED | PASS on external captures: slot-0 card, USIM/ISIM, subscription load and LTE home registration; no SIM is present in the maintainer target | Repeat on installed r30 with matching modem firmware and explicit build identity; latest capture used mismatched baseband `...1.150609.3.152387.2`. |
-| Removable eUICC active profile | BLOCKED | PARTIAL/FAIL on historical early build: eUICC/EID, subscription, LTE and bidirectional SMS pass; profile refresh/embedded metadata and data fail | Repeat active-profile, management and coexistence tests on installed r30. |
-| Cellular voice/SMS/MMS/data | BUILT, NOT INSTALLED | Offline-verified r31 contains carrier-ID `10028` `nrphone`, IMS, hotspot and XCAP profiles; prior external capture used generic APNs, received modem `0x1004`, lacked inbound SMS, and independently received CS call cause 252 | Install exact r31 SHA-256 `b702dc7b119e8e91180c49fc59c3f8b0bbc4c0c75ecbfe373ac8dd06cf70def3`; confirm `nrphone`, then repeat data, inbound/outbound SMS, MMS and calls on matching modem firmware. |
-| US multi-carrier SIMs | BUILT, NOT INSTALLED | Offline-verified r33 adds current official Lineage US APN drift to the stock-parity carrier profiles and US VoLTE admission; no safe online CarrierConfig/carrier-ID delta remains | Install exact r33 SHA-256 `fb2c2c294a7dc2d76499fdce8018211d5bfbd3f7792fc0094561d0547187833b`, then test AT&T, T-Mobile, Verizon, Dish/Boost and available prepaid/MVNO SIMs independently; untested carriers remain unverified. |
-| VoLTE/VoWiFi/emergency/DSDS | BUILT, NOT INSTALLED | Offline-verified r31 contains the stock-effective AT&T VoLTE policy and APNs; prior external capture left framework IMS unregistered because Lineage exposed VoLTE unavailable | Install exact r31; confirm effective VoLTE availability, IMS PDN/registration, calls, IMS SMS, two SIMs and handover on matching modem firmware. |
+| Physical SIM detection | BLOCKED | PASS on external captures: slot-0 card, USIM/ISIM, subscription load and LTE home registration; both r35 slots are physically absent | Repeat on installed r35 with matching modem firmware and explicit build identity; latest external capture used mismatched baseband `...1.150609.3.152387.2`. |
+| Removable eUICC active profile | BLOCKED | PARTIAL/FAIL on historical early build: eUICC/EID, subscription, LTE and bidirectional SMS pass; profile refresh/embedded metadata and data fail | Repeat active-profile, management and coexistence tests on installed r35. |
+| Cellular voice/SMS/MMS/data | BLOCKED | r35 contains the carrier/APN fixes and migrated all four carrier-ID 10028 rows; prior external capture used generic APNs, received modem `0x1004`, lacked inbound SMS, and received CS call cause 252 | Insert a provisioned SIM; confirm `nrphone`, then repeat data, inbound/outbound SMS, MMS and calls on matching modem firmware. |
+| US multi-carrier SIMs | BLOCKED | r35 includes current official Lineage US APN drift, stock-parity carrier profiles, and US VoLTE admission; both slots are empty | Test AT&T, T-Mobile, Verizon, Dish/Boost and available prepaid/MVNO SIMs independently; untested carriers remain unverified. |
+| VoLTE/VoWiFi/emergency/DSDS | BLOCKED | r35 contains the stock-effective AT&T VoLTE policy and APNs; QTI/IMS startup passes without a subscription | Confirm effective VoLTE availability, IMS PDN/registration, calls, IMS SMS, two SIMs and handover on matching modem firmware. |
 | eSIM UI/QR path | PASS through QR scanner | PARTIAL: external removable eUICC proves active-profile use, not native download; profile refresh fails | Real profile credentials: download, enable, reboot, delete and transfer. |
 | OMAPI/UICC secure element | BLOCKED | BLOCKED | Physical SIM/reader and applet. |
 
@@ -157,7 +157,7 @@ No pressure/barometer sensor is exposed.
 | Hotspot/tethering | UNKNOWN | UNKNOWN | 2.4/5/6 GHz clients, upstream handoff and coexistence. |
 | Wi-Fi Direct | UNKNOWN | UNKNOWN | Discovery, group owner/client, transfer and coexistence. |
 | Bluetooth adapter and profiles | PARTIAL: classic/LE infrastructure starts | PARTIAL: enabled; no accessory | Pairing, reconnect, HID, PAN, BLE scan/advertise/GATT. |
-| NFC adapter and tag polling | PASS: toggle/tag evidence | PARTIAL: adapter on; no tag | MTR-024 100-toggle loop, tag transactions and suspend. |
+| NFC adapter and tag polling | PASS: toggle/tag evidence | PARTIAL on r35: one disable/enable cycle returned to on with stable PID; transitional ST21 `-107` remained; no tag | MTR-024 100-toggle loop, tag transactions and suspend. |
 | NFC HCE/payment/off-host | PARTIAL: HCE capability only | PARTIAL: services enumerate only | External reader/payment, UICC/eSE and charger transitions. |
 | UWB | N/A: no UWB feature/HAL or metroid-specific fitted-device evidence | N/A | Reopen only with authoritative hardware evidence. |
 
@@ -168,7 +168,7 @@ No pressure/barometer sensor is exposed.
 | USB ADB transport | PASS | PASS: 16 MiB push/pull hashes matched | Cable reconnect, host variation, late HAL start and HAL restart. |
 | MTP/PTP | UNKNOWN | UNKNOWN | File transfer, large files, reconnect and locked state. |
 | RNDIS tethering | UNKNOWN | UNKNOWN | IPv4/IPv6 transport and reconnect. |
-| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PARTIAL/FAIL on r30: `05c6:908c`, `cdc_ncm`, DHCP and simultaneous 16 MiB ADB hashes pass, but Ethernet IpClient also claims `usb0` and clears the NCM gateway after assignment | Install the metroid Connectivity RRO excluding `usb0`, then repeat gateway/local transport, upstream, reconnect, HAL restart and adjacent modes. |
+| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PARTIAL/PASS on r35: phone `10.205.201.184/24`, host `10.205.201.209/24`, bidirectional local ping, and Ethernet exclusion of `usb0` pass; plain ADB restoration passes | IPv6/upstream, cable reconnect, HAL restart, MTP and RNDIS regressions. |
 | USB OTG/host | BLOCKED | BLOCKED | Storage, HID and powered accessory required. |
 | USB Ethernet/accessory networking | BLOCKED | BLOCKED | Compatible adapter; DHCP, IPv4/IPv6, suspend and unplug. |
 | DisplayPort/video output | BLOCKED | BLOCKED | Compatible adapter/display required; fitted support is not yet proven. |
@@ -197,7 +197,7 @@ No pressure/barometer sensor is exposed.
 | AVB/signing/payload integrity | PASS offline/runtime boot | PASS offline and boots | Deliberate corruption/rollback behavior is destructive and untested. |
 | Normal-system OTA/GApps preservation | PASS through r21 | PARTIAL: r22 applied, merged, preserved GApps and passed three coherent crash-clean boots | Repeat on the next promotable candidate. |
 | Recovery sideload/rollback | PARTIAL | PARTIAL: successful installs may show near 47% host progress by upstream design; no retained incomplete install | MTR-028 requires recovery final status, automatic target slot, update/merge state, two coherent boots and encrypted-data retention; rejected-slot rollback remains untested. |
-| Short deep suspend | PASS on prior accepted evidence | INCONCLUSIVE: powered ADB 180 s gate recorded `success 0 -> 0`; no kernel failure and no framework wakelock | Repeat unplugged with ADB disconnected and compare suspend/SoC counters. |
+| Short deep suspend | PASS on prior accepted evidence | INCONCLUSIVE on r35: 14m26s USB-powered screen-off no-SIM idle retained boot/system_server and clean crash/tombstone/pstore/fatal/SSR gates, but powered ADB cannot prove deep suspend | Repeat unplugged with ADB disconnected and compare suspend/SoC counters. |
 | Long idle drain | UNKNOWN | UNKNOWN | 8-hour unplugged screen-off test with subsystem wake accounting. |
 | CPUSS residency accounting | FAIL: MTR-020 wrong register | FAIL | Correct from stock evidence and verify across suspend. |
 | Crash/tombstone health | PASS: empty crash buffer, no new tombstone | PASS diagnostic: three coherent-r22 boots produced zero GMS fatalities and no new tombstone; MTR-026 cleared | Repeat on the next promotable installed candidate. |
