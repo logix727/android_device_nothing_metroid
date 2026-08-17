@@ -1,0 +1,33 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-028"
+  ],
+  "affected_test_union": [
+    "two coherent boots with exact artifact, slot, snapshot, encryption, SELinux, crash, tombstone, pstore and boot-critical AVC checks",
+    "vendor.qti.data.factoryservice.IFactory/default and vendor.qti.hardware.dpmaidlservice.IDpmService/default register without VINTF denial and survive service restart",
+    "framework device VoLTE, VT and WFC capability resources resolve true while per-carrier CarrierConfig remains authoritative",
+    "carrier-ID 1691 default, initial-attach, iWLAN MMS, IMS and XCAP rows materialize after packaged APN checksum migration",
+    "physical UICC detection, subscription creation, carrier ID resolution and selected default and IMS profiles",
+    "default-data and IMS PDN setup records the QMI or vendor-RIL result without treating an unchanged OEM_DCFAILCAUSE_4 as fixed",
+    "framework IMS registration, VoLTE call audio, IMS SMS and supplementary-service capabilities on an admitted carrier",
+    "incoming and outgoing non-IMS SMS and circuit-switched call fallback remain independent acceptance rows",
+    "eSIM EID, activation-code download, enable, reboot persistence, disable, delete and physical-SIM coexistence",
+    "airplane-mode, DSDS, suspend-resume and LTE-Wi-Fi transition recovery",
+    "MTR-028 transfer result, automatic target slot, snapshot merge and second boot recorded independently"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "287d393bae66c8231bd50f3f5486b76f0feb1480bba143427f885210c6660b71"
+    }
+  }
+}
