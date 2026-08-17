@@ -5,6 +5,10 @@
         <fqname>ISap/slot2</fqname>
     </hal>
     <hal format="aidl">
+        <name>vendor.qti.data.factoryservice</name>
+        <fqname>IFactory/default</fqname>
+    </hal>
+    <hal format="aidl">
         <name>vendor.qti.hardware.data.connectionaidl</name>
         <fqname>IDataConnection/slot1</fqname>
         <fqname>IDataConnection/slot2</fqname>
@@ -19,6 +23,10 @@
         <version>2</version>
         <fqname>IIWlan/slot1</fqname>
         <fqname>IIWlan/slot2</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.dpmaidlservice</name>
+        <fqname>IDpmService/default</fqname>
     </hal>
     <hal format="aidl">
         <name>vendor.qti.hardware.radio.am</name>
