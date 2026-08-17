@@ -168,6 +168,24 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   the 0x1004 response on either carrier. Before any further data-path source
   edit, run the documented same-device stock control on the matching modem
   generation and compare stock QMI/MCFG behavior with QXDM/QMI-level capture.
+- Cross-capture localization: all 12 Swedish and all retained AT&T
+  `SETUP_DATA_CALL` responses complete in 2-7 ms with `cid=-1` and no interface.
+  The boot-inclusive AT&T capture also proves `SET_INITIAL_ATTACH_APN` is sent
+  and accepted before the same failure. The rejection is local and precedes a
+  network bearer; missing initial attach and network-side APN rejection are not
+  supported explanations.
+- AP-side parity: the running QCRIL/data executables, libraries, database, and
+  data XML inputs match the comparison stock set byte-for-byte except two ELF
+  build-ID notes; the current tuna IPA/rmnet kernel nodes match NothingOSS and
+  no radio/data AVC precedes the failure. Do not edit kernel, IPA, APN, or modem
+  firmware from the opaque OEM code.
+- Independent VINTF defect: stock declares
+  `vendor.qti.data.factoryservice.IFactory/default` and
+  `vendor.qti.hardware.dpmaidlservice.IDpmService/default`. Installed traces
+  show `vendor_cnd` and `vendor_dpmd_vndr` rejected because r35 omits both from
+  its packaged standalone fragment. Restore those exact declarations, but do
+  not claim that integration cleanup explains `0x1004` without a changed QMI
+  trace.
 - Acceptance: present UICC/subscription, calls, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests on the documented modem generation.
 
@@ -204,18 +222,21 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   capture uses the mismatched
   `...1.150609.3.152387.2` baseband and does not independently identify the ROM
   build, so repeat on r30 with its frozen modem generation before source changes.
-- First carrier-policy divergence: after the AT&T subscription resolves, framework
-  logs `available = false` and sets `voLteFeatureOn = false` even though user
-  enablement, TTY, and provisioning are true. Lineage's carrier-ID 1187 config
-  does not set `carrier_volte_available_bool`, whose framework default is false.
-  Nothing's validated stock CarrierConfig overlay enables VoLTE for both AT&T
-  PLMNs used by this SIM (`310280` home and `310410` serving), then disables only
-  VT and WFC in its carrier-ID 1187/10028 policy.
+- First framework-policy divergence: after the AT&T subscription resolves,
+  framework logs `available = false` and sets `voLteFeatureOn = false` even
+  though user enablement, TTY, and provisioning are true. r35's CarrierConfig RRO
+  sets the AT&T carrier gate true, but its exact `framework-res.apk` still has
+  `config_device_volte_available=false`. `ImsManager` requires both gates.
+  Nothing stock's active framework RRO sets device VoLTE, VT, and WFC capability
+  true, while carrier policy remains authoritative for admission.
 - Successor source fix: add a metroid-scoped CarrierConfig RRO reproducing the
   stock-effective AT&T policy: VoLTE available, VT/WFC unavailable, TTY over
   VoLTE disabled, enhanced-4G editing disabled, and stock APN filtering/IMS
   controls. The focused RRO and CarrierConfig test modules compile, and the built
   APK retains the expected raw MCC/MNC values.
+- Device-capability fix: restore stock's three device IMS capability resources in
+  the metroid framework overlay. This makes the existing per-carrier policy
+  effective; it does not broadly enable a carrier that leaves its own gate false.
 - r31 offline result: immutable snapshot
   `releases/candidate_20260814_233610_118108082_candidate/`, OTA SHA-256
   `b702dc7b119e8e91180c49fc59c3f8b0bbc4c0c75ecbfe373ac8dd06cf70def3`,
@@ -250,22 +271,26 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `fb2c2c294a7dc2d76499fdce8018211d5bfbd3f7792fc0094561d0547187833b`,
   passes all offline release gates and supersedes r32. Status remains
   built-not-installed.
-- Fix boundary: this removes Android's deterministic voice-MMTEL disable and,
-  together with `vendor/apn` commit `ed04060`, supplies the stock `ims` and
-  `nrphone` profiles. It does not prove carrier registration or explain the
-  circuit-switched cause 252 and absent non-IMS inbound indication; those remain
-  installed fallback-path acceptance results.
+- Fix boundary: the CarrierConfig RRO alone did not remove Android's deterministic
+  voice-MMTEL disable because r35 retained the false device gate. The framework
+  resource fix makes that carrier policy effective and, together with
+  `vendor/apn` commit `ed04060`, supplies the stock AT&T `ims` and `nrphone`
+  profiles. It does not prove carrier registration or explain circuit-switched
+  cause 252 or the absent non-IMS inbound indication.
 - New external capture (2026-08-16, r35, 3/Hallon SE 24002): QImsService
   repeatedly reports `ImsServiceSub ... registered = 2` (NOT_REGISTERED) with
   `restrictCause = 0` for both network modes 0 and 14; `ImsConfigImpl:
   onSubscriptionsChanged unable to process due to SubscriptionInfo is null`;
-  `LteVopsSupportInfo` shows `mVopsSupport = 2` (VoLTE NOT_SUPPORTED) and
-  `mEmcBearerSupport = 2` on the serving 24002 LTE cell. This matches the
-  tester-reported IMS registration error codes 4001 and 4002 (not present in
-  these three captures; they were observed at other times). The repeated
+  `LteVopsSupportInfo` shows `mVopsSupport = 2` and
+  `mEmcBearerSupport = 2`; AOSP defines value 2 as SUPPORTED, not unsupported.
+  IMS registration errors 4001 and 4002 are present in the supplied telephony
+  capture at LTE-home transitions. The repeated
   `service not connected. Domain = PS` line also appears while registered, so it
-  is not the first divergence. No IMS PDN is established, consistent with the
-  cell declaring VoPS unsupported and the separate 0x1004 data failure.
+  is not the first divergence. r35 has no IMS APN for carrier ID 1691 and no IMS
+  PDN is attempted; stock supplies carrier-ID 1691 `ims` and `xcap` rows. Add
+  stock's exact four-row default/IA, iWLAN-MMS, IMS, and XCAP family. This
+  required configuration fix is independent of the separate default-data
+  `0x1004` failure and does not by itself prove IMS will register.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
 

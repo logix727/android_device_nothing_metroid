@@ -1,0 +1,67 @@
+From 2573baa7e860087e1e775c8cf69939bb727e32cd Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 17 Aug 2026 16:41:09 -0400
+Subject: [PATCH 1/2] apns: add 3 Sweden IMS and XCAP profiles
+
+Nothing stock ships four profiles for 3/Hallon SE (mcc 240 / mnc 02):
+data.tre.se, an ims APN, an xcap APN, and an MMS-over-iWLAN entry. Our
+database shipped no ims-type APN for this carrier at all.
+
+An external physical-SIM capture on installed r35 shows the consequence:
+across the whole radio log there is not one reference to an ims APN and not
+one IMS PDN attempt -- all twelve SETUP_DATA_CALL requests are for
+data.tre.se -- while MMTEL repeatedly reports CODE_REGISTRATION_ERROR with
+vendor codes 4001 and 4002 on each LTE REG_HOME transition. IMS registration
+requires an IMS PDN, which requires an ims-type APN, so it could never
+succeed.
+
+Add the ims and xcap rows with stock's exact apn, protocol, roaming_protocol,
+and user_visible values, following the ed04060 precedent for AT&T 5G SA.
+
+Deliberately not changed: the "ia" type on the existing data.tre.se row.
+Stock sets it, but the initial-attach path was verified working from a
+boot-inclusive capture (SET_INITIAL_ATTACH_APN is sent and accepted), so
+there is no evidence to justify altering an existing row.
+
+This does not address the separate carrier-independent OEM_DCFAILCAUSE_4
+(0x1004) data failure, which remains open.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Change-Id: I65c02baf0ae075246ae6995002cc83bc980b0c18
+---
+ SE.xml | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/SE.xml b/SE.xml
+index 4592524..0459754 100644
+--- a/SE.xml
++++ b/SE.xml
+@@ -560,6 +560,26 @@
+         mmsproxy="mmsproxy.tre.se"
+         type="mms"
+     />
++    <apn
++        mcc="240"
++        mnc="02"
++        carrier="3 IMS"
++        apn="ims"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="ims"
++        user_visible="false"
++    />
++    <apn
++        mcc="240"
++        mnc="02"
++        carrier="3 Ut"
++        apn="services"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="xcap"
++        user_visible="false"
++    />
+     <apn
+         mcc="240"
+         mnc="04"
+-- 
+2.43.0

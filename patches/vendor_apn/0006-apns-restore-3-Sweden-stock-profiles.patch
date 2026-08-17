@@ -1,0 +1,66 @@
+From c88b64d16f3bbc4e98af640fcde33c3b9ab58267 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 17 Aug 2026 18:29:18 -0400
+Subject: [PATCH 2/2] apns: restore 3 Sweden stock profiles
+
+Change-Id: I9db1933b3a04899fcd9d49e53f1750f2c5cd375f
+---
+ SE.xml | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/SE.xml b/SE.xml
+index 0459754..b7a1a6f 100644
+--- a/SE.xml
++++ b/SE.xml
+@@ -546,25 +546,37 @@
+     <apn
+         mcc="240"
+         mnc="02"
+-        carrier="3 SE"
++        carrier="3"
+         apn="data.tre.se"
+-        type="default,supl,mms"
++        carrier_id="1691"
++        mmsc="http://mms.tre.se"
++        mmsport="8799"
++        mmsproxy="mmsproxy.tre.se"
++        network_type_bitmask="1|2|3|4|5|6|7|8|9|10|12|13|14|15|17|20"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="default,ia,supl,mms"
+     />
+     <apn
+         mcc="240"
+         mnc="02"
+-        carrier="3 SE MMS"
+-        apn="data.tre.se"
++        carrier="3 MMS iWLAN"
++        apn="services"
++        carrier_id="1691"
+         mmsc="http://mms.tre.se"
+         mmsport="8799"
+         mmsproxy="mmsproxy.tre.se"
++        network_type_bitmask="18"
++        protocol="IPV4V6"
+         type="mms"
++        user_visible="false"
+     />
+     <apn
+         mcc="240"
+         mnc="02"
+         carrier="3 IMS"
+         apn="ims"
++        carrier_id="1691"
+         protocol="IPV4V6"
+         roaming_protocol="IPV4V6"
+         type="ims"
+@@ -575,6 +587,7 @@
+         mnc="02"
+         carrier="3 Ut"
+         apn="services"
++        carrier_id="1691"
+         protocol="IPV4V6"
+         roaming_protocol="IPV4V6"
+         type="xcap"
+-- 
+2.43.0

@@ -150,12 +150,20 @@ separate acceptance results.
 
 The same capture exposes a second stock-backed divergence after carrier config
 loads: framework reports VoLTE `available=false` and disables voice MMTEL despite
-provisioning and user enablement being true. Nothing stock enables VoLTE for
-AT&T `310280` and `310410`, while Lineage's carrier-ID 1187 file leaves the
-framework default false. `CarrierConfigOverlayMetroid` restores the stock-effective
-AT&T policy without enabling stock-disabled VT or WFC. Its focused module and
-CarrierConfig test builds pass. Install it with `ed04060` in one coherent
-candidate; do not treat CS cause 252 or missing non-IMS inbound SMS as closed.
+provisioning and user enablement being true. `CarrierConfigOverlayMetroid`
+restores the stock-effective AT&T carrier policy, but the exact r35
+`framework-res.apk` still resolves `config_device_volte_available=false`.
+Nothing stock sets the device VoLTE, VT, and WFC capability resources true and
+then applies carrier policy. Restore those device resources so the existing
+carrier RRO can take effect. Do not treat CS cause 252 or missing non-IMS inbound
+SMS as closed.
+
+The 3/Hallon capture also exposes a carrier-specific IMS defect: r35 has no
+carrier-ID 1691 IMS or XCAP APN and makes no IMS-PDN attempt, while stock ships
+both. `vendor/apn` commit `2573baa` adds those rows; its follow-up binds them to
+carrier ID 1691 and restores stock's specific default/IA and iWLAN-MMS rows. AOSP
+value `LteVopsSupportInfo=2` means supported, and IMS errors
+4001/4002 are present in the supplied capture; prior contrary notes are corrected.
 
 The tested configuration has three independently verified inputs:
 
@@ -218,9 +226,10 @@ guesses.
   but both data paths receive modem `0x1004`. The successor restores stock
   `QtiTelephony`, `QtiTelephonyService`, `qcrilmsgtunnel`, `QtiTelephonyCompat`,
   stock-equivalent SELinux domains, and seven missing Cox 311/600 APNs. Focused
-  package, policy, APN-schema, image, and VINTF checks pass. Install and exercise
-  present-UICC, subscription, data, SMS, calls, and IMS on the documented modem
-  generation.
+  package, policy, APN-schema, image, and VINTF checks pass. The next source state
+  additionally restores stock's framework IMS capability gates, Swedish
+  carrier-ID 1691 IMS/XCAP rows, and two stock AIDL declarations requested by
+  CND/DPM. None is claimed to resolve the separate pre-network `0x1004` response.
 - MTR-003: the external removable-eUICC capture proves active-profile LTE/SMS but
   fails profile refresh and embedded metadata. Use a private activation code to
   test native download, enable/disable, reboot, deletion, transfer, and physical-
@@ -273,31 +282,30 @@ guesses.
 
 ## Next execution order
 
-1. Test installed r35 on the frozen `...1.126608.2.134544.2` modem generation
-   with explicit ROM
-   identity. Confirm specific carrier ID `10028`, `nrphone` initial attach/default,
-   `ims`, `nrhotspot`, and XCAP selection before capturing the first data-call
-   response. Confirm effective VoLTE availability and voice/SMS MMTEL capability,
-   then separately test inbound SMS, IMS registration, and calls.
-   The 2026-08-16 3/Hallon SE capture shows `0x1004` repeating while the device is
-   home-registered on LTE 24002 with the correct `data.tre.se` rows on r35.
-   Because `0x1004` now persists on a second, unrelated carrier with the APN
-   fixes in place, treat those fixes as validated-but-insufficient: before another
-   data-path source edit, run the same-device stock control on the matching modem
-   generation and compare stock QMI/MCFG behavior with QXDM/QMI-level capture.
-2. Complete r35 UDFPS repetitions, camera finalization, and USB adjacent-mode
+1. Focused-build and stage the stock-backed framework capability, Swedish IMS APN,
+   and CND/DPM VINTF corrections. Keep them separate from the unresolved data
+   cause in status and validation.
+2. Localize `0x1004` before another data-path edit. Use an exact r35/modem/MCFG
+   identity, one boot-inclusive vendor-RIL-verbose attempt, then a same-device
+   stock control and QMI/QXDM comparison if the local reason remains opaque.
+   Determine whether QMI WDS Start Network Interface is emitted and retain its
+   extended result. Do not change kernel, IPA, modem, MCFG, or APNs speculatively.
+3. On the eventual coherent candidate, confirm effective device and carrier IMS
+   gates, carrier-ID APNs, default and IMS PDNs, inbound/outbound SMS, calls, data,
+   DSDS, airplane mode, and suspend on the documented modem generation.
+4. Complete r35 UDFPS repetitions, camera finalization, and USB adjacent-mode
    regressions, then complete MTR-023 and perceptible AudioFX acceptance.
-3. Preserve MTR-026 as a cleared recurring crash gate. For MTR-027, first record
+5. Preserve MTR-026 as a cleared recurring crash gate. For MTR-027, first record
    whether Phonesky is stopped and launcher-resolvable; r35 required package-state
    normalization before a crash-free launch reached Google's uncertified-device
    activity. Keep certification externally blocked. Test official per-device
    registration only as storefront access, never as ROM certification.
-4. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
+6. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
    already-planned recovery sideload; record recovery's result independently.
-5. Complete installed-system Aperture acceptance from the canonical hardware matrix.
-6. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
+7. Complete installed-system Aperture acceptance from the canonical hardware matrix.
+8. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.
-7. Execute remaining WP2-WP5 work in dependency order, using stock/kernel/upstream
+9. Execute remaining WP2-WP5 work in dependency order, using stock/kernel/upstream
    evidence first.
 
 ## Release gate
