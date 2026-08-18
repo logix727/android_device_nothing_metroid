@@ -179,6 +179,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   build-ID notes; the current tuna IPA/rmnet kernel nodes match NothingOSS and
   no radio/data AVC precedes the failure. Do not edit kernel, IPA, APN, or modem
   firmware from the opaque OEM code.
+- New external capture (2026-08-17): the conventional USIM/ISIM reaches READY,
+  LTE HOME registration, carrier IDs 1187/10028, the corrected `nrphone` initial
+  attach and default profile, and successful initial-attach acknowledgement.
+  `SETUP_DATA_CALL` then returns `OEM_DCFAILCAUSE_4` in 15 ms with no CID or
+  interface. The private capture SHA-256 is
+  `73b40140bf800e71c5e8a5326613b0fd5d525197fd4efb8c50e37dc6c5f5fc6a`.
+  It reports modem `...1.114407.2.116758.2`, not the frozen
+  `...1.126608.2.134544.2`, has no independently verifiable ROM identity, and
+  contains no WDS Start Network Interface result or extended QMI reason. It
+  confirms the existing localization but is not candidate acceptance and does
+  not make another source edit eligible.
 - Independent VINTF defect: stock declares
   `vendor.qti.data.factoryservice.IFactory/default` and
   `vendor.qti.hardware.dpmaidlservice.IDpmService/default`. Installed traces

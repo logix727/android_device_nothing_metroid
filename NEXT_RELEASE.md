@@ -80,8 +80,8 @@ device, ten airplane-mode cycles retain all radio-side process PIDs with no cras
 and two coherent boots pass. It is the current XDA tester candidate; physical-SIM
 and real eSIM acceptance remain required. See `release/20260818-r38-installed.md`
 and `release/XDA_TESTER_20260818_R38.txt`.
-Immutable snapshot: `releases/candidate_20260817_193603_796382843_candidate/`;
-OTA SHA-256 `ca8390590270e325650057eac21d480d82c5453e2f96e57415ee0c7503cfb647`.
+Immutable snapshot: `releases/candidate_20260817_224207_031130541_candidate/`;
+OTA SHA-256 `c517bbb9a375e45a2dbec4ba9e4914436589d3aeaad157d5f347dfd7695b7afe`.
 The install-clean build, source/companion provenance, all 16 payload-image
 equivalence, signing/AVB, partition, VINTF, init, and duplicate audits pass.
 
@@ -337,7 +337,10 @@ guesses.
    identity, one boot-inclusive vendor-RIL-verbose attempt, then a same-device
    stock control and QMI/QXDM comparison if the local reason remains opaque.
    Determine whether QMI WDS Start Network Interface is emitted and retain its
-   extended result. Do not change kernel, IPA, modem, MCFG, or APNs speculatively.
+   extended result. The 2026-08-17 AT&T capture cannot substitute for this: it
+   uses modem `...1.114407.2.116758.2`, lacks a verifiable ROM identity, and stops
+   at the same framework-visible `0x1004`. Do not change kernel, IPA, modem, MCFG,
+   or APNs speculatively.
 3. On the eventual coherent candidate, confirm effective device and carrier IMS
    gates, carrier-ID APNs, default and IMS PDNs, inbound/outbound SMS, calls, data,
    DSDS, airplane mode, and suspend on the documented modem generation.
