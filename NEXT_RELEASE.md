@@ -37,13 +37,18 @@ signature. This is a bounded idle-stability result, not unplugged deep suspend
 or drain acceptance. The installed result is summarized in
 `release/20260817-r35-installed.md`.
 
-r36 is `OFFLINE-VERIFIED` in
+r36 is installed coherently on slot A in
 `release/20260817-r36-candidate.json`. It contains the stock-backed framework IMS
 capability gates, complete 3 Sweden carrier-ID 1691 APN family, and CND/DPM AIDL
 manifest plus framework-matrix contracts. It does not claim to resolve the
 separate pre-network `0x1004` data failure. Do not install it on the no-SIM
 maintainer device merely to prove service registration; physical carrier
-acceptance and the vendor-RIL/QMI comparison remain required.
+acceptance and the vendor-RIL/QMI comparison remain required. Two boots pass with
+encrypted userdata, Enforcing SELinux, successful/bootable slot metadata, empty
+snapshot state, no new crash/tombstone/pstore record, persistent GApps bases,
+both restored CND/DPM services registered, all three IMS capability resources
+true, and all four carrier-ID 1691 APNs materialized. See
+`release/20260817-r36-installed.md`.
 Immutable snapshot: `releases/candidate_20260817_193603_796382843_candidate/`;
 OTA SHA-256 `ca8390590270e325650057eac21d480d82c5453e2f96e57415ee0c7503cfb647`.
 The install-clean build, source/companion provenance, all 16 payload-image
