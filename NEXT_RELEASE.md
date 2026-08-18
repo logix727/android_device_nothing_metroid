@@ -2,14 +2,15 @@
 
 ## r39 current-source candidate
 
-r39 is `BUILT-NOT-INSTALLED` in
+r39 is installed coherently on slot B from
 `releases/candidate_20260818_112412_146945461_candidate/`; OTA SHA-256
 `4bc472155f9ab9052086d5c55d14fed40b3ad0d1692cad85df88ef939e43fb7a`.
 It integrates current official APNs, preserves metroid carrier rows, and passes
-the manifest-derived focused preflight plus full offline audit. It is not a new
-baseline. One normal A/B OTA install requires explicit approval, followed by the
-invariant suite and physical-SIM/eSIM data, IMS, calls, and SMS acceptance on the
-required `...1.126608.2.134544.2` modem generation.
+the manifest-derived focused preflight, full offline audit, update_engine
+`kSuccess`, snapshot merge, two coherent boots, invariant gates, and no-SIM radio
+recovery. It is not a new baseline: the maintainer device reports
+`ABSENT,ABSENT`. Physical-SIM/eSIM data, IMS, calls, and SMS acceptance on the
+required `...1.126608.2.134544.2` modem generation remains the promotion gate.
 
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
 Canonical accepted baseline: [`BASELINE.md`](BASELINE.md).
