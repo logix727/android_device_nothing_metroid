@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-003"
+  ],
+  "validation_parent": {
+    "artifact_sha256": "c517bbb9a375e45a2dbec4ba9e4914436589d3aeaad157d5f347dfd7695b7afe",
+    "installed_record": "lineage/device/nothing/metroid/release/20260818-r38-installed.md",
+    "installed_record_revision": "4da3d9276c8e662922063aed1f835dbf192c68b9",
+    "installed_record_sha256": "ccd9625f1efbf7b167fece2260b5e4c78b97d4bbfec34aea90506006afb9b292",
+    "manifest": "releases/candidate_20260817_224207_031130541_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "07203c77f30596584ffa527c439abd36361829f3adbea9fffba75cd394df622b",
+    "source_device_revision": "43630b8f9f7e83c292d212e3f673cdd1ac1b12b5",
+    "workspace_revision": "fc15f99d091903676b0728d05b3565a18f71bd3a"
+  },
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "radio-esim-secure-element",
+    "storage-security-update"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-001": [
+      "matching-modem physical SIM registration, default data PDN, IPv4/IPv6, DNS, MMS and hotspot",
+      "retain the first QMI/WDS extended failure result if data setup does not create an interface"
+    ],
+    "MTR-002": [
+      "IMS PDN and MMTEL registration, inbound/outbound calls and SMS, VoLTE and available VoWiFi"
+    ],
+    "MTR-003": [
+      "eSIM UI and EID/profile refresh plus provisioned active-profile registration, data, calls and SMS"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "287d393bae66c8231bd50f3f5486b76f0feb1480bba143427f885210c6660b71"
+    }
+  }
+}
