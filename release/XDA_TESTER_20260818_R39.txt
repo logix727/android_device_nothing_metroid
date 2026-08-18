@@ -1,0 +1,60 @@
+Nothing Phone (3) metroid LineageOS 23 UNOFFICIAL r39 SIM/eSIM acceptance
+
+OTA:
+lineage-23.0-20260818-UNOFFICIAL-metroid.zip
+Size: 4095648439 bytes
+SHA-256: 4bc472155f9ab9052086d5c55d14fed40b3ad0d1692cad85df88ef939e43fb7a
+
+Required modem generation on both slots:
+MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2
+
+Stop before testing if the OTA hash, installed incremental (`1787065398`), or
+either baseband differs. The ROM OTA does not contain modem firmware. Do not mix
+firmware generations or substitute another ROM build.
+
+TEST SCOPE
+
+This is radio/eSIM acceptance only. Do not repeat full audio, camera, UDFPS, USB,
+or unrelated hardware matrices. Short speaker/camera/display checks are invariant
+smoke only.
+
+1. Record carrier, physical SIM versus native/removable eSIM, slot, MCC/MNC, and
+   whether installation was an update or clean install. Redact ICCID, IMSI, EID,
+   IMEI, phone number, activation code, accounts, Wi-Fi details, and location.
+2. Confirm card/profile readiness, subscription creation, carrier ID and specific
+   carrier ID, LTE/5G registration, and selected default/IA, IMS, MMS, hotspot,
+   and XCAP APNs.
+3. Test IPv4/IPv6 mobile data, DNS, MMS, hotspot, inbound/outbound SMS, and
+   inbound/outbound calls. Record the exact first failing operation and time.
+4. Confirm IMS PDN, MMTEL registration, VoLTE, available VoWiFi, IMS SMS, and
+   call audio. Do not infer success from service registration alone.
+5. Toggle airplane mode once, reboot once, and repeat mobile data plus one call
+   and SMS. With two subscriptions, test default-data switching and DSDS.
+6. For eSIM, test profile discovery/download, enable, one reboot, disable, and
+   physical-SIM coexistence. Do not delete a production profile merely for this
+   test.
+
+EXPECTED CURRENT BEHAVIOR
+
+- Device VoLTE, VT, and Wi-Fi Calling capability resources resolve true.
+- AT&T carrier ID 10028 selects `nrphone`/`nrhotspot` plus IMS and XCAP.
+- 3 Sweden carrier ID 1691 selects default/IA, iWLAN MMS, IMS, and XCAP.
+- eUICC controllers, Google LPA, OMAPI readers, IMS radio, CND, and DPM register.
+
+IF MOBILE DATA FAILS WITH OEM_DCFAILCAUSE_4 (0x1004)
+
+Do not change APNs, kernel, IPA, MCFG, modem, or framework resources. Keep the
+failed attempt timestamp and privately provide a boot-inclusive radio/vendor log
+plus the QMI WDS Start Network Interface result and extended reason when your
+diagnostic tooling can capture it. A framework-only log ending at `0x1004` is not
+enough to select another source fix.
+
+REPORTING
+
+Include the exact OTA SHA-256, incremental, both baseband strings, install path,
+SIM/eSIM type, carrier, first failed operation, timestamp, selected APNs, and a
+sanitized result table. Keep raw logs private; prior captures exposed subscriber
+identifiers.
+
+This is an unofficial test build, not official LineageOS and not carrier or
+Google certified. Do not rely on it for emergency service.
