@@ -57,6 +57,11 @@ deterministically crashes `com.qti.phone` because the stock QTI APK resolves
 byte-identical to stock and the matched interface jar supplies the exact ABI.
 Carry only that jar and boot-classpath entry in the next R3 candidate; keep it
 isolated from unrelated boot-chain work and require ten installed radio cycles.
+r37 is frozen around only MTR-030 in
+`release/20260817-r37-candidate.json`; installed r36 and its sealed OTA remain the
+rollback. Focused system staging has one exact stock jar, one generated
+boot-classpath entry, one defining class jar, matching QTI APK hash, and successful
+hidden-API/dexpreopt/system-image generation.
 Immutable snapshot: `releases/candidate_20260817_193603_796382843_candidate/`;
 OTA SHA-256 `ca8390590270e325650057eac21d480d82c5453e2f96e57415ee0c7503cfb647`.
 The install-clean build, source/companion provenance, all 16 payload-image
