@@ -47,6 +47,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
     nt-telephony-interface
 
+PRODUCT_PACKAGES += \
+    nt-telephony-interface
+
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \

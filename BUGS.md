@@ -953,7 +953,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-030: QTI phone crashes on radio state change
 
 - Severity: high radio reliability gate
-- Status: confirmed on installed r36; source fix pending validation
+- Status: confirmed on installed r36 and r37; corrected source packaging pending
+  validation
 - Reproduction: one airplane-mode enable/disable cycle on coherent r36 produces
   a `com.qti.phone` fatality in
   `QcrilOemhookMsgTunnel.broadcastRrcStateChange()` with
@@ -964,12 +965,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   matched stock jar defines the exact Binder Stub ABI referenced by the installed
   APK; the APK and common-jar hashes match stock byte-for-byte.
 - Source fix: extract only the generation-matched interface jar into the private
-  vendor project and add it to `PRODUCT_BOOT_JARS`. Do not patch the presigned QTI
-  APK, invent an incomplete Binder stub, or import the broad Nothing framework.
+  vendor project and add it to both `PRODUCT_BOOT_JARS` and `PRODUCT_PACKAGES`.
+  r37 proved the boot-jar declaration alone generates `bootclasspath.pb` entries
+  but does not retain the jar in the install-clean product or OTA target-files;
+  its first airplane cycle reproduced the exact crash. Do not patch the presigned
+  QTI APK, invent an incomplete Binder stub, or import the broad Nothing framework.
 - Risk: R3 because this changes zygote's boot classpath. Require duplicate-class,
   hidden-API, dexpreopt, fresh staged-image, AVB/payload, two-boot, and rollback
   gates before installed testing.
-- Acceptance: ten airplane-mode cycles with stable QTI process recovery, no new
+- Acceptance: first require the exact jar in audited target-files and installed
+  `/system/framework`, then ten airplane-mode cycles with stable QTI process recovery, no new
   crash/tombstone/pstore/AVC, and physical-SIM/eSIM radio recovery when available.
 
 ### MTR-027: Google Play Protect uncertified-device policy
