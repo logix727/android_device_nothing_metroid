@@ -1,0 +1,41 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-003"
+  ],
+  "validation_parent": {
+    "artifact_sha256": "4bc472155f9ab9052086d5c55d14fed40b3ad0d1692cad85df88ef939e43fb7a",
+    "installed_record": "lineage/device/nothing/metroid/release/20260818-r39-installed.md",
+    "installed_record_revision": "abffb54454e5b5d45496914ed228f9381e720455",
+    "installed_record_sha256": "4be8830f53ba626c0bc1cf006751749e154d47c0edc12f25e14e721f9d8c2860",
+    "manifest": "releases/candidate_20260818_112412_146945461_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "37730bba6768c25ffe82a90fd580caa14e8a0ea776c326ae2ff534e079eb5341",
+    "source_device_revision": "7a7c0570dca3443900d618bc71171da3fcf8077a",
+    "workspace_revision": "e5df41320deaa53cb43572edb5b8395131cb7801"
+  },
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "radio-esim-secure-element"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-003": [
+      "removable eUICC in physical slot 1 reports removable embedded metadata and a valid EID without exposing identifiers",
+      "profile refresh, download, enable, reboot persistence, disable and physical-SIM coexistence",
+      "active profile registration, mobile data, calls and SMS"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "287d393bae66c8231bd50f3f5486b76f0feb1480bba143427f885210c6660b71"
+    }
+  }
+}
