@@ -7,11 +7,12 @@
   ],
   "validation_parent": {
     "artifact_sha256": "REPLACE_WITH_INSTALLED_PARENT_OTA_SHA256",
-    "device_revision": "REPLACE_WITH_PARENT_DEVICE_TREE_COMMIT",
     "installed_record": "lineage/device/nothing/metroid/release/REPLACE_WITH_PARENT-installed.md",
+    "installed_record_revision": "REPLACE_WITH_INSTALLED_RECORD_COMMIT",
     "installed_record_sha256": "REPLACE_WITH_INSTALLED_RECORD_SHA256",
     "manifest": "releases/REPLACE_WITH_PARENT_SNAPSHOT/source/repo-manifest.xml",
     "manifest_sha256": "REPLACE_WITH_PARENT_MANIFEST_SHA256",
+    "source_device_revision": "REPLACE_WITH_BUILT_PARENT_DEVICE_TREE_COMMIT",
     "workspace_revision": "REPLACE_WITH_PARENT_WORKSPACE_COMMIT"
   },
   "classified_test_suites": [
