@@ -950,6 +950,28 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: repeat the two-boot crash-hygiene gate on every promotable
   successor candidate.
 
+### MTR-030: QTI phone crashes on radio state change
+
+- Severity: high radio reliability gate
+- Status: confirmed on installed r36; source fix pending validation
+- Reproduction: one airplane-mode enable/disable cycle on coherent r36 produces
+  a `com.qti.phone` fatality in
+  `QcrilOemhookMsgTunnel.broadcastRrcStateChange()` with
+  `NoClassDefFoundError: com.nothing.telephony.INothingTelephony$Stub`.
+- First deterministic divergence: r36 packages stock-matched QtiTelephony and
+  `nt-telephony-common.jar` but omits stock's
+  `/system/framework/nt-telephony-interface.jar` and boot-classpath entry. The
+  matched stock jar defines the exact Binder Stub ABI referenced by the installed
+  APK; the APK and common-jar hashes match stock byte-for-byte.
+- Source fix: extract only the generation-matched interface jar into the private
+  vendor project and add it to `PRODUCT_BOOT_JARS`. Do not patch the presigned QTI
+  APK, invent an incomplete Binder stub, or import the broad Nothing framework.
+- Risk: R3 because this changes zygote's boot classpath. Require duplicate-class,
+  hidden-API, dexpreopt, fresh staged-image, AVB/payload, two-boot, and rollback
+  gates before installed testing.
+- Acceptance: ten airplane-mode cycles with stable QTI process recovery, no new
+  crash/tombstone/pstore/AVC, and physical-SIM/eSIM radio recovery when available.
+
 ### MTR-027: Google Play Protect uncertified-device policy
 
 - Severity: external distribution/policy gate

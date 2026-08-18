@@ -49,6 +49,14 @@ snapshot state, no new crash/tombstone/pstore record, persistent GApps bases,
 both restored CND/DPM services registered, all three IMS capability resources
 true, and all four carrier-ID 1691 APNs materialized. See
 `release/20260817-r36-installed.md`.
+
+Installed acceptance reopened the source queue as MTR-030. Airplane mode
+deterministically crashes `com.qti.phone` because the stock QTI APK resolves
+`com.nothing.telephony.INothingTelephony$Stub` from stock's omitted
+`nt-telephony-interface.jar` boot jar. The matched QTI APK/common jar are
+byte-identical to stock and the matched interface jar supplies the exact ABI.
+Carry only that jar and boot-classpath entry in the next R3 candidate; keep it
+isolated from unrelated boot-chain work and require ten installed radio cycles.
 Immutable snapshot: `releases/candidate_20260817_193603_796382843_candidate/`;
 OTA SHA-256 `ca8390590270e325650057eac21d480d82c5453e2f96e57415ee0c7503cfb647`.
 The install-clean build, source/companion provenance, all 16 payload-image

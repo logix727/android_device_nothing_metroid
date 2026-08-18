@@ -43,6 +43,10 @@ PRODUCT_PACKAGES += \
     update_engine_sideload \
     update_verifier
 
+# Stock QTI telephony resolves Nothing's Binder interface from the boot classpath.
+PRODUCT_BOOT_JARS += \
+    nt-telephony-interface
+
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
     POSTINSTALL_PATH_system=system/bin/otapreopt_script \
