@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-030"
+  ],
+  "affected_test_union": [
+    "two coherent boots with exact artifact, slot, snapshot, encryption, SELinux, crash, tombstone, pstore and boot-critical AVC checks",
+    "the exact generation-matched nt-telephony-interface jar exists in target-files, installed-files, system image and installed /system/framework",
+    "the generated boot classpath names nt-telephony-interface and ART starts without hidden-API, dexpreopt, duplicate-class or zygote failure",
+    "QtiTelephony remains byte-identical to the validated stock input and resolves INothingTelephony Stub from the boot classpath",
+    "ten airplane-mode enable and disable cycles preserve com.qti.phone, QCRIL, IMS, CND, DPM and LPA process and service recovery",
+    "physical-SIM or active-eSIM registration, data, IMS, calls and SMS recover after airplane mode when carrier hardware becomes available",
+    "device IMS capability resources, CND and DPM services, carrier-ID 1691 APNs, eSIM controllers, LPA and OMAPI readers retain r36 behavior",
+    "GMS and Phonesky base packages and retained updates remain coherent and crash-clean",
+    "MTR-028 transfer result, automatic target slot, snapshot merge and second boot are recorded independently"
+  ],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2",
+      "sha256": "287d393bae66c8231bd50f3f5486b76f0feb1480bba143427f885210c6660b71"
+    }
+  }
+}
