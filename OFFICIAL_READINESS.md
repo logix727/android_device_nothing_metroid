@@ -29,7 +29,7 @@ official build eligibility.
   frozen modem generation.
 - Complete camera/video, UDFPS, audio, Bluetooth, Wi-Fi hotspot, USB/MTP,
   mandatory sensor, NFC/payment, suspend, and thermal/charging acceptance.
-- Complete native eSIM profile management, OMAPI, and accessory rows when
+- Complete removable-eUICC profile management, OMAPI, and accessory rows when
   credentials or hardware are available; historical removable-eUICC active-profile
   LTE/SMS is only partial evidence.
 
