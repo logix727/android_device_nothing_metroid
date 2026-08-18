@@ -1,0 +1,34 @@
+Nothing Phone (3) metroid LineageOS 23 UNOFFICIAL r38
+
+OTA SHA-256:
+c517bbb9a375e45a2dbec4ba9e4914436589d3aeaad157d5f347dfd7695b7afe
+
+This candidate is installed on the maintainer device and passes two boots plus
+ten airplane-mode cycles. It fixes a deterministic QTI phone crash caused by a
+missing stock Nothing telephony boot interface. It also includes the previously
+installed IMS device gates, AT&T carrier policy/APNs, complete 3 Sweden
+carrier-ID 1691 APNs, and CND/DPM VINTF contracts.
+
+Do not report "SIM works" from signal bars or service registration alone.
+Please record:
+
+1. Exact ROM version and baseband version.
+2. SIM type, carrier, MCC/MNC, slot, and whether carrier/specific carrier IDs
+   resolve. Redact subscriber identifiers before sharing.
+3. After boot and after one airplane-mode cycle: selected default and IMS APNs,
+   LTE/NR registration, mobile-data result, and whether an interface/CID appears.
+4. One outbound and inbound SMS, one outbound and inbound call, IMS registration,
+   and call audio both directions.
+5. For eSIM: EID visibility, QR/activation-code download, enable, reboot
+   persistence, disable, delete, and physical-SIM coexistence. Never share the
+   activation code or EID publicly.
+6. Capture `adb logcat -b all -v threadtime` from before the reproduction through
+   30 seconds after it. Keep raw logs private because they contain identifiers.
+
+The older claim that missing AT&T CarrierConfig causes `0x1004` is obsolete.
+Later r35 evidence proves carrier config applied, carrier IDs 1187/10028 resolved,
+and stock-aligned `nxtgenphone` was selected before the same immediate failure;
+3 Sweden independently reproduced it. The remaining data issue needs the exact
+vendor-RIL/QMI result, not another APK swap or mixed vendor/modem experiment.
+
+UNOFFICIAL XDA test build. Not official LineageOS and not certified.

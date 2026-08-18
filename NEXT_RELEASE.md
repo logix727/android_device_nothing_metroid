@@ -74,6 +74,12 @@ r38 is frozen in `release/20260818-r38-candidate.json` after adding the module t
 product packaging. Focused full-product staging now contains the exact stock jar
 in `installed-files.txt` and `system.img` while retaining the generated boot class
 path entries. r37 remains rejected and must not be reused.
+
+r38 is installed and no-SIM accepted for MTR-030. The exact jar persists on the
+device, ten airplane-mode cycles retain all radio-side process PIDs with no crash,
+and two coherent boots pass. It is the current XDA tester candidate; physical-SIM
+and real eSIM acceptance remain required. See `release/20260818-r38-installed.md`
+and `release/XDA_TESTER_20260818_R38.txt`.
 Immutable snapshot: `releases/candidate_20260817_193603_796382843_candidate/`;
 OTA SHA-256 `ca8390590270e325650057eac21d480d82c5453e2f96e57415ee0c7503cfb647`.
 The install-clean build, source/companion provenance, all 16 payload-image

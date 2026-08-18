@@ -953,8 +953,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-030: QTI phone crashes on radio state change
 
 - Severity: high radio reliability gate
-- Status: confirmed on installed r36 and r37; corrected source packaging pending
-  validation
+- Status: fixed and no-SIM accepted on installed r38; recurring carrier recovery
+  gate
 - Reproduction: one airplane-mode enable/disable cycle on coherent r36 produces
   a `com.qti.phone` fatality in
   `QcrilOemhookMsgTunnel.broadcastRrcStateChange()` with
@@ -976,6 +976,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: first require the exact jar in audited target-files and installed
   `/system/framework`, then ten airplane-mode cycles with stable QTI process recovery, no new
   crash/tombstone/pstore/AVC, and physical-SIM/eSIM radio recovery when available.
+- r38 result: the exact stock jar exists in sealed target-files and installed
+  `/system/framework`. Ten airplane-mode cycles retain the same QTI, QCRIL, IMS,
+  CND, and DPM PIDs with an empty crash buffer. Two coherent boots pass recurring
+  invariants. Physical-SIM/eSIM carrier recovery remains untested.
 
 ### MTR-027: Google Play Protect uncertified-device policy
 
