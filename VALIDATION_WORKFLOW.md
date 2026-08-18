@@ -114,11 +114,14 @@ or other proprietary hardware behavior.
 6. Any source, patch-series, signing-input, or companion-input change after T4
    invalidates the candidate and its audit.
 
-The committed candidate record is JSON with `schema_version: 2`,
+New committed candidate records use `schema_version: 3`,
 `record_type: "frozen-candidate"`, `status: "frozen"`, a non-empty `issues`
-array of `MTR-XXX` IDs, a non-empty `affected_test_union`, and `companion_inputs`
-entries for `gapps` (`file`, `sha256`) and `modem` (`build`, `sha256`). The build
-wrapper rejects missing, uncommitted, dirty, or malformed records. Companion
+array of `MTR-XXX` IDs, an immutable `validation_parent`, the planner-derived
+`classified_test_suites`, per-issue functional acceptance, separately labeled
+optional scheduled acceptance, and `companion_inputs` entries for `gapps`
+(`file`, `sha256`) and `modem` (`build`, `sha256`). Historical records remain
+unchanged evidence. The build wrapper rejects missing, uncommitted, dirty, or
+malformed records and any suite mismatch. Companion
 paths are local/private inputs: the record stores only identity and SHA-256.
 The signing-key selection file is also tracked and sealed by hash; private key
 material remains local and is represented only by its pinned public key or
@@ -180,6 +183,21 @@ scheduled compatibility-baseline milestones, after a broad upstream/platform
 rebase, for an R3 change with broad blast radius, or after an unexplained
 invariant failure. Routine releases use invariant smoke plus change-affected
 rows and preserve prior acceptance for demonstrably unaffected operations.
+
+The maintained change-impact planner derives those affected matrices from the
+sealed installed parent's Repo manifest and the proposed target manifest. Future
+candidate records use stable `classified_test_suites`; handwritten test prose,
+mutable `current`/`latest` links, and unrelated scheduled acceptance cannot widen
+or narrow the derived union. Audio, camera, Bluetooth, USB, and other full
+matrices run only when their source vector changed, their issue is included, or
+the planner marks a broad compatibility baseline. The invariant speaker and rear
+camera operations remain short smoke checks, not full subsystem matrices.
+
+Run the planner-selected focused targets and static gates once with
+`tools/maintenance/run_validation_plan.py`. Its manifest-bound receipt is a
+required candidate input. The candidate wrapper verifies and seals that receipt,
+then performs one `installclean` build; it does not repeat focused module builds
+after cleaning output.
 
 Google add-on package/process survival, storefront access, Play Protect
 certification, and Play Integrity are separate results. Follow MTR-027 and never

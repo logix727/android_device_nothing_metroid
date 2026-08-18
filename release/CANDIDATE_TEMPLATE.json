@@ -1,14 +1,29 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "record_type": "frozen-candidate",
   "status": "frozen",
   "issues": [
     "MTR-XXX"
   ],
-  "affected_test_union": [
-    "two coherent boots with exact artifact, slot, snapshot, encryption, SELinux, crash, tombstone, pstore and boot-critical AVC checks",
-    "replace with the real affected operation and adjacent regression matrix"
+  "validation_parent": {
+    "artifact_sha256": "REPLACE_WITH_INSTALLED_PARENT_OTA_SHA256",
+    "device_revision": "REPLACE_WITH_PARENT_DEVICE_TREE_COMMIT",
+    "installed_record": "lineage/device/nothing/metroid/release/REPLACE_WITH_PARENT-installed.md",
+    "installed_record_sha256": "REPLACE_WITH_INSTALLED_RECORD_SHA256",
+    "manifest": "releases/REPLACE_WITH_PARENT_SNAPSHOT/source/repo-manifest.xml",
+    "manifest_sha256": "REPLACE_WITH_PARENT_MANIFEST_SHA256",
+    "workspace_revision": "REPLACE_WITH_PARENT_WORKSPACE_COMMIT"
+  },
+  "classified_test_suites": [
+    "replace-with-plan-validation-output"
   ],
+  "full_compatibility": false,
+  "issue_acceptance": {
+    "MTR-XXX": [
+      "replace with the real affected operation and adjacent regression"
+    ]
+  },
+  "scheduled_acceptance": [],
   "companion_inputs": {
     "gapps": {
       "file": "MindTheGapps-16.0.0-arm64-YYYYMMDD_HHMMSS.zip",
