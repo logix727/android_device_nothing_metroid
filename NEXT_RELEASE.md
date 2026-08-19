@@ -383,6 +383,13 @@ guesses.
    vendor tree. Install it only in the combined radio candidate and require a
    real active-SIM comparison of `0x1004`, QMI/WDS progression, interface/CID,
    IMS, calls and SMS.
+4. The official `2608141733` stock update is newer than the prior frozen June
+   companion. Its validated modem is
+   `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5`; core QCRIL/data/IMS
+   remains unchanged, while QtiTelephony, `nt-telephony-common.jar`, and
+   `libril-qc-radioconfig.so` receive coherent radio-control updates. r42 is
+   superseded before upload. Freeze the successor against the complete 260814
+   firmware set, not a mixed modem-only configuration.
 3. On the eventual coherent candidate, confirm effective device and carrier IMS
    gates, carrier-ID APNs, default and IMS PDNs, inbound/outbound SMS, calls, data,
    DSDS, airplane mode, and suspend on the documented modem generation.

@@ -200,6 +200,15 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   requires a system package. Restore the exact hash/signature/path as the next
   controlled physical-data candidate; do not claim it fixes `0x1004` until an
   active SIM shows the data call advances.
+- Newer official stock control (2026-08-20): Nothing Archive's official
+  `Metroid_B4.1-260814-1733` incremental was reconstructed from the exact
+  `2606241457` base; all 41 outputs match its published SHA-256 manifest. Core
+  QCRIL/data/IMS binaries, DB, data-status APK, Google/QTI LPA, DSP and
+  `multiimgqti` remain byte-identical. Nothing changes modem generation to
+  `MPSS...1.152387.2.170946.5`, QtiTelephony's UICC-switch failure handling,
+  `nt-telephony-common.jar`, and ABI-compatible `libril-qc-radioconfig.so`.
+  Supersede r42 before distribution and test the current radio trio only with the
+  coherent 260814 firmware generation; do not mix a modem-only image.
 - Independent VINTF defect: stock declares
   `vendor.qti.data.factoryservice.IFactory/default` and
   `vendor.qti.hardware.dpmaidlservice.IDpmService/default`. Installed traces
