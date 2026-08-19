@@ -32,3 +32,34 @@ SHA-256 `9a745b155b0062e12b0150d694271d347964ff6dd1f48f49581b0617f83c18e3`,
 all 41 extracted partition images match the published hash list, and NothingOSS
 `sm8735/b/mr` is pinned at
 `b2381b5e146c4e50dd5871d3254c83e2af227614`.
+
+## Current radio comparison: B4.1 260814
+
+The official incremental from `Metroid_B4.1-260624-1457` to
+`Metroid_B4.1-260814-1733` was downloaded from Nothing's Google OTA endpoint:
+
+- URL: `https://android.googleapis.com/packages/ota-api/package/2a52b639be641edff7fb07fac5d645503acd14bc.zip`
+- OTA SHA-256:
+  `3c537697c6d086045fb1d285f69579416f591d9df45dfc8e91f00a435bfa37a0`
+- Nothing Archive commit: `278ba197ca20792ead72adc57e0268c4724928b4`
+- Published partition-manifest SHA-256:
+  `100416e302bd4aafb7a5c08821a79b544b2f53a36d4df87f687be8597cfdad27`
+- Reconstruction: the archive `ota_extractor` applied the incremental to the
+  exact verified 260624 41-partition base; all 41 outputs pass the published
+  manifest.
+- Modem build:
+  `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5`
+- Modem filesystem image SHA-256:
+  `561be74df3f8c943706b04ff4fa5247ad90a71abc88d6ebf35302844c4d17270`
+- Zero-padded 367001600-byte modem partition SHA-256:
+  `35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3`
+
+Core QCRIL/data/IMS binaries, database, Google/QTI LPA, data-status APK, DSP and
+`multiimgqti` are unchanged. The current stock radio control set changes
+QtiTelephony (`67935f1accf409ad96490ac67492b76c4b8a4ccd16f9cd6dadae20f920ddf92d`),
+`nt-telephony-common.jar`
+(`b760c04d504157593c87ca36cb847d3f04ca9e7f8f9246f43f4a6281909bec87`),
+and ABI-compatible `libril-qc-radioconfig.so`
+(`0bb964f7ac65a02939862c301ce4c64b2c5f121fb6c485cbb5ef84d99fe03572`).
+These inputs are promoted atomically; the successor candidate requires the full
+260814 firmware generation rather than a modem-only mix.
