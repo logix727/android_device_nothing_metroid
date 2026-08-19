@@ -291,9 +291,11 @@ guesses.
   carrier-ID 1691 IMS/XCAP rows, and two stock AIDL declarations requested by
   CND/DPM. None is claimed to resolve the separate pre-network `0x1004` response.
 - MTR-003: the external removable-eUICC capture proves active-profile LTE/SMS but
-  fails profile refresh and embedded metadata. Use a private activation code to
-  test native download, enable/disable, reboot, deletion, transfer, and physical-
-  SIM coexistence. Never retain EID/credentials.
+  fails profile refresh and embedded metadata. Nothing officially confirms Phone
+  (3) eSIM support. Test built-in eUICC discovery first, then use the public AOSP
+  TS.48 input in `release/TEST_ESIM_INFO.md` to distinguish LPA/eUICC transport
+  from the expected retail-certificate gate. A carrier profile remains required
+  for registration, data, IMS, calls, and SMS. Never retain EID/private credentials.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 

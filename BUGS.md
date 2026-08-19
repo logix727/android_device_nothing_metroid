@@ -355,6 +355,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   stack, `EuiccManager.isEnabled()` is true across two boots and Google SIM
   Manager reaches the native **Set up an eSIM** chooser and QR scanner without a
   platform telephony compatibility patch.
+- Hardware confirmation: Nothing's official Phone (3) support article states
+  that Phone (3) supports eSIM. The built-in slot-1 framework declaration is
+  therefore retained; absence of a dedicated kernel eSIM node is not evidence
+  against the modem/UIM-managed eUICC path.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
