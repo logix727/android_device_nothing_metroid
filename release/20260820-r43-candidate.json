@@ -1,0 +1,52 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-003"
+  ],
+  "validation_parent": {
+    "artifact_sha256": "dbe1a2058d0c81b7bf1145a5edb2878d3cdb20bf0d48eeb909cdfbb2ad12dde1",
+    "installed_record": "lineage/device/nothing/metroid/release/20260819-r41-installed.md",
+    "installed_record_revision": "4073eaaebe9513b2717b1b270e40d64ddc0e3804",
+    "installed_record_sha256": "30c7676ef9fefe0a5a59c16346566646ba732b1295c22d19c2726061e3584469",
+    "manifest": "releases/candidate_20260819_095810_817946883_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "8dda48b19b4c657cce4e7cb1b1bb87c11d5487a8c8e915eeafdb0f8cbd04e417",
+    "source_device_revision": "35d91565fb30586d125e8b419c4b9a0c606a37a2",
+    "workspace_revision": "e5df41320deaa53cb43572edb5b8395131cb7801"
+  },
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "radio-esim-secure-element",
+    "storage-security-update"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-001": [
+      "stock datastatusnotification starts as a product system package and publishes data-enabled, roaming and APN state to QCRIL",
+      "active physical SIM registers and default data creates a CID/interface without OEM_DCFAILCAUSE_4",
+      "IPv4/IPv6, DNS, MMS and hotspot pass or retain the first QMI/WDS extended failure"
+    ],
+    "MTR-002": [
+      "IMS PDN and MMTEL register and inbound/outbound calls and SMS pass on an active physical SIM"
+    ],
+    "MTR-003": [
+      "empty physical slot 1 automatically switches to QTI eSIM mode after boot",
+      "RadioConfig publishes card-present ATR/EID and Google LPA reaches carrier SM-DP+",
+      "real carrier profile download, registration, data, calls and SMS pass before publication"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
