@@ -62,7 +62,7 @@ matrix before editing.
 | T2 Reversible | Standalone probe or same-signature APK/runtime trial with proven cleanup. | No partition write. |
 | T3 Staged image | Regenerate required packaging and inspect target staging, VINTF, init, ELF, SELinux, and image membership. | No phone write. |
 | T4 Candidate | Freeze source and companion files, run the candidate wrapper with their paths, then payload/AVB/signing/provenance audits. | One full build. |
-| T5 Installed | Obtain approval, install the exact audited OTA, boot twice, run invariant smoke plus affected matrices. | One planned install. |
+| T5 Installed | Under standing authorization, install the exact audited OTA, boot twice, run invariant smoke plus affected matrices. | One planned install. |
 
 Passing T2 reduces uncertainty but does not close a shipped fix. The final code
 must still be present in the T5 artifact.
@@ -138,8 +138,9 @@ behavior, or release acceptance.
   reserves a second write to restore a coherent state.
 - A third device write ends the train. Reassess the evidence and freeze a new
   plan instead of continuing flash-driven debugging.
-- Modem/firmware, erasure, format-data, rollback, and bootloader operations remain
-  separate approval-required events.
+- Modem/firmware, erasure, format-data, rollback, and bootloader operations are
+  covered by standing owner authorization. Keep them separate, checkpointed,
+  explicitly targeted events.
 
 Prefer normal-system `update_engine`. Recovery installation must keep ROM, GApps,
 and modem as separate recorded inputs and follow the documented new-slot GApps
@@ -209,7 +210,9 @@ convert a blocked policy result into a ROM pass.
 - Stop before T4 if a focused or staged gate fails or the worktree is not frozen.
 - Stop before T5 if artifact identity, payload equivalence, AVB/signing, or source
   provenance is uncertain.
-- Ask before every OTA, flash, slot, firmware, erasure, or format operation.
+- Do not ask again for OTA, flash, slot, firmware, erasure, wipe, or format
+  operations. Standing owner authorization applies; verify the target and stop on
+  unexpected safety, boot, encryption, identity, or unplanned-data conditions.
 - On an installed failure, capture the first failure immediately. Do not fold in
   another fix until the candidate disposition and affected issues are recorded.
 - Quarantine only a reproduced flaky test with an owner, issue, expiry, and

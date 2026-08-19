@@ -53,7 +53,7 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 6. Implement the smallest maintainable fix in the owning subsystem.
 7. Run focused compile/static tests.
 8. Prefer reversible APK/runtime tests before OTA cycles when possible.
-9. Build one install-clean OTA, audit it, request approval, install, and test two
+9. Build one install-clean OTA, audit it, install under standing authorization, and test two
    boots plus the full affected regression matrix.
 10. Update tests, `NEXT_RELEASE.md`, and eventually `BASELINE.md`.
 
@@ -144,20 +144,21 @@ Before a boot-critical change joins a candidate:
   project status and create a verified checkpoint containing intended tracked and
   untracked work. Never use checkout/restore/reset/clean to manufacture a clean
   tree.
-- Keep public forks current with focused reviewed commits and source tags. Pushes,
-  releases, repository-policy changes, and XDA posts require explicit approval;
-  published history is not rewritten.
+- Keep public forks current with focused reviewed commits and source tags. The
+  standing owner authorization covers pushes, releases, and repository-policy
+  changes; published history is not rewritten. XDA posting remains owner-only.
 
 ## Device and root testing
 
 - Confirm serial, installed build hash, slot, boot state, encryption, SELinux,
   battery/thermal state, and available restore path before testing.
-- Read-only `adb root` diagnostics may run under an approved test plan. Root does
-  not authorize remounts, file pushes, property/settings changes, package or
-  service mutation, partition access, reboot, slot change, sideload, or flash.
-- Obtain exact approval before any device mutation. Capture pre/post state, stop
-  on unexpected heat, reboot, crash, slot, AVB, encryption, or data behavior, and
-  keep raw rooted logs private.
+- Standing owner authorization covers rooted diagnostics and mutation, remounts,
+  file pushes, property/settings changes, package/service/profile operations,
+  partition access, reboot, slot change, sideload, flash, firmware, and intentional
+  wipe/format. Do not ask again. Capture pre/post state and keep raw logs private.
+- Stop on unexpected target identity, heat/hardware danger, unplanned data loss,
+  crash/slot/AVB/encryption/boot behavior, or loss of the verified recovery path.
+  Intentional flashing and wiping are not stop conditions.
 - Workers may analyze existing evidence only. The maintainer performs approved
   device commands and validates the resulting evidence personally.
 
@@ -171,12 +172,13 @@ Before sideloading, distributing a candidate, or making a functional claim:
 4. Init-service, VINTF, vendor-image, payload-equivalence, AVB, signing, partition,
    and artifact checks are inspected, not merely executed.
 5. Exact ZIP SHA-256 and source revisions are recorded.
-6. User approves the exact sideload/flash and target device.
+6. Verify the exact sideload/flash and target device under standing authorization.
 7. Target boot, second boot, Enforcing, encryption, crash sweep, and affected
    hardware acceptance pass.
 8. Release notes distinguish verified, unverified, and broken behavior.
-9. Any publication is separately approved, labeled `UNOFFICIAL` testing, and
-   excludes proprietary source, private inputs, credentials, and raw logs.
+9. Non-XDA publication uses standing authorization, is labeled `UNOFFICIAL`
+   testing, and excludes proprietary source, private inputs, credentials, and raw
+   logs. Only the owner publishes to XDA.
 
 ## Current priorities
 
