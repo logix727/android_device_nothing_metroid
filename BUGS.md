@@ -190,6 +190,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   contains no WDS Start Network Interface result or extended QMI reason. It
   confirms the existing localization but is not candidate acceptance and does
   not make another source edit eligible.
+- Stock AP-to-modem producer divergence (2026-08-20): B4.1 physically ships
+  persistent `datastatusnotification.apk` under `/product/app`; r41 retained its
+  QCRIL/QcRilHook consumers and package allowlists but omitted the producer.
+  Stock's boot service sends data-enabled (`0x80028`), roaming (`0x80029`) and
+  enabled/preferred APN+type (`0x8002a`) state into byte-identical QCRIL data
+  libraries before setup. A `/data/app` probe proves signer/shared-QTI-UID and
+  library compatibility but correctly does not launch because the allowlist
+  requires a system package. Restore the exact hash/signature/path as the next
+  controlled physical-data candidate; do not claim it fixes `0x1004` until an
+  active SIM shows the data call advances.
 - Independent VINTF defect: stock declares
   `vendor.qti.data.factoryservice.IFactory/default` and
   `vendor.qti.hardware.dpmaidlservice.IDpmService/default`. Installed traces

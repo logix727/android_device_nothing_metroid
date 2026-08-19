@@ -376,6 +376,13 @@ guesses.
    uses modem `...1.114407.2.116758.2`, lacks a verifiable ROM identity, and stops
    at the same framework-visible `0x1004`. Do not change kernel, IPA, modem, MCFG,
    or APNs speculatively.
+3. One controlled stock-parity data probe is now eligible:
+   `datastatusnotification.apk` was the missing stock system producer for QCRIL
+   data-enabled/roaming/APN OEM hooks while all consumers and allowlists were
+   retained. The exact B4.1 APK is restored at `/product/app` in the private
+   vendor tree. Install it only in the combined radio candidate and require a
+   real active-SIM comparison of `0x1004`, QMI/WDS progression, interface/CID,
+   IMS, calls and SMS.
 3. On the eventual coherent candidate, confirm effective device and carrier IMS
    gates, carrier-ID APNs, default and IMS PDNs, inbound/outbound SMS, calls, data,
    DSDS, airplane mode, and suspend on the documented modem generation.

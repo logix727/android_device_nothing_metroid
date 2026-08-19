@@ -122,6 +122,7 @@ system_ext/priv-app/qcrilmsgtunnel/qcrilmsgtunnel.apk;PRESIGNED
 # eSIM
 product/priv-app/EuiccGoogle/EuiccGoogle.apk;PRESIGNED
 product/app/uimlpaservice/uimlpaservice.apk
+product/app/datastatusnotification/datastatusnotification.apk;PRESIGNED
 product/lib64/libjni_aidl_service.so
 system_ext/etc/permissions/vendor.qti.hardware.c2pa-V1-java.xml
 system_ext/etc/permissions/vendor.qti.ims.rcsservice.xml
