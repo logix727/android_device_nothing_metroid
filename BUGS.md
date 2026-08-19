@@ -308,16 +308,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-003: stock-backed eSIM provisioning
 
 - Severity: high
-- Status: r39 installs the stock LPA path; removable-slot classification fix is
-  source-complete and focused-built but not installed; real profile acceptance
-  remains hardware/credential blocked
+- Status: installed on r17; provisioning UI accepted through QR scanner, real
+  profile download/activation pending
 - Impact: applications were presented an eUICC hardware feature for which no
   LPA/EuiccService or eUICC binder backend existed, so discovery, download,
   activation, deletion, and settings could not work.
 - Evidence (base): `EuiccManager` was disabled, no `EuiccService` package was
   installed, and no eUICC binder service was present.
-- Source: `proprietary-files.txt:123-124`, `device.mk:91-108`, and the removed
-  `overlay/frameworks/base/core/res/res/values/arrays.xml`
+- Source: `proprietary-files.txt:6`
 - Cause: `android.hardware.telephony.euicc` was advertised without a legally
   distributable LPA/EuiccService and its served declarations.
 - Interim resolution (r4-r16): stop advertising eUICC until a complete stock
@@ -361,25 +359,6 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
   profile refresh fails and framework subscription metadata says non-embedded.
-- New hardware/source result (2026-08-18): public Nothing specifications and the
-  NothingOSS kernel/DTS do not establish a soldered eUICC. No eSIM-specific
-  kernel driver or DT node exists; profile operations traverse Google/QTI LPA,
-  QCRIL UIM/LPA and the modem. The only functionally proven eUICC is removable
-  hardware inserted in physical slot 1.
-- First deterministic divergence: metroid's local framework overlay declared
-  physical slot 1 in `non_removable_euicc_slots`, but no retained stock dump
-  contains that overlay. AOSP uses the array to force `UiccSlot.isRemovable()`
-  false, prefer built-in-default behavior, and populate profile removability.
-  That directly contradicts the proven removable slot-1 hardware and can explain
-  the historical non-removable metadata. Remove the unsupported overlay; retain
-  the stock-derived Google partner mapping that routes eSIM operations to slot 1.
-- Focused validation: `framework-res` and `FrameworksTelephonyTests` build. The
-  staged `framework-res.apk` resolves `non_removable_euicc_slots` to an empty
-  array. Google and QTI's exact stock APKs both intentionally declare
-  `EuiccService` priority 100; retained runtime evidence selects Google's service,
-  so no package-priority change is eligible. Stock `EuiccResource` and
-  `uimlpatest` entries are orphaned declarations and neither APK exists in the
-  stock product image.
 - Acceptance remaining: real activation-code download, profile enable/disable,
   reboot persistence, deletion, transfer, and physical-SIM coexistence. Never
   print or publish the device EID or activation credentials.

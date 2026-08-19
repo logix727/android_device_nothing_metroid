@@ -291,12 +291,9 @@ guesses.
   carrier-ID 1691 IMS/XCAP rows, and two stock AIDL declarations requested by
   CND/DPM. None is claimed to resolve the separate pre-network `0x1004` response.
 - MTR-003: the external removable-eUICC capture proves active-profile LTE/SMS but
-  fails profile refresh and reports incorrect removability metadata. Public
-  Nothing specifications and NothingOSS kernel/DTS do not establish built-in
-  eUICC hardware. Remove the unsupported slot-1 non-removable overlay, then use a
-  private removable-eUICC activation code to test download, enable/disable,
-  reboot, deletion, transfer, and physical-SIM coexistence. Never retain
-  EID/credentials.
+  fails profile refresh and embedded metadata. Use a private activation code to
+  test native download, enable/disable, reboot, deletion, transfer, and physical-
+  SIM coexistence. Never retain EID/credentials.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 

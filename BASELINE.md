@@ -75,7 +75,7 @@ external policy result (MTR-027).
   ISO manager/HAL initialization and no Bluetooth AVC/crash.
 - Launch API and boot-image SPL metadata are corrected.
 - GNSS property and MediaCodec media-quality lookup defects remain fixed.
-- eSIM framework: `EuiccManager` is enabled across two boots; Google SIM Manager
+- eSIM: native `EuiccManager` is enabled across two boots; Google SIM Manager
   reaches **Set up an eSIM**, transfer chooser, and QR scanner using the standard
   framework path with no telephony compatibility carry.
 - Matching A16 modem firmware fixed the prior generic EID failure caused by mixed
@@ -85,8 +85,6 @@ external policy result (MTR-027).
 
 - Real eSIM activation-code download, enable/disable, reboot persistence, deletion,
   transfer, and physical-SIM coexistence.
-- Built-in eUICC hardware is not established by public specifications, stock
-  dumps, or NothingOSS kernel/DTS. The proven path is a removable eUICC in slot 1.
 - Physical SIM calls, SMS/MMS, data, IMS features, emergency UI, DSDS, and OMAPI.
 - Controlled thermal severity/cooling/display behavior after the retained 48-49 C
   unplugged-use event.
