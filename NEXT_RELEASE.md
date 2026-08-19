@@ -299,6 +299,11 @@ guesses.
   only that legacy ID through configured built-in slot 1 and repeat the same
   public profile operation. A carrier profile remains required for registration,
   data, IMS, calls, and SMS. Never retain EID/private credentials.
+- r41 installed on slot A and proves the legacy routing fix (`slotId=1`), but
+  native discovery still fails below framework: RadioConfig reports card absent,
+  `isEuicc=false`, and no EID. Google LPA returns `0x20009`; QTI-only service is
+  not a viable replacement. Do not upload another build until a profile installs
+  and registers. Run a complete same-device stock B4.1 control next.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 

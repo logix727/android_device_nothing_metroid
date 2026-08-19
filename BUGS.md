@@ -367,6 +367,18 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   transport does not publish a card ID while upstream maps unsupported IDs to an
   invalid slot. Restore only the property-gated fallback to built-in slot 1;
   retain Google LPA selection and all stock-matching QCRIL/modem inputs.
+- r41 installed result: routing advances from slot `-1` to slot `1`, but Google
+  LPA still reports `euiccSlotPresent=false`, no EID, and `0x20009`; no profile is
+  installed. A reversible stock partner mapping probe does not alter this result.
+  Google LPA rejects `mIsEuicc=false` before its slot-switch logic, so partner
+  resources cannot repair absent RadioConfig eUICC identity. Test the stock QTI
+  EuiccService directly before selecting another source change.
+- QTI-service control: making stock QTI LPA the sole EuiccService does not expose
+  a profile path and returns a null default-list result that crashes the framework
+  callback. Google service selection is restored. The remaining first divergence
+  is below framework: RadioConfig reports slot 1 active but card absent,
+  `isEuicc=false`, and no EID. No r41/r42 artifact is eligible for upload until a
+  profile registers.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
