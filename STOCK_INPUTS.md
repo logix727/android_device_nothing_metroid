@@ -63,3 +63,12 @@ and ABI-compatible `libril-qc-radioconfig.so`
 (`0bb964f7ac65a02939862c301ce4c64b2c5f121fb6c485cbb5ef84d99fe03572`).
 These inputs are promoted atomically; the successor candidate requires the full
 260814 firmware generation rather than a modem-only mix.
+
+Firmware installation boundary: update both slots for `abl`, `aop`,
+`aop_config`, `bluetooth`, `cpucp`, `cpucp_dtb`, `devcfg`, `dsp`,
+`featenabler`, `hyp`, `imagefv`, `keymaster`, `modem`, `multiimgoem`,
+`multiimgqti`, `qupfw`, `shrm`, `soccp_dcd`, `soccp_debug`, `tz`, `uefi`,
+`uefisecapp`, `xbl`, `xbl_config`, and `xbl_ramdump`. Do not flash stock
+`pvmfw`: it is ROM-owned and source-built with the candidate pKVM stack. Android
+logical partitions, boot/vendor_boot/init_boot/recovery/dtbo, AVB partitions and
+userdata likewise remain candidate-owned.
