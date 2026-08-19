@@ -21,6 +21,9 @@ recovery patch raises minui's input
 device capacity so the PMIC power and volume-down keys are registered after
 the phone's squeeze-sensor input nodes. The Soong patch restores the platform
 security-patch property in the boot/init_boot ramdisk build properties.
+The telephony patch provides a device-property-gated fallback from a legacy
+unsupported eUICC card ID to the configured physical slot; standard card-ID
+devices retain upstream behavior.
 
 The series includes every required framework, app, HAL, build, and recovery
 patch. A candidate must not rely on an unlisted local commit. Do not apply it to

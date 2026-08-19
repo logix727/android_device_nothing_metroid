@@ -359,6 +359,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   that Phone (3) supports eSIM. The built-in slot-1 framework declaration is
   therefore retained; absence of a dedicated kernel eSIM node is not evidence
   against the modem/UIM-managed eUICC path.
+- Reproduced native download (2026-08-19): Google's public TS.48 activation code
+  reaches metadata retrieval, then `EuiccConnector` supplies the unsupported
+  default card ID as physical slot `-1`. Google LPA cannot resolve a preferred
+  eUICC and returns `0x20009` before contacting the SM-DP+ or testing certificates.
+  This is the first deterministic source divergence: the measured legacy QCRIL
+  transport does not publish a card ID while upstream maps unsupported IDs to an
+  invalid slot. Restore only the property-gated fallback to built-in slot 1;
+  retain Google LPA selection and all stock-matching QCRIL/modem inputs.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC

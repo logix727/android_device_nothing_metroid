@@ -294,8 +294,11 @@ guesses.
   fails profile refresh and embedded metadata. Nothing officially confirms Phone
   (3) eSIM support. Test built-in eUICC discovery first, then use the public AOSP
   TS.48 input in `release/TEST_ESIM_INFO.md` to distinguish LPA/eUICC transport
-  from the expected retail-certificate gate. A carrier profile remains required
-  for registration, data, IMS, calls, and SMS. Never retain EID/private credentials.
+  from the expected retail-certificate gate. The installed result stops earlier:
+  unsupported card ID becomes slot `-1` and Google LPA returns `0x20009`. Route
+  only that legacy ID through configured built-in slot 1 and repeat the same
+  public profile operation. A carrier profile remains required for registration,
+  data, IMS, calls, and SMS. Never retain EID/private credentials.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 
