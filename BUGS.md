@@ -209,6 +209,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `nt-telephony-common.jar`, and ABI-compatible `libril-qc-radioconfig.so`.
   Supersede r42 before distribution and test the current radio trio only with the
   coherent 260814 firmware generation; do not mix a modem-only image.
+- r43 first-boot result: Android 16 refuses SystemServer readiness because stock's
+  shared-UID permission grant does not directly allowlist `datastatusnotification`
+  for `READ_PRECISE_PHONE_STATE` and `WRITE_APN_SETTINGS`. Add those exact two
+  product privapp grants; no other permission or service change is eligible. r43
+  is rejected before merge/upload.
 - Independent VINTF defect: stock declares
   `vendor.qti.data.factoryservice.IFactory/default` and
   `vendor.qti.hardware.dpmaidlservice.IDpmService/default`. Installed traces
