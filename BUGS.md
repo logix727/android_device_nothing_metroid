@@ -379,6 +379,20 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   is below framework: RadioConfig reports slot 1 active but card absent,
   `isEuicc=false`, and no EID. No r41/r42 artifact is eligible for upload until a
   profile registers.
+- Definitive clean-stock control (2026-08-19): verified Nothing OS B4.1 was
+  flashed from the immutable stock image set with clean userdata. It is fully
+  provisioned, uses the same modem and QTI/Google LPA service set, and also
+  reports no EID, no eUICC card, no embedded profile, and `Euicc enabled=false`
+  with both slots empty. Therefore native empty-slot enumeration is stock
+  behavior on this unit, not a Lineage source divergence.
+- Framework control: Android Mock Modem on restored r41 publishes a synthetic
+  eUICC ATR/EID and the focused CTS assertion passes; the real modem service is
+  restored with no crash/pstore. Framework eUICC parsing is healthy. Revert the
+  r41 legacy slot fallback from future source: it changes only the error route
+  and cannot make a secure element or profile materialize.
+- Real management acceptance now requires removable eUICC hardware. Use the
+  upstream userdebug `removable_esim_switch` and an SGP.26 test eUICC over OMAPI;
+  software mock modem cannot emulate GSMA secure-profile transactions.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC

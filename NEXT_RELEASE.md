@@ -304,6 +304,12 @@ guesses.
   `isEuicc=false`, and no EID. Google LPA returns `0x20009`; QTI-only service is
   not a viable replacement. Do not upload another build until a profile installs
   and registers. Run a complete same-device stock B4.1 control next.
+- Clean stock B4.1 now proves identical empty-slot behavior: no EID/eUICC/profile
+  when both slots are absent. Mock Modem proves r41 framework accepts synthetic
+  eUICC ATR/EID. Revert the legacy slot carry/property from future builds and
+  stop patching framework for native empty-slot state. The next MTR-003 gate is a
+  removable SGP.26 test eUICC over OMAPI; do not upload until a real profile
+  installs and registers.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 
