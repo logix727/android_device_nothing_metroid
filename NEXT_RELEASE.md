@@ -310,6 +310,13 @@ guesses.
   stop patching framework for native empty-slot state. The next MTR-003 gate is a
   removable SGP.26 test eUICC over OMAPI; do not upload until a real profile
   installs and registers.
+- Root cause found after stock/QTI decompilation: slot 1 is a pSIM/eSIM hardware
+  mux and QTI boots it in pSIM mode. The metroid partner app now requests stock
+  QTI eSIM type 1 only when slot 1 is absent. Reversible testing proves reboot
+  activation, card-present ATR/EID, `EID_READY`, and Google SM-DP+ HTTP 200. The
+  public test profile then reaches the retail eUICC and fails only its expected
+  test-certificate check. Include this source fix in the next coherent radio
+  candidate; use a real carrier profile for final registration acceptance.
 - Preserve the exact A16 modem firmware on both slots; do not mix QCRIL userspace
   with another modem/MCFG generation.
 

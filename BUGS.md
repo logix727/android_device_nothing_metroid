@@ -393,6 +393,19 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Real management acceptance now requires removable eUICC hardware. Use the
   upstream userdebug `removable_esim_switch` and an SGP.26 test eUICC over OMAPI;
   software mock modem cannot emulate GSMA secure-profile transactions.
+- Native mux resolution (2026-08-20): QTI reports slot 1 supports pSIM+eSIM but
+  boots in pSIM mode (`current=[0,0]`, `supported=[0,3]`). The stock Qualcomm
+  `SIM_TYPE_UPDATE_ACTION` selecting type 1 changes slot 1 to card present,
+  publishes its ATR/EID and raises `EID_READY`. A source-built partner receiver
+  now sends that exact request at boot/slot-status/partner-customization only when
+  slot 1's public SIM state is `ABSENT`; an inserted pSIM or active eUICC is not
+  touched. A reversible APK update proves automatic post-reboot activation with
+  no crash/pstore.
+- With the mux active and GApps restored, Google LPA reaches the public SM-DP+
+  over HTTP 200 and retrieves EID/eUICC info from slot 1. The public TS.48 test
+  profile is rejected by the retail eUICC (`subjectCode=8.8.2`,
+  `reasonCode=3.1`), an expected test-certificate mismatch rather than a ROM
+  transport failure. Real carrier-profile download remains the registration gate.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
