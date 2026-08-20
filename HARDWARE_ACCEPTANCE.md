@@ -157,7 +157,7 @@ No pressure/barometer sensor is exposed.
 | Hotspot/tethering | UNKNOWN | UNKNOWN | 2.4/5/6 GHz clients, upstream handoff and coexistence. |
 | Wi-Fi Direct | UNKNOWN | UNKNOWN | Discovery, group owner/client, transfer and coexistence. |
 | Bluetooth adapter and profiles | PARTIAL: classic/LE infrastructure starts | PARTIAL: enabled; no accessory | Pairing, reconnect, HID, PAN, BLE scan/advertise/GATT. |
-| NFC adapter and tag polling | PASS: toggle/tag evidence | PARTIAL on r35: one disable/enable cycle returned to on with stable PID; transitional ST21 `-107` remained; no tag | MTR-024 100-toggle loop, tag transactions and suspend. |
+| NFC adapter and tag polling | PASS: toggle/tag evidence | PARTIAL/PASS on r44: 100 disable/enable cycles reach OFF/ON and retain the NFC PID with no crash/tombstone/pstore/AVC; transient ST21 `-107` remains; no tag | Tag transactions, synchronized stock transition trace and suspend/charger loops. |
 | NFC HCE/payment/off-host | PARTIAL: HCE capability only | PARTIAL: services enumerate only | External reader/payment, UICC/eSE and charger transitions. |
 | UWB | N/A: no UWB feature/HAL or metroid-specific fitted-device evidence | N/A | Reopen only with authoritative hardware evidence. |
 

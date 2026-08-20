@@ -1002,6 +1002,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - r35 bounded result: one disable/enable cycle returned to `mState=on` with the
   same NFC service PID. Transitional ST21 reads/writes again returned `-107`, so
   the cycle neither reproduces a user-visible failure nor clears the issue.
+- r44 no-accessory stress: 100 disable/enable cycles all reach explicit OFF/ON
+  state and finish ON with the same NFC process PID. Crash, tombstone, pstore and
+  AVC inventories remain unchanged. The trace still contains 143 transient ST21
+  `-107/ENOTCONN` operations during close/open polarity and initialization
+  sequences, followed by successful callbacks. This accepts toggle stability but
+  confirms the transport symptom persists; tag, HCE, payment, suspend and charger
+  transitions plus synchronized stock timing remain required before source work.
 - Fix direction: reproduce against synchronized Lineage/stock transition traces.
 - Acceptance: 100 toggles plus tag, HCE, payment, suspend, and charger-transition
   loops with no user-visible failure or recurring transport error.
