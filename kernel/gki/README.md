@@ -16,15 +16,15 @@ The LineageOS charter permits this explicitly:
 | file | provenance |
 |---|---|
 | `Image` | `6.6.102-android15-8-gab8eb70a71b8-ab14350911-4k`, built by `kleaf@build-host` 2025-10-29. Google GKI build `ab14350911`. Shipped by Nothing on Nothing OS `Metroid_B4.0-250917-1218`. |
-| `system_dlkm/` | 94 modules from Google GKI build `ab13768703`, plus `rfkill.ko` from `ab14350911` and `zram.ko` from `ab13562137`, as shipped by Nothing. |
+| `system_dlkm/` | 93 modules from Google GKI build `ab13768703`, plus `rfkill.ko` and `tipc.ko` from `ab14350911` and `zram.ko` from `ab13562137`. The matched TIPC module is required by Qualcomm NICM/DSI; the shipped `ab13768703` TIPC module is rejected by this GKI for a protected-symbol mismatch. |
 
 Exact public corresponding-source records:
 
 | Artifact set | Android CI build | Immutable `kernel/common` source | Build configuration |
 |---|---|---|---|
 | `Image` | [`14350911/kernel_aarch64`](https://ci.android.com/builds/submitted/14350911/kernel_aarch64/latest) | [`ab8eb70a71b8906e3ceac53d2b10f027f8774bcb`](https://android.googlesource.com/kernel/common/+/ab8eb70a71b8906e3ceac53d2b10f027f8774bcb) | [`build.config.gki.aarch64`](https://android.googlesource.com/kernel/common/+/ab8eb70a71b8906e3ceac53d2b10f027f8774bcb/build.config.gki.aarch64) |
-| 94 `system_dlkm` modules | [`13768703/kernel_aarch64`](https://ci.android.com/builds/submitted/13768703/kernel_aarch64/latest) | [`c2569c3b141cb39a6c2bca63c62697589fe86dc4`](https://android.googlesource.com/kernel/common/+/c2569c3b141cb39a6c2bca63c62697589fe86dc4) | [`build.config.gki.aarch64`](https://android.googlesource.com/kernel/common/+/c2569c3b141cb39a6c2bca63c62697589fe86dc4/build.config.gki.aarch64) |
-| `rfkill.ko` | [`14350911/kernel_aarch64`](https://ci.android.com/builds/submitted/14350911/kernel_aarch64/latest) | [`ab8eb70a71b8906e3ceac53d2b10f027f8774bcb`](https://android.googlesource.com/kernel/common/+/ab8eb70a71b8906e3ceac53d2b10f027f8774bcb) | same as `Image` |
+| 93 `system_dlkm` modules | [`13768703/kernel_aarch64`](https://ci.android.com/builds/submitted/13768703/kernel_aarch64/latest) | [`c2569c3b141cb39a6c2bca63c62697589fe86dc4`](https://android.googlesource.com/kernel/common/+/c2569c3b141cb39a6c2bca63c62697589fe86dc4) | [`build.config.gki.aarch64`](https://android.googlesource.com/kernel/common/+/c2569c3b141cb39a6c2bca63c62697589fe86dc4/build.config.gki.aarch64) |
+| `rfkill.ko`, `tipc.ko` | [`14350911/kernel_aarch64`](https://ci.android.com/builds/submitted/14350911/kernel_aarch64/latest) | [`ab8eb70a71b8906e3ceac53d2b10f027f8774bcb`](https://android.googlesource.com/kernel/common/+/ab8eb70a71b8906e3ceac53d2b10f027f8774bcb) | same as `Image` |
 | `zram.ko` | [`13562137/kernel_aarch64`](https://ci.android.com/builds/submitted/13562137/kernel_aarch64/latest) | [`bde0c41169f4fa2e4e2579e4bcd1431c6e2c0845`](https://android.googlesource.com/kernel/common/+/bde0c41169f4fa2e4e2579e4bcd1431c6e2c0845) | [`build.config.gki.aarch64`](https://android.googlesource.com/kernel/common/+/bde0c41169f4fa2e4e2579e4bcd1431c6e2c0845/build.config.gki.aarch64) |
 
 Both source revisions specify Clang `r510928` in `build.config.constants`.
@@ -34,7 +34,7 @@ The third `zram.ko` source revision also specifies Clang `r510928`.
 `a56ce8776a134b6ebf5bf0cfc67aabd56fabc41a961790dc16ee4770733770bc`.
 The sorted SHA-256 inventory of `Image`, `system_dlkm/*.ko`, and
 `system_dlkm/modules.*` hashes to
-`765bbf9e50b31c5a3531d13dd7cc16a0d62877b80b29ede5d1130b60781ec463`.
+`460a00f85afcd9a6eabe7a693d359dabd3f7bc1422d77802586ea61d94828ca2`.
 The digest is computed from path-normalized lines generated inside `kernel/gki`:
 
 ```bash
@@ -52,6 +52,7 @@ headers copied from the pinned public metroid kernel. Regenerate it with
 Mixed-build module hashes:
 
 - `rfkill.ko`: `d951a1e9eff86f85b4ffc0e195c04c1b89dbe5a4fd8fd2b7472cd1d1c5f7e711`
+- `tipc.ko`: `b942e3fea873ffdcd317de0ff1cac0d0dd488e21fcffc461fd50647fcd04c538`
 - `zram.ko`: `c513faf7b1ceb7f01ddbeab460ff904ac7fb6d5134062be9f07a5fb892dfe845`
 
 Note the `Image` and `system_dlkm` come from *different* Google GKI builds (6.6.102 vs 6.6.87).

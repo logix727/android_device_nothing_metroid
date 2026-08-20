@@ -15,6 +15,7 @@ ro.vendor.qti.va_aosp.support=1
 # Radio
 persist.vendor.data.mode=concurrent
 ril.subscription.types=NV,RUIM
+ro.telephony.default_network=26,26
 telephony.lteOnCdmaDevice=1
 
 # WFD

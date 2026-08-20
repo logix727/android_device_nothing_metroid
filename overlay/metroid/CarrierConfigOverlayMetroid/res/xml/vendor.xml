@@ -29,6 +29,9 @@
         <boolean name="require_apn_filtering_with_radio_capability_bool" value="true" />
         <boolean name="editable_enhanced_4g_lte_bool" value="false" />
     </carrier_config>
+    <carrier_config cid="2575">
+        <string name="default_preferred_apn_name_string">ereseller</string>
+    </carrier_config>
     <carrier_config mcc="310" mnc="410">
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="false" />
