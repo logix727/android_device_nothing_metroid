@@ -1,5 +1,16 @@
 # Next release
 
+## r44 current radio test seed
+
+r44 is installed coherently on slot B from
+`releases/candidate_20260819_195257_288867266_candidate/`; OTA SHA-256
+`7d6d83598ad1088f8bd1d0c712abcf158c2dbe4669e748ff95535fefccf465b8`.
+It runs the complete validated 260814 firmware generation, current-stock radio
+controls, stock data-status producer and automatic native eSIM mux. Two boots,
+merge, encryption, Enforcing, crash/pstore, data-status/QcRilHook startup and
+eSIM card-present/EID readiness pass. It is ready for external active-SIM and
+real-carrier-eSIM acceptance, but is not yet the accepted baseline.
+
 ## r39 current-source candidate
 
 r39 is installed coherently on slot B from
