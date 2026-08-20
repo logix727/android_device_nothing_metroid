@@ -197,6 +197,13 @@
             <instance>default</instance>
         </interface>
     </hal>
+    <hal format="aidl">
+        <name>vendor.qti.qccvndhal_aidl</name>
+        <interface>
+            <name>IQccvndhal</name>
+            <instance>qccvndhal</instance>
+        </interface>
+    </hal>
     <hal format="aidl" optional="true">
         <name>vendor.qti.hardware.qspa</name>
         <version>1</version>
