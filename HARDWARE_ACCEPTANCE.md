@@ -25,7 +25,7 @@ passes.
 | Name | Build / slot | State |
 |---|---|---|
 | Accepted baseline | r21 `23.0-20260808`, OTA `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`, slot A | Enforcing, encrypted, two boots, empty crash buffer; accepted |
-| Latest live state | coherent r35 `23.0-20260815`, slot B, OTA `d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6` | Enforcing and encrypted across two boots; APN migration and bounded UDFPS/NCM/NFC/haptic/camera checks pass; Play Store remains uncertified (MTR-027); not accepted |
+| Latest live state | coherent r44 `23.0-20260819`, slot B, OTA `7d6d83598ad1088f8bd1d0c712abcf158c2dbe4669e748ff95535fefccf465b8` | Enforcing and encrypted across two boots; current 260814 firmware/radio, data-status service, eSIM card/EID readiness and ten no-SIM airplane cycles pass; carrier acceptance pending |
 
 Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
 and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public

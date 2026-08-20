@@ -1066,6 +1066,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `/system/framework`. Ten airplane-mode cycles retain the same QTI, QCRIL, IMS,
   CND, and DPM PIDs with an empty crash buffer. Two coherent boots pass recurring
   invariants. Physical-SIM/eSIM carrier recovery remains untested.
+- r44 regression: ten airplane-mode enable/disable cycles on the current August
+  firmware/radio stack retain identical QCRIL, DPM, CND, IMS, `com.qti.phone`,
+  and `org.codeaurora.ims` PID sets across 21 samples. The new persistent
+  data-status service remains started in `com.qti.phone`; crash/exit-info,
+  tombstone, pstore, AVC and modem-SSR inventories do not change. One transient
+  `can't get INothingTelephony` warning occurs without class failure or process
+  restart. Carrier-attached recovery remains external.
 
 ### MTR-027: Google Play Protect uncertified-device policy
 
