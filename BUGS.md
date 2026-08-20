@@ -901,7 +901,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-022: Aperture camera flip bypasses metroid video routing
 
 - Severity: medium
-- Status: coherent r22 runtime evidence retained; accepted-release promotion pending
+- Status: r44 routing/finalization and ten-cycle stability accepted; visual
+  content and stabilization acceptance remain separate
 - Impact: a front-to-back flip can reopen logical camera 4 while UHD or 60 fps is
   selected instead of the required physical main camera.
 - Source: `packages/apps/Aperture/app/src/main/java/org/lineageos/aperture/viewmodels/CameraViewModel.kt:1255-1278`
@@ -925,6 +926,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   checks without a new crash or tombstone. r22 remains unaccepted.
 - Acceptance: front/back/front transitions at FHD30, FHD60, and UHD30 before
   recording and after process restart; verify camera ID and finalized files.
+- r44 result: ten system-Aperture cycles each pass FHD30 `4 -> 1 -> 4`, FHD60
+  `0 -> 1 -> 0`, and UHD30 `0 -> 1 -> 0`. All 30 retained clips are finalized
+  H.264/AAC at 1920x1080/30, 1920x1080/60, or 3840x2160/30. Camera provider,
+  Nothing camera service and cameraserver PIDs remain unchanged; no fatal,
+  Mapper5, GWP-ASan, tombstone, pstore or AVC event occurs. The routing and
+  finalized-file acceptance gate is closed on r44.
 
 ### MTR-023: face-enrollment guidance is blank outside English
 
@@ -1147,8 +1154,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-029: QTI Mapper5 debug logging reads freed buffer handles
 
 - Severity: high
-- Status: property fix installed on r35; preview stability passes, finalized
-  ten-cycle acceptance pending
+- Status: fixed and ten-cycle accepted on r44
 - Impact: sampled GWP-ASan detection can terminate Aperture while Codec2 submits
   camera video buffers, leaving a native tombstone despite otherwise successful
   FHD/UHD recording.
@@ -1172,6 +1178,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: two coherent boots, property `0`, ten ordered FHD30/FHD60/UHD30
   Aperture cycles with rear/front/rear routing and finalized H.264/AAC clips,
   stable camera services, and no new crash, tombstone, AVC, or pstore record.
+- r44 acceptance: property `0` is installed; ten ordered Aperture cycles pass
+  rear/front/rear routing and true parsed 30/60/30 fps H.264/AAC finalization.
+  Provider/cameraserver/Nothing camera PIDs remain stable and crash, Mapper5,
+  GWP-ASan, tombstone, AVC and pstore inventories remain empty. MTR-029 is closed.
 
 ## Acceptance gaps
 
