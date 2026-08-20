@@ -1,0 +1,57 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": [
+    "MTR-001",
+    "MTR-002",
+    "MTR-003",
+    "MTR-015"
+  ],
+  "validation_parent": {
+    "artifact_sha256": "7d6d83598ad1088f8bd1d0c712abcf158c2dbe4669e748ff95535fefccf465b8",
+    "installed_record": "lineage/device/nothing/metroid/release/20260820-r44-installed.md",
+    "installed_record_revision": "dfc8917e7bc20c712fcf6c399728814d26211fd2",
+    "installed_record_sha256": "3b01d49a76fd3eb120ceb3b0ac9d9ac78ff9ac6212d5579256fe37212881c34e",
+    "manifest": "releases/candidate_20260819_195257_288867266_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "17ad112383d2fe02419f19a5dd5933f08daf7fcdfaea471e3752d0b47e549ece",
+    "source_device_revision": "553ead4184d1a0872ce36267ada9b6b535d085d4",
+    "workspace_revision": "e5df41320deaa53cb43572edb5b8395131cb7801"
+  },
+  "classified_test_suites": [
+    "location",
+    "platform-full-compatibility",
+    "radio-esim-secure-element",
+    "storage-security-update"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-001": [
+      "fresh SIM and eSIM subscriptions automatically start with stock mode 26 and select the carrier-ID 2575 ereseller APN",
+      "TIPC loads during boot, DSI initializes, and default data creates a CID and interface without OEM_DCFAILCAUSE_4",
+      "IPv4, IPv6, DNS, 5G NR_NSA display, MMS send and receive, and airplane recovery pass without manual radio commands"
+    ],
+    "MTR-002": [
+      "IMS PDN and MMTEL register and inbound and outbound calls and SMS pass on an active carrier profile"
+    ],
+    "MTR-003": [
+      "native eSIM profile remains enabled through install, first boot, second boot, and airplane recovery",
+      "RadioConfig publishes card-present ATR and EID and subscription defaults move to the active embedded profile"
+    ],
+    "MTR-015": [
+      "QCC system and vendor services register without a retry loop or VINTF mismatch",
+      "GNSS cold and warm fixes and raw measurements pass with network on and off"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
