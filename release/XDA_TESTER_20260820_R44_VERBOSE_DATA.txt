@@ -1,0 +1,57 @@
+Nothing Phone (3) metroid r44 private mobile-data diagnostic
+
+This is a one-attempt diagnostic for the tester already running r44. Raw output
+is private because radio logs can contain subscriber identifiers. Do not post it
+to XDA, GitHub, paste sites, or public file hosts.
+
+Required ROM identity:
+- Incremental: 1787182257
+- Both basebands: MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5
+- OTA SHA-256: 7d6d83598ad1088f8bd1d0c712abcf158c2dbe4669e748ff95535fefccf465b8
+
+Preparation:
+1. Boot Android fully and unlock once.
+2. Connect USB debugging to a trusted computer and authorize it.
+3. Leave the active physical SIM or eSIM installed and ready.
+4. Do not enable Qualcomm DIAG/QXDM or RIL payload logging.
+5. Put capture_r44_mobile_data.sh in the current directory.
+
+Run on Linux or macOS:
+
+  chmod 755 capture_r44_mobile_data.sh
+  ./capture_r44_mobile_data.sh
+
+The script refuses the wrong ROM, mismatched modem firmware, and absent/not-ready
+SIM state. It then enables the narrow Qualcomm ADB log gate, reboots, and waits
+for one manual test.
+
+At READY FOR ONE TEST:
+1. Leave airplane mode off.
+2. Turn Wi-Fi off.
+3. Turn mobile data off, then on exactly once.
+4. Wait for success or visible failure. Do not change APNs and do not retry.
+5. Press Enter in the terminal.
+
+The script captures unfiltered radio/main buffers so RILQ messages are retained,
+collects NICM/rmnet state, restores both Qualcomm logging properties to 0, and
+reboots again. Do not disconnect USB until it reports "Capture complete".
+
+Privately return the complete metroid-r44-data-<timestamp> directory. The key
+files are:
+- identity.txt
+- data-call-summary.txt
+- logcat-radio-main.txt
+- pre-attempt-state.txt
+- post-attempt-state.txt
+- restored-state.txt
+- SHA256SUMS
+
+Before returning it, confirm restored-state.txt contains:
+
+  adb_log_on=0
+  ril_payload_on=0
+  selinux=Enforcing
+  crypto=encrypted
+
+Do not redact or edit the original files. Transfer them privately to the
+maintainer, who will produce a separate sanitized summary.

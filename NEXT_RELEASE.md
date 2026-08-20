@@ -379,21 +379,20 @@ guesses.
 1. Focused-build and stage the stock-backed framework capability, Swedish IMS APN,
    and CND/DPM VINTF corrections. Keep them separate from the unresolved data
    cause in status and validation.
-2. Localize `0x1004` before another data-path edit. Use an exact r35/modem/MCFG
-   identity, one boot-inclusive vendor-RIL-verbose attempt, then a same-device
-   stock control and QMI/QXDM comparison if the local reason remains opaque.
-   Determine whether QMI WDS Start Network Interface is emitted and retain its
-   extended result. The 2026-08-17 AT&T capture cannot substitute for this: it
-   uses modem `...1.114407.2.116758.2`, lacks a verifiable ROM identity, and stops
-   at the same framework-visible `0x1004`. Do not change kernel, IPA, modem, MCFG,
-   or APNs speculatively.
-3. One controlled stock-parity data probe is now eligible:
-   `datastatusnotification.apk` was the missing stock system producer for QCRIL
-   data-enabled/roaming/APN OEM hooks while all consumers and allowlists were
-   retained. The exact B4.1 APK is restored at `/product/app` in the private
-   vendor tree. Install it only in the combined radio candidate and require a
-   real active-SIM comparison of `0x1004`, QMI/WDS progression, interface/CID,
-   IMS, calls and SMS.
+2. Freeze the confirmed Dark Star attach/data pair. Carrier ID 2575 must select
+   `ereseller` automatically before initial attach; do not alter global AT&T
+   APNs. Replace stale 6.6.87 `tipc.ko` with signed GKI build 14350911 matching
+   the installed 6.6.102 Image and load it from `modules.load`. Live proof reached
+   LTE HOME, DSI completion, CID 0, `rmnet_data2`, IPv4, DNS, gateway and MTU
+   1430. Preserve stock `ro.telephony.default_network=26,26`; replacement on r44
+   otherwise initialized GSM-only and hid the 5G selector. Source remains
+   built-not-installed.
+3. On the coherent successor, begin from an untouched boot and preferred-APN
+   state. Require automatic `ereseller`, boot-loaded TIPC, DSI completion,
+   IPv4/IPv6 and DNS, bidirectional SMS, one VoLTE call, MMS send/receive,
+   airplane recovery and suspend. The Light Plan has no hotspot entitlement.
+   QTI basic 5G, Android `NR_NSA`, and SystemUI 5G display pass diagnostically;
+   accept an NR bearer separately only from an attached NR physical channel.
 4. The official `2608141733` stock update is newer than the prior frozen June
    companion. Its validated modem is
    `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5`; core QCRIL/data/IMS
@@ -401,22 +400,22 @@ guesses.
    `libril-qc-radioconfig.so` receive coherent radio-control updates. r42 is
    superseded before upload. Freeze the successor against the complete 260814
    firmware set, not a mixed modem-only configuration.
-3. On the eventual coherent candidate, confirm effective device and carrier IMS
+5. On the eventual coherent candidate, confirm effective device and carrier IMS
    gates, carrier-ID APNs, default and IMS PDNs, inbound/outbound SMS, calls, data,
    DSDS, airplane mode, and suspend on the documented modem generation.
-4. Complete r35 UDFPS repetitions, camera finalization, and USB adjacent-mode
+6. Complete r35 UDFPS repetitions, camera finalization, and USB adjacent-mode
    regressions, then complete MTR-023 and perceptible AudioFX acceptance.
-5. Preserve MTR-026 as a cleared recurring crash gate. For MTR-027, first record
+7. Preserve MTR-026 as a cleared recurring crash gate. For MTR-027, first record
    whether Phonesky is stopped and launcher-resolvable; r35 required package-state
    normalization before a crash-free launch reached Google's uncertified-device
    activity. Keep certification externally blocked. Test official per-device
    registration only as storefront access, never as ROM certification.
-6. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
+8. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
    already-planned recovery sideload; record recovery's result independently.
-7. Complete installed-system Aperture acceptance from the canonical hardware matrix.
-8. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
+9. Complete installed-system Aperture acceptance from the canonical hardware matrix.
+10. Complete WP1 thermal/charging because the 49 C unplugged event is the highest
    safety-relevant unresolved evidence.
-9. Execute remaining WP2-WP5 work in dependency order, using stock/kernel/upstream
+11. Execute remaining WP2-WP5 work in dependency order, using stock/kernel/upstream
    evidence first.
 
 ## Release gate

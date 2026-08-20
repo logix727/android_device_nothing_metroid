@@ -214,6 +214,75 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   for `READ_PRECISE_PHONE_STATE` and `WRITE_APN_SETTINGS`. Add those exact two
   product privapp grants; no other permission or service change is eligible. r43
   is rejected before merge/upload.
+- r44 installed result: the exact stock data-status APK is a product system app,
+  its sticky service runs in `com.qti.phone`, and the current 260814 radio stack
+  survives ten airplane-mode cycles. Active-SIM data remains untested, so this
+  does not establish that the producer changes `0x1004`.
+- Public-source localization: AOSP defines `0x1004` as
+  `PDP_FAIL_OEM_DCFAILCAUSE_4`, one of the values reserved to hide the actual OEM
+  error. It is not a 3GPP or QMI WDS cause. The actionable result is the WDS Start
+  Network Interface response's verbose call-end type/reason pair.
+- Measured r44 diagnostic control: setting
+  `persist.vendor.radio.adb_log_on=1` and rebooting exposes the stock
+  `RILQ`/`DataModule`/`ProfileHandler`/`DsiWrapper`/QDP/WDS paths, including
+  `dsiGetVerboseCallEndReason`, without enabling RIL payload logging. The probe
+  was restored to `0` and r44 rebooted encrypted and Enforcing. Use this bounded
+  switch for one private active-SIM attempt; keep
+  `persist.vendor.radio.ril_payload_on=0` unless the first capture is
+  insufficient because payload logs can expose subscriber content.
+- Kernel/data-path audit: tuna IPA/rmnet DT, boot config, loaded modules,
+  `dsi_config.xml`, `nicm_config.xml`, and `IPACM_cfg.xml` match Nothing stock or
+  pinned NothingOSS. LTE registration and SMS also prove the integrated MPSS
+  QRTR path is alive. No kernel edit is eligible before the WDS result is known.
+- r44 active Dark Star result (2026-08-20): the first registration failure was
+  AT&T EMM 19 / ESM 33 because Android selected retail `nrphone` instead of the
+  carrier-ID 2575 `ereseller` profile for initial attach. Selecting `ereseller`
+  immediately established LTE HOME registration on `310410` with voice, SMS,
+  data/MMS, VOPS and ENDC available. Add the carrier-scoped
+  `default_preferred_apn_name_string=ereseller` override; do not alter global
+  AT&T APNs.
+- The remaining `0x1004` was then localized before DSI/WDS:
+  `CallManager: DSI init not yet completed`. Qualcomm NICM opens Linux
+  `AF_TIPC`, but r44's staged `tipc.ko` was from GKI `ab13768703` (6.6.87), while
+  the installed Image is `ab14350911` (6.6.102). The kernel rejects the stale
+  module for protected symbol `tipc_dump_done`, leaving `CONFIG_TIPC=m` unloaded
+  and DSI permanently incomplete. Loading the exact Google-signed
+  `ab14350911` module live, then restarting NICM/QCRIL, changed the same
+  firewalled `ereseller` request to `cause=NONE`, CID 0, `rmnet_data2`, IPv4,
+  DNS, gateway and MTU 1430. Firewall counters remained zero. Replace only
+  `tipc.ko` with build 14350911 and load it from `system_dlkm/modules.load`.
+- Dark Star diagnostic acceptance on that live repaired runtime: one deliberately
+  constrained IPv4 echo transferred 28 bytes each direction on `rmnet_data2`;
+  50 IPv4 and 17 IPv6 background packets were blocked. Bidirectional SMS passed;
+  the first outbound attempt received QMI WMS error 56 over IMS after 57 seconds,
+  then Android correctly fell back to CS and delivered it. A manual radio restart
+  had left QCRIL ATEL-ready false and caused one inbound WMS indication to be
+  buffered then dropped; restoring slot-1 ATEL readiness and one airplane reattach
+  restored inbound delivery. A 14-second self-call used `ImsPhone`, reached ACTIVE
+  in about one second and ended cleanly, accepting VoLTE signaling for this runtime.
+- NR configuration is not a current divergence: the effective user mask includes
+  NR, CarrierConfig allows NSA and SA, LTE reports `isNrAvailable=true`,
+  `isEnDcAvailable=true`, and `isDcNrRestricted=false`. No NR physical secondary
+  channel attached during the bounded test, so 5G service remains unaccepted and
+  must be compared in known coverage rather than forced with an APN or icon hack.
+- A replacement Dark Star eSIM exposed the missing stock default:
+  `ro.telephony.default_network=26,26`. Without it, the new subscription started
+  GSM-only (`preferred_network_mode=0,0`) and Settings hid the 5G selector.
+  Restoring the full user mask immediately registered LTE B66 HOME with NR and
+  EN-DC available. Add stock's exact two-modem mode-26 property so new SIM/eSIM
+  subscriptions enable NR/LTE/CDMA/EVDO/GSM/WCDMA without user intervention.
+- 5G diagnostic acceptance: QTI reports `TYPE_5G_BASIC`, EN-DC enabled and
+  combined SA+NSA; Android publishes LTE + `NR_NSA`, and SystemUI renders `5G`
+  after cellular validation. A five-packet allocation probe transferred exactly
+  140 bytes each way and exposed LTE carrier aggregation only, so an allocated
+  NR secondary channel remains unproven. Do not synthesize NR service or port
+  stock SystemUI's redundant vendor icon client.
+- Carrier-ID 2575 already has the required automatic profile family:
+  `ereseller` for default/MMS/SUPL/FOTA/XCAP, `ims` for IMS, and `resellermht` for
+  DUN. Do not merge these profiles or add global AT&T overrides. A 166-byte
+  self-MMS produced successful outbound (`m_type=128`, `resp_st=128`) and
+  self-received (`m_type=132`) provider rows with PNG parts and no pending/error
+  row. The Light Plan has no hotspot entitlement.
 - Independent VINTF defect: stock declares
   `vendor.qti.data.factoryservice.IFactory/default` and
   `vendor.qti.hardware.dpmaidlservice.IDpmService/default`. Installed traces
@@ -430,6 +499,15 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   profile is rejected by the retail eUICC (`subjectCode=8.8.2`,
   `reasonCode=3.1`), an expected test-certificate mismatch rather than a ROM
   transport failure. Real carrier-profile download remains the registration gate.
+- r44 native download probe (2026-08-20): the connected production-certificate
+  eUICC enumerates with `result=OK`, `mProfiles=[]`, SIM2 secure-element access,
+  and successful APDUs. Google's published TS.48 v2 SAIP2.1 code reaches
+  `prod.smdp-plus.rsp.goog` over HTTP 200, then InitiateAuthentication returns
+  GSMA `8.8.2/3.1`: no CI public-key identifier proposed by the eUICC is
+  supported by that SM-DP+. The card remains blank. This accepts the local
+  provisioning/LPA/APDU/transport path but cannot test profile management or
+  packet data. Use a matching SGP.26 test-card/SM-DP+ pair for lab management;
+  use a provisioned commercial SIM/profile for MTR-001/MTR-002 radio acceptance.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
@@ -692,7 +770,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-015: QCC location assistance stack is incomplete
 
 - Severity: medium
-- Status: confirmed integration defect
+- Status: source fixed; built-not-installed
 - Impact: GNSS fixes work, but assistance/correction behavior can degrade during
   cold starts or network transitions; XTRA retries an unavailable QCC service.
 - Evidence: the QCC vendor service is absent while the location process remains
@@ -700,6 +778,9 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/init.qccvendor.rc:17-21`
 - Fix direction: restore the coherent vendor/system QCC stack and declarations,
   or remove the clients and dangling RCs together.
+- Source fix: restore the exact stock QCC APK, system/vendor AIDL services,
+  libraries, init/VINTF declarations and compatibility-matrix instance. Focused
+  QCC builds and `check-vintf-all` pass; installed behavior remains untested.
 - Acceptance: no retry loop; cold/warm TTFF and raw measurements with network
   on/off and screen-off GNSS.
 
