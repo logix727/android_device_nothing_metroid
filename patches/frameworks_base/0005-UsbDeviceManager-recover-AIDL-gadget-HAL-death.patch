@@ -1,0 +1,63 @@
+From 35087af25dc4b584286e7850d4794c0e55a92e20 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Wed, 19 Aug 2026 23:42:44 -0400
+Subject: [PATCH 5/5] UsbDeviceManager: recover AIDL gadget HAL death
+
+Change-Id: I8bb690a5eae113d442d2e7c8eafdff6727fc53e1
+---
+ .../server/usb/hal/gadget/UsbGadgetAidl.java  | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/services/usb/java/com/android/server/usb/hal/gadget/UsbGadgetAidl.java b/services/usb/java/com/android/server/usb/hal/gadget/UsbGadgetAidl.java
+index 5866addae..4d29c9d36 100644
+--- a/services/usb/java/com/android/server/usb/hal/gadget/UsbGadgetAidl.java
++++ b/services/usb/java/com/android/server/usb/hal/gadget/UsbGadgetAidl.java
+@@ -50,6 +50,8 @@ public final class UsbGadgetAidl implements UsbGadgetHal {
+     // Proxy object for the usb gadget hal daemon.
+     @GuardedBy("mGadgetProxyLock")
+     private IUsbGadget mGadgetProxy;
++    @GuardedBy("mGadgetProxyLock")
++    private IBinder mGadgetBinder;
+     private final UsbDeviceManager mDeviceManager;
+     public final IndentingPrintWriter mPw;
+     // Mutex for all mutable shared state.
+@@ -72,8 +74,16 @@ public final class UsbGadgetAidl implements UsbGadgetHal {
+         logAndPrint(Log.ERROR, mPw, "Usb Gadget AIDL hal service died");
+         synchronized (mGadgetProxyLock) {
+             mGadgetProxy = null;
++            mGadgetBinder = null;
+         }
+         connectToProxy(null);
++        synchronized (mGadgetProxyLock) {
++            if (mGadgetProxy == null) {
++                return;
++            }
++        }
++        mDeviceManager.setCurrentFunctions(mDeviceManager.getCurrentFunctions(),
++                ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE));
+     }
+ 
+     private void connectToProxy(IndentingPrintWriter pw) {
+@@ -83,11 +93,17 @@ public final class UsbGadgetAidl implements UsbGadgetHal {
+             }
+ 
+             try {
+-                mGadgetProxy = IUsbGadget.Stub.asInterface(
+-                        ServiceManager.waitForService(USB_GADGET_AIDL_SERVICE));
++                mGadgetBinder = ServiceManager.waitForService(USB_GADGET_AIDL_SERVICE);
++                mGadgetProxy = IUsbGadget.Stub.asInterface(mGadgetBinder);
++                mGadgetBinder.linkToDeath(this::serviceDied, 0);
+             } catch (NoSuchElementException e) {
+                 logAndPrintException(pw, "connectToProxy: usb gadget hal service not found."
+                         + " Did the service fail to start?", e);
++            } catch (RemoteException e) {
++                mGadgetBinder = null;
++                mGadgetProxy = null;
++                logAndPrintException(pw, "connectToProxy: usb gadget hal service not responding",
++                        e);
+             }
+         }
+     }
+-- 
+2.43.0
+

@@ -793,7 +793,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: primary r35 NCM local transport passes; adjacent regressions pending
+- Status: r44 ADB/MTP/NCM pass; AIDL gadget-HAL restart source fix pending install;
+  RNDIS data-plane failure remains separately open
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
 - First divergence: stock-derived vendor init created `ncm.0` while the selected
   QTI gadget HAL links `ncm.gs6`.
@@ -843,6 +844,20 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   complete from this attempt.
 - Acceptance: NCM/NCM+ADB host enumeration, DHCP/DNS, IPv4/IPv6 traffic, cable
   reconnect, HAL restart, and ADB/MTP/RNDIS regressions.
+- r44 acceptance: 16 MiB USB-ADB and 64 MiB MTP round trips are byte-identical.
+  NCM+ADB enumerates as `05c6:908c` with Linux `cdc_ncm`; DHCP assigns host
+  `10.201.3.178/24`, bidirectional IPv4 and host-to-phone IPv6 pass, ADB integrity
+  remains clean, `usb0` is tethered with `lastError=0`, and Ethernet excludes it.
+  RNDIS+ADB enumerates as `05c6:9024` with `rndis_host` and reaches tethered
+  `lastError=0`, but host DHCP and static local transport fail; keep this as an
+  independent IPA/GSI diagnostic, not a kernel fix.
+- New first divergence: restarting `vendor.usbgadget-hal` changes the QTI HAL PID
+  and republishes Binder, but framework AIDL `UsbGadgetAidl` never links a death
+  recipient. SystemServer retains the dead proxy, leaves the NCM descriptor
+  applied and cannot switch MTP/RNDIS/default until reboot. Add Binder death
+  handling, reconnect and one current-function reapply, matching `UsbPortAidl`.
+  `services.usb` and `FrameworksServicesTests` compile; installed acceptance is
+  deferred to the next coherent candidate.
 
 ### MTR-020: CPUSS sleep-residency counters are absent
 

@@ -166,9 +166,9 @@ No pressure/barometer sensor is exposed.
 | Operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
 | USB ADB transport | PASS | PASS: 16 MiB push/pull hashes matched | Cable reconnect, host variation, late HAL start and HAL restart. |
-| MTP/PTP | UNKNOWN | UNKNOWN | File transfer, large files, reconnect and locked state. |
-| RNDIS tethering | UNKNOWN | UNKNOWN | IPv4/IPv6 transport and reconnect. |
-| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PARTIAL/PASS on r35: phone `10.205.201.184/24`, host `10.205.201.209/24`, bidirectional local ping, and Ethernet exclusion of `usb0` pass; plain ADB restoration passes | IPv6/upstream, cable reconnect, HAL restart, MTP and RNDIS regressions. |
+| MTP/PTP | UNKNOWN | PASS on r44 for MTP+ADB: 64 MiB GIO push/pull hashes match | Locked-state exposure, PTP and physical reconnect. |
+| RNDIS tethering | UNKNOWN | FAIL on r44: correct `05c6:9024`/`rndis_host`, phone address and TetheredState form, but host DHCP and static local transport fail | Capture RNDIS IPA/GSI lifecycle and DHCP packets before source edits. |
+| NCM / NCM+ADB | FAIL: MTR-019 function-name mismatch | PASS on r44 for NCM+ADB: `05c6:908c`, `cdc_ncm`, DHCP, bidirectional IPv4, host-to-phone IPv6, ADB integrity and Ethernet exclusion pass | Upstream unavailable; phone-to-host IPv6 tooling, physical reconnect and pending HAL-death fix acceptance. |
 | USB OTG/host | BLOCKED | BLOCKED | Storage, HID and powered accessory required. |
 | USB Ethernet/accessory networking | BLOCKED | BLOCKED | Compatible adapter; DHCP, IPv4/IPv6, suspend and unplug. |
 | DisplayPort/video output | BLOCKED | BLOCKED | Compatible adapter/display required; fitted support is not yet proven. |
