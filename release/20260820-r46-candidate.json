@@ -1,0 +1,39 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": ["MTR-001"],
+  "validation_parent": {
+    "artifact_sha256": "8c1dd12324cfc23b4557d85bf0b001e25bb85880a83e0a1c2358d1540576348e",
+    "installed_record": "lineage/device/nothing/metroid/release/20260820-r45-installed.md",
+    "installed_record_revision": "c2a80921c15abb1cbf552387164548c5064ac500",
+    "installed_record_sha256": "552ad7b39692f843ad58f25280e07a92553030eb465e3ef5564b15fc93f70aff",
+    "manifest": "releases/candidate_20260820_152734_901503311_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "ee884c453fb19c2eff22eedf8d83f2fcc16cdceb4d285f42c4451f46015f6044",
+    "source_device_revision": "06174e18172d1e798082eccb7b64a97c8e33d67c",
+    "workspace_revision": "e12db12de39178e543845b35a2c4fabec10bb9d8"
+  },
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "radio-esim-secure-element"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-001": [
+      "gki.modprobe loads only the curated system-DLKM modules list during early-init and TIPC is present before NICM/QCRIL",
+      "DSI initializes and Dark Star data creates IPv4 and IPv6 interfaces without a manual module or radio restart",
+      "active eSIM, mode 26, automatic ereseller, 5G display, calls, SMS, MMS and airplane recovery pass across two clean boots"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
