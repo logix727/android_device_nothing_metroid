@@ -14,5 +14,8 @@
         <package name="com.qualcomm.qcrilmsgtunnel">
             <seinfo value="nothing_qti_telephony" />
         </package>
+        <package name="com.qti.qcc">
+            <seinfo value="nothing_qti_qcc" />
+        </package>
     </signer>
 </policy>

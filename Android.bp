@@ -29,6 +29,13 @@ prebuilt_etc {
 }
 
 prebuilt_etc {
+    name: "privapp-permissions-qti-qcc.xml",
+    src: "configs/permissions/privapp-permissions-qti-qcc.xml",
+    sub_dir: "permissions",
+    system_ext_specific: true,
+}
+
+prebuilt_etc {
     name: "privapp-permissions-qti-data-status.xml",
     src: "configs/permissions/privapp-permissions-qti-data-status.xml",
     sub_dir: "permissions",

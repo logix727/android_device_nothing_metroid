@@ -22,11 +22,12 @@ system_ext/bin/sltntc
 vendor/bin/hw/android.hardware.thermal-service.qti
 
 # QCC
-system_ext/app/QCC/QCC.apk;PRESIGNED
+system_ext/app/QCC/QCC.apk:system_ext/priv-app/QCC/QCC.apk;PRESIGNED
 system_ext/bin/qccsyshal_aidl-service
 system_ext/etc/init/vendor.qti.qccsyshal_aidl-service.rc
 system_ext/etc/vintf/manifest/vendor.qti.qccsyshal_aidl-service.xml
 system_ext/lib64/vendor.qti.qccsyshal_aidl-V1-ndk.so
+system_ext/lib64/vendor.qti.qccvndhal_aidl-V1-ndk.so
 vendor/etc/vintf/manifest/vendor.qti.qccvndhal_aidl-service.xml
 
 system_ext/apex/com.android.compos.apex

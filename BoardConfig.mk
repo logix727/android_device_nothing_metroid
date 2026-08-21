@@ -356,6 +356,7 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += device/nothing/metroid/configs/hid
 # QTI HAL service binaries (keymint/boot/fingerprint) were unlabeled ("rootfs") -> init
 # refuses to exec them EVEN IN PERMISSIVE -> keystore2 crash-loop -> InitFatalReboot.
 # platform=sun -> sm8750 QTI sepolicy labels keymint-service-qti vendor_hal_keymint_qti_exec.
+include device/qcom/sepolicy/SEPolicy.mk
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public

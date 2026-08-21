@@ -100,6 +100,7 @@ PRODUCT_PACKAGES += \
     default-permissions-com.google.android.euicc.xml \
     privapp-permissions-com.google.android.euicc.xml \
     privapp-permissions-qti-data-status.xml \
+    privapp-permissions-qti-qcc.xml \
     privapp-permissions-qti-telephony-service.xml
 
 PRODUCT_COPY_FILES += \
