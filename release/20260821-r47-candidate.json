@@ -15,7 +15,8 @@
   },
   "classified_test_suites": [
     "location",
-    "platform-full-compatibility"
+    "platform-full-compatibility",
+    "storage-security-update"
   ],
   "full_compatibility": true,
   "issue_acceptance": {
