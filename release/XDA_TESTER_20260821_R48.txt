@@ -1,0 +1,44 @@
+[ROM][UNOFFICIAL][TESTING][16] LineageOS 23 for Nothing Phone (3) [metroid] r48
+
+This is an unofficial private test seed. It is not an official LineageOS build,
+updater release, or support promise.
+
+ROM identity:
+- Incremental: 1787327311
+- OTA SHA-256: 5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581
+
+MANDATORY FIRMWARE PREFLIGHT
+
+The Lineage OTA updates Android OS partitions. It does not contain Nothing's
+proprietary modem, bootloader, DSP, trust-zone, Bluetooth or other stock firmware.
+Before testing, run:
+
+  adb shell getprop gsm.version.baseband
+
+Both comma-separated entries must end with:
+
+  1.152387.2.170946.5
+
+If either entry differs, stop. Do not report carrier results and do not flash only
+modem. Return to official Nothing OS, update through the official B4.1 260814
+firmware path so the complete firmware set is installed coherently, verify both
+basebands, then install r48 again.
+
+Validated changes:
+- boot-time TIPC/Qualcomm DSI cellular initialization;
+- stock NR-capable mode for new SIM/eSIM subscriptions;
+- automatic carrier-scoped APNs, including Dark Star `ereseller`;
+- QCC location-assistance app/library/domain closure;
+- authoritative v2 recovery sideload-result protocol for patched host ADB.
+
+Carrier test order, without manual APN or network-type edits:
+1. Verify ROM incremental and both basebands.
+2. Insert/enable the SIM and wait for registration.
+3. Enable data once and confirm an interface/address.
+4. Test one outbound and inbound SMS.
+5. Test one outbound and inbound call.
+6. Test one outbound and inbound MMS.
+7. Toggle airplane mode once and repeat data.
+
+If data fails, privately return identity plus one verbose radio capture. Do not
+post raw logs publicly because they contain subscriber identifiers.
