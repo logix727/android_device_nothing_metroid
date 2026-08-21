@@ -2,12 +2,12 @@
 
 Last audited against accepted baseline and coherent live state: 2026-08-21
 
-Accepted build: `23.0-20260821-UNOFFICIAL-metroid` (r47)
+Accepted build: `23.0-20260821-UNOFFICIAL-metroid` (r48)
 
-Live device: accepted r47, coherent slot A
+Live device: accepted r48, coherent slot A
 
 Accepted OTA SHA-256:
-`d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`
+`5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -23,11 +23,11 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-011, MTR-016, MTR-028 |
+| Active fixes | MTR-011, MTR-016 |
 | Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-018, MTR-019, MTR-022, MTR-023, MTR-029 |
 | Evidence/test gaps without eligible source edit | MTR-005, MTR-020, MTR-024 |
 | External hardware/carrier/policy acceptance | MTR-001/MTR-002 other carriers, MTR-027, OMAPI |
-| Closed defects / recurring gates | MTR-003, MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-017, MTR-021, MTR-026 |
+| Closed defects / recurring gates | MTR-003, MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-017, MTR-021, MTR-026, MTR-028 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -1215,8 +1215,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-028: recovery ADB sideload progress does not report install completion
 
 - Severity: P0 recurring release gate
-- Status: v2 result protocol implemented and unit-tested; installed recovery
-  success/failure acceptance pending
+- Status: v2 result protocol installed on accepted r48; negative token unit-tested
 - User-visible symptom: host progress commonly stops near 47 percent and may
   print `adb: failed to read command: Success`, making a completed transfer look
   incomplete.

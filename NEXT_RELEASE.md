@@ -1,17 +1,16 @@
 # Next release
 
-## Accepted r47 and r48 scope
+## Accepted r48 and next scope
 
-r47 is the accepted and live baseline on slot A from
-`releases/candidate_20260820_214832_213816480_candidate/`; OTA SHA-256
-`d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`.
+r48 is the accepted and live baseline on slot A from
+`releases/candidate_20260821_121653_317252161_candidate/`; OTA SHA-256
+`5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`.
 It passes two boots, encryption/Enforcing, active eSIM, automatic mode 26 and
 `ereseller`, IPv4/IPv6 data, `NR_NSA`, IMS call, boot-loaded TIPC and QCC closure.
 
-r48 is restricted to MTR-028: versioned recovery/host ADB sideload-result
-reporting. It must not include speculative NFC, sensor-extension, haptic, CPUSS,
-thermal or camera changes. Historical release narrative below remains evidence,
-not current execution direction.
+Next source work must not include speculative NFC, sensor-extension, haptic,
+CPUSS, thermal or camera changes. Historical release narrative below remains
+evidence, not current execution direction.
 
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
 Canonical accepted baseline: [`BASELINE.md`](BASELINE.md).

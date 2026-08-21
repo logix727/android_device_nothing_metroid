@@ -4,11 +4,11 @@ This is private target-device acceptance evidence, not a redistribution claim.
 The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
-This records the accepted r47 release and current live state. The device runs
-`23.0-20260821-UNOFFICIAL-metroid` (incremental `1787275251`) on successful slot
-A from `releases/candidate_20260820_214832_213816480_candidate/`; OTA SHA-256
-`d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`.
-r47 is encrypted and Enforcing, preserves GApps and the active Dark Star eSIM,
+This records the accepted r48 release and current live state. The device runs
+`23.0-20260821-UNOFFICIAL-metroid` (incremental `1787327311`) on successful slot
+A from `releases/candidate_20260821_121653_317252161_candidate/`; OTA SHA-256
+`5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`.
+r48 is encrypted and Enforcing, preserves GApps and the active Dark Star eSIM,
 and passes two boots, boot-loaded TIPC, automatic mode 26 and `ereseller`,
 IPv4/IPv6 data, `NR_NSA`, IMS call, QCC domain/linker closure, empty pstore and
 no QCC crash/AVC. SMS/MMS passed on the same unchanged carrier/radio stack before
@@ -19,8 +19,8 @@ the QCC-only r47 delta. Google certification remains externally blocked.
 - Version: `23.0-20260821-UNOFFICIAL-metroid`
 - Build date UTC: `1787275251`
 - OTA: `lineage-23.0-20260821-UNOFFICIAL-metroid.zip`
-- OTA SHA-256: `d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`
-- Verified snapshot: `releases/candidate_20260820_214832_213816480_candidate/`
+- OTA SHA-256: `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`
+- Verified snapshot: `releases/candidate_20260821_121653_317252161_candidate/`
 - Accepted slot when recorded: A
 - SELinux: Enforcing
 - Data: encrypted
@@ -89,7 +89,7 @@ the QCC-only r47 delta. Google certification remains externally blocked.
 
 ## Source revisions
 
-Full accepted source state is sealed under the r47 verified snapshot. Primary
+Full accepted source state is sealed under the r48 verified snapshot. Primary
 revisions:
 
 | Project | Revision |
@@ -98,5 +98,5 @@ revisions:
 | `vendor/nothing/metroid` | `62a5802800e0e31a75a6bd5b56e798ef42c9e1ec` (private) |
 | `kernel/nothing/sm8735` | `aeb23d327717f9f4820f1ba5b1436fd401089a36` |
 
-Post-r47 workflow/record and r48 recovery-protocol commits are not part of the
-accepted OTA until the exact audited successor is installed and accepted.
+Post-r48 workflow/record commits are not part of the accepted OTA until the exact
+audited successor is installed and accepted.
