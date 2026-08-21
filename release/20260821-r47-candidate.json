@@ -1,0 +1,40 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": ["MTR-015"],
+  "validation_parent": {
+    "artifact_sha256": "e9184cd4e444392d96d0603f442ad2be561c06e2a661a9b3c289320a62600ba9",
+    "installed_record": "lineage/device/nothing/metroid/release/20260821-r46-installed.md",
+    "installed_record_revision": "d67cebb977be90a646b1611eaa33d1416dc9b566",
+    "installed_record_sha256": "052b8e4a1236a31ad36356f1d24d6fd305cef3cb45bc4ea93450704f1effdb5c",
+    "manifest": "releases/candidate_20260820_190948_675458144_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "11721f7fd5f8b988f553574a26f30694b6e346ac5726bff4bf9cc8db639344fa",
+    "source_device_revision": "5075e7b15e1be235be252666b6d31b5925e080ea",
+    "workspace_revision": "e12db12de39178e543845b35a2c4fabec10bb9d8"
+  },
+  "classified_test_suites": [
+    "location",
+    "platform-full-compatibility"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-015": [
+      "stock-signed QCC runs as vendor_qcc_app and receives only its required privileged cross-user permission",
+      "QCC loads libqccfileservice and the system-ext QCC vendor AIDL library without linker or JNI errors",
+      "QCC, qccsyshal and qccvndhal remain alive without crash, ANR or AVC loops across two boots",
+      "XTRA no longer retries and GNSS cold and warm fixes and raw measurements pass"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
