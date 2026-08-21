@@ -7,18 +7,13 @@ Unofficial LineageOS 23 (Android 16) bring-up for the Nothing Phone (3), codenam
 
 **Alpha development. Maintainer-tested; not an official release.**
 
-There is currently no supported public OTA or recovery bootstrap download. Do
-not follow old mirrors, mix artifacts, or treat this repository as an official
-LineageOS release. The latest accepted build is a maintainer-local candidate;
-the connected target runs coherent r28 but is not accepted. r29 is
-offline-verified and not installed; no carrier fix is claimed until its full
-target-device matrix passes.
+There is no official LineageOS release or updater service. The accepted private
+XDA test seed is r47, installed on the maintainer target from the audited
+snapshot recorded in `BASELINE.md`. Do not follow old mirrors or mix artifacts.
 
-The current maintainer baseline has radio/IMS infrastructure, Power HAL,
-framework thermal skin/headroom, corrected launch/security metadata, and native
-eSIM provisioning UI with matching stock modem firmware. Historical physical-SIM
-and removable-eUICC captures reach LTE registration and SMS but fail data at an
-opaque modem response; r29 carries the next stock-aligned telephony correction.
+The current baseline has active eSIM, automatic carrier APN and NR mode, working
+IPv4/IPv6 data and IMS call, QCC location-assistance closure, Power HAL,
+thermal skin/headroom, corrected metadata and native eSIM provisioning.
 Carrier/IMS, eSIM management, thermal/charging, camera, Bluetooth/audio, haptics,
 and accessory coverage remain. See [`BUGS.md`](BUGS.md).
 

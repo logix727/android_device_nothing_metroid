@@ -4,46 +4,41 @@ This is private target-device acceptance evidence, not a redistribution claim.
 The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
-This records the last accepted release, not the current live state. r21 remains
-accepted unchanged. The device currently runs installed r35
-(`23.0-20260815-UNOFFICIAL-metroid`) on successful slot B from snapshot
-`releases/candidate_20260815_192053_709386797_candidate/`, OTA SHA-256
-`d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6`.
-r35 is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
-passes two coherent boot, system_server, QTI/IMS startup, crash-buffer,
-tombstone, and pstore gates. The packaged APN checksum migrated and persisted,
-UDFPS enrollment plus four unlocks passed, and bounded NCM, haptic, NFC, and
-camera-preview checks passed. It remains installed but not accepted: no physical
-SIM is available, the UDFPS 50-unlock matrix is incomplete, USB adjacent-mode
-regressions remain, and camera still/video finalization was not accepted. Google
-Play launches after package-state normalization, but certification remains an
-external policy result (MTR-027).
+This records the accepted r47 release and current live state. The device runs
+`23.0-20260821-UNOFFICIAL-metroid` (incremental `1787275251`) on successful slot
+A from `releases/candidate_20260820_214832_213816480_candidate/`; OTA SHA-256
+`d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`.
+r47 is encrypted and Enforcing, preserves GApps and the active Dark Star eSIM,
+and passes two boots, boot-loaded TIPC, automatic mode 26 and `ereseller`,
+IPv4/IPv6 data, `NR_NSA`, IMS call, QCC domain/linker closure, empty pstore and
+no QCC crash/AVC. SMS/MMS passed on the same unchanged carrier/radio stack before
+the QCC-only r47 delta. Google certification remains externally blocked.
 
 ## ROM
 
-- Version: `23.0-20260808-UNOFFICIAL-metroid`
-- Build date UTC: `1786152646`
-- OTA: `lineage-23.0-20260808-UNOFFICIAL-metroid.zip`
-- OTA SHA-256: `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
-- Verified snapshot: `releases/candidate_20260808_192539_leaudio-r21/`
+- Version: `23.0-20260821-UNOFFICIAL-metroid`
+- Build date UTC: `1787275251`
+- OTA: `lineage-23.0-20260821-UNOFFICIAL-metroid.zip`
+- OTA SHA-256: `d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`
+- Verified snapshot: `releases/candidate_20260820_214832_213816480_candidate/`
 - Accepted slot when recorded: A
 - SELinux: Enforcing
 - Data: encrypted
 - Root vbmeta flags: `1` (hashtree disabled for recovery add-ons; verification
   remains enabled)
 - Two boots: passed
-- Crash buffer: empty
-- New tombstones: none; retained 19:44 tombstone was maintainer-induced before r17
+- QCC crash/AVC: none across two boots
+- Pstore: empty
 
 ## Required companion inputs
 
 ### Modem firmware
 
 - Both `modem_a` and `modem_b` contain the complete stock A16 modem filesystem.
-- Build: `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.126608.2.134544.2`
+- Build: `MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5`
 - Source evidence: `references/upstream/dump_a16/modem/`
-- Constructed VFAT image SHA-256:
-  `d53a062a749e83d5854ab17a5aa5680d27c7b1e1970ee7112e71036b1d7b2a5f`
+- Companion image SHA-256:
+  `35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3`
 - Construction was verified with `fsck.vfat` and an exact recursive content diff.
 - Pre-change backups are private under `/tmp/opencode/metroid-modem-backup/`:
   - modem A: `2cc0c5a181dd01ab0aecda37ede38ad4c0ad1a8eabddbb5fe493d32a93c7ecc0`
@@ -94,19 +89,14 @@ external policy result (MTR-027).
 
 ## Source revisions
 
-Full accepted source state is sealed under the r21 verified snapshot. Primary
+Full accepted source state is sealed under the r47 verified snapshot. Primary
 revisions:
 
 | Project | Revision |
 |---|---|
-| `device/nothing/metroid` | `9ab75995eaf77217b9719a533fec86c844e65ae0` |
-| `vendor/nothing/metroid` | `636496ba47257fe7a8673af07eb54b5eb06b06de` (private) |
-| `kernel/nothing/sm8735` | `ce342da8315a62e6144882faeddbdeccda544f9b` |
-| `build/soong` | `b4bbdf5956a788ab60921bd71421b1c9be31a8f0` |
-| `frameworks/av` | `113ccbf172d572086818456a41b62809c38a0ac0` |
-| `packages/apps/Aperture` | `db454eb0525be0b59bee2c32030df3fd7d553eb5` |
+| `device/nothing/metroid` | `57d09bcce0c1aa3f258c803b07dc55442728597e` |
+| `vendor/nothing/metroid` | `62a5802800e0e31a75a6bd5b56e798ef42c9e1ec` (private) |
+| `kernel/nothing/sm8735` | `aeb23d327717f9f4820f1ba5b1436fd401089a36` |
 
-Post-r21 workflow/record commits and newer builds are not part of the accepted
-OTA. r35 is installed coherent evidence, not an accepted baseline. Update the
-accepted ROM section only after all required companion inputs and release gates
-are accepted.
+Post-r47 workflow/record and r48 recovery-protocol commits are not part of the
+accepted OTA until the exact audited successor is installed and accepted.

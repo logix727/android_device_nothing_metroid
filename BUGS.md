@@ -1,13 +1,13 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and coherent live state: 2026-08-17
+Last audited against accepted baseline and coherent live state: 2026-08-21
 
-Accepted build: `23.0-20260808-UNOFFICIAL-metroid` (r21)
+Accepted build: `23.0-20260821-UNOFFICIAL-metroid` (r47)
 
-Live device: `23.0-20260815-UNOFFICIAL-metroid` (r35), coherent slot B; not accepted
+Live device: accepted r47, coherent slot A
 
 Accepted OTA SHA-256:
-`e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
+`d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`
 
 This is the authoritative maintainer backlog. A confirmed issue has installed-
 device or accepted-image evidence and a deterministic source/configuration cause.
@@ -23,11 +23,11 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-001, MTR-002, MTR-005, MTR-011, MTR-015, MTR-016, MTR-024 |
+| Active fixes | MTR-011, MTR-016, MTR-028 |
 | Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-018, MTR-019, MTR-022, MTR-023, MTR-029 |
-| Evidence incomplete | MTR-020 |
-| External hardware/carrier/policy acceptance | MTR-027, real eSIM profile, OMAPI |
-| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-017, MTR-021, MTR-026, MTR-028 |
+| Evidence/test gaps without eligible source edit | MTR-005, MTR-020, MTR-024 |
+| External hardware/carrier/policy acceptance | MTR-001/MTR-002 other carriers, MTR-027, OMAPI |
+| Closed defects / recurring gates | MTR-003, MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-017, MTR-021, MTR-026 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -940,13 +940,15 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `services.usb` and `FrameworksServicesTests` compile; installed acceptance is
   deferred to the next coherent candidate.
 
-### MTR-020: CPUSS sleep-residency counters are absent
+### MTR-020: optional CPUSS sleep-residency debugfs counters are absent
 
 - Severity: medium
-- Status: evidence incomplete; prior proposed cause disproved
-- Impact: suspend works, but CPU/cluster low-power residency accounting is absent.
-- Evidence: the CPUSS sleep-stats driver fails to map the configured register and
-  exposes no residency counters.
+- Status: closed as nonrequired diagnostic tooling; no stock divergence
+- Impact: none established; this is an optional Qualcomm debugfs display interface,
+  not an Android functional compatibility requirement.
+- Evidence: the first secure SCM read returns an error that the driver flattens to
+  `-EINVAL`, but stock DTS, driver, config and module inventory are identical and
+  no matching stock runtime proves the counters bind or advance.
 - Source: `kernel/nothing/sm8735/arch/arm64/boot/dts/vendor/qcom/tuna.dtsi:1790-1802`
 - Stock comparison: NothingOSS tuna uses `0x178a0098` in both B4.1 `260414` and
   `260624`. The previously proposed `0x178b0098` belongs to `kera`, a different
@@ -956,10 +958,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `17800054.cpuss-sleep-stats` remains unbound with no debugfs tree. Historical
   boots report `-22`; the driver collapses any secure SCM configuration-register
   read failure to that value, so the first failing address is still unknown.
-- Next action: use a separately reviewed non-promotable diagnostic kernel to log
-  the first failing SCM read, then compare equivalent stock runtime behavior.
-  Do not change a register address or include this question in r25.
-- Acceptance: successful probe and counters increasing over repeated suspend.
+- Next action: none. Reopen only if matching stock runtime proves successful bind
+  and advancing counters. Do not copy kera addresses or build a diagnostic OTA.
 
 ### MTR-021: inherited init inventory contains dangling services and invalid work
 
@@ -1215,8 +1215,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-028: recovery ADB sideload progress does not report install completion
 
 - Severity: P0 recurring release gate
-- Status: misleading 47-percent host display fixed in source; real sideload
-  acceptance pending; install outcome must still be correlated
+- Status: v2 result protocol implemented and unit-tested; installed recovery
+  success/failure acceptance pending
 - User-visible symptom: host progress commonly stops near 47 percent and may
   print `adb: failed to read command: Success`, making a completed transfer look
   incomplete.
@@ -1234,8 +1234,15 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   block reaches exactly 100 percent. The display no longer uses the 47 multiplier
   or approximate marker. Linux and Windows host ADB builds pass, including
   103/103 host tests and focused duplicate/out-of-order/partial-block coverage.
-- Scope: this reports transfer coverage only. It does not claim recovery install
-  progress and does not alter normal-sideload result semantics.
+- Result-protocol source fix: recovery now exposes opt-in
+  `sideload-host-v2:<size>:<block-size>`, which returns `DONEDONE` only for
+  `INSTALL_SUCCESS` and `FAILFAIL` for every recovery install failure. Patched
+  host ADB tries v2 first and exits nonzero on `FAILFAIL`; old recoveries fall
+  back to legacy transfer-only behavior with an explicit outcome-unavailable
+  warning. Old hosts retain byte-for-byte legacy service behavior.
+- Focused validation: Linux and Windows host ADB build; 103/103 host tests and
+  9/9 minadbd sideload tests pass, including v2 success/failure and legacy-failure
+  compatibility.
 - Gate: record exact ZIP SHA-256, host output, recovery final status, automatically
   selected target slot, update/snapshot state, slot success, encrypted userdata,
   Enforcing SELinux, and first and second coherent boots. A transfer that never
@@ -1246,8 +1253,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   recovery's additional-packages prompt established ROM success and the exact
   GApps sideload returned `Total xfer: 1.00x`. The target then booted coherently
   twice on slot B. Validate the patched host on the next already-planned sideload.
-  Keep a separate upstream minadbd terminal-token improvement open; do not
-  mislabel byte-serving progress as install progress.
+  r48 must validate both an accepted OTA and a deliberately rejected package
+  with patched host and recovery before closure.
 - r29/r30 result: the patched host transfer reached 100 percent during the r29
   recovery sideload. The exact sealed r30 OTA then installed through Android
   update_engine with `kSuccess (0)`, automatically activated slot A, preserved

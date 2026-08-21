@@ -16,16 +16,14 @@ actually been exercised.
 | UNKNOWN | No functional result. Enumeration, a Binder service, or absence of a bug is not a pass. |
 | N/A | The inventory shows that the device does not expose this hardware. |
 
-Rows without a specific r21 result are not accepted-release claims. Live r35
-observations are installed diagnostic evidence only until a complete release gate
-passes.
+Rows without a specific r47 result are not accepted-release claims. Older live
+observations remain diagnostic evidence only.
 
 ## Tested configurations
 
 | Name | Build / slot | State |
 |---|---|---|
-| Accepted baseline | r21 `23.0-20260808`, OTA `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`, slot A | Enforcing, encrypted, two boots, empty crash buffer; accepted |
-| Latest live state | coherent r44 `23.0-20260819`, slot B, OTA `7d6d83598ad1088f8bd1d0c712abcf158c2dbe4669e748ff95535fefccf465b8` | Enforcing and encrypted across two boots; current 260814 firmware/radio, data-status service, eSIM card/EID readiness and ten no-SIM airplane cycles pass; carrier acceptance pending |
+| Accepted baseline / live state | r47 `23.0-20260821`, OTA `d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`, slot A | Enforcing, encrypted, two boots, boot-loaded TIPC, active eSIM, automatic carrier data/NR_NSA, QCC clean; accepted |
 
 Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
 and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public
@@ -138,7 +136,7 @@ No pressure/barometer sensor is exposed.
 | Operation | r21 | Live r22 | Remaining acceptance |
 |---|---|---|---|
 | GNSS live fix and raw measurements | PASS: retained indoor fix/raw evidence | Infrastructure only observed | Cold/warm TTFF, outdoor accuracy, screen-off, airplane mode and restart loops. |
-| QCC assisted location | FAIL: MTR-015 incomplete stack | FAIL | Restore coherent stack or remove clients; compare TTFF. |
+| QCC assisted location | FAIL: MTR-015 incomplete stack | PASS infrastructure on r47: QCC runs in `vendor_qcc_app`, both AIDL services and XTRA remain alive with no linker/JNI/AVC/crash | Outdoor cold/warm TTFF remains acceptance-only. |
 | Physical SIM detection | BLOCKED | PASS on external captures: slot-0 card, USIM/ISIM, subscription load and LTE home registration; both r35 slots are physically absent | Repeat on installed r35 with matching modem firmware and explicit build identity; latest external capture used mismatched baseband `...1.150609.3.152387.2`. |
 | Removable eUICC active profile | BLOCKED | r44 diagnostic PASS: native slot-1 US Mobile Dark Star profile downloads, enables, registers LTE HOME and survives airplane reattach; eUICC APDU/discovery path passes | Prove the same path on the next coherent candidate without live radio-module intervention; then test profile disable/enable, reboot and deletion. |
 | Cellular voice/SMS/MMS/data | BLOCKED | r44 diagnostic PASS for LTE HOME, bidirectional SMS, one 14-second VoLTE call, a firewalled 28-byte TX/28-byte RX IPv4 probe, and a 166-byte self-MMS with successful outbound and inbound provider rows. | Install the automatic APN/TIPC/default-RAT candidate and repeat without manual APN/module/ATEL steps; add IPv6/DNS and an external MMS peer. |
@@ -196,10 +194,10 @@ No pressure/barometer sensor is exposed.
 | SELinux | PASS: Enforcing | PASS: Enforcing | AVC review per affected operation. |
 | AVB/signing/payload integrity | PASS offline/runtime boot | PASS offline and boots | Deliberate corruption/rollback behavior is destructive and untested. |
 | Normal-system OTA/GApps preservation | PASS through r21 | PARTIAL: r22 applied, merged, preserved GApps and passed three coherent crash-clean boots | Repeat on the next promotable candidate. |
-| Recovery sideload/rollback | PARTIAL | PARTIAL: successful installs may show near 47% host progress by upstream design; no retained incomplete install | MTR-028 requires recovery final status, automatic target slot, update/merge state, two coherent boots and encrypted-data retention; rejected-slot rollback remains untested. |
+| Recovery sideload/rollback | PARTIAL | r47 installs successfully but legacy host still reports the recovery reboot boundary as 47%; r45 retained a real interrupted-transfer failure | r48 must prove v2 host exit 0 on success and nonzero on deliberate install failure, plus automatic target slot, two boots and encrypted-data retention. |
 | Short deep suspend | PASS on prior accepted evidence | INCONCLUSIVE on r35: 14m26s USB-powered screen-off no-SIM idle retained boot/system_server and clean crash/tombstone/pstore/fatal/SSR gates, but powered ADB cannot prove deep suspend | Repeat unplugged with ADB disconnected and compare suspend/SoC counters. |
 | Long idle drain | UNKNOWN | UNKNOWN | 8-hour unplugged screen-off test with subsystem wake accounting. |
-| CPUSS residency accounting | FAIL: MTR-020 wrong register | FAIL | Correct from stock evidence and verify across suspend. |
+| CPUSS residency accounting | N/A: optional Qualcomm debugfs interface, not a functional compatibility requirement | No stock-vs-Lineage divergence established | Reopen only if matching stock runtime proves counters bind and advance. |
 | Crash/tombstone health | PASS: empty crash buffer, no new tombstone | PASS diagnostic: three coherent-r22 boots produced zero GMS fatalities and no new tombstone; MTR-026 cleared | Repeat on the next promotable installed candidate. |
 | Hardware keystore / TEE / StrongBox | UNKNOWN | UNKNOWN | Key generation, attestation, authentication binding, reboot persistence and deletion. |
 | Removable storage | N/A: no removable-storage slot exposed | N/A | None. USB OTG storage is covered separately. |

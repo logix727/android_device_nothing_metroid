@@ -1,0 +1,58 @@
+From 5468a11bced5023cff45c4d988994a30b684b732 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Fri, 21 Aug 2026 09:20:14 -0400
+Subject: [PATCH] adb: request authoritative sideload install results
+
+Change-Id: I2f8f6c599991dd122788a53afc68677d071441e3
+---
+ client/commandline.cpp | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/client/commandline.cpp b/client/commandline.cpp
+index 83e477c..cc93915 100644
+--- a/client/commandline.cpp
++++ b/client/commandline.cpp
+@@ -900,11 +900,24 @@ static int adb_sideload_install(const char* filename, bool rescue_mode) {
+         return -1;
+     }
+ 
++    std::string error;
++    bool install_result_available = rescue_mode;
+     std::string service = android::base::StringPrintf(
+-            "%s:%" PRId64 ":%d", rescue_mode ? "rescue-install" : "sideload-host",
++            "%s:%" PRId64 ":%d", rescue_mode ? "rescue-install" : "sideload-host-v2",
+             static_cast<int64_t>(sb.st_size), SIDELOAD_HOST_BLOCK_SIZE);
+-    std::string error;
+     unique_fd device_fd(adb_connect(service, &error));
++    if (device_fd < 0 && !rescue_mode) {
++        service = android::base::StringPrintf("sideload-host:%" PRId64 ":%d",
++                                              static_cast<int64_t>(sb.st_size),
++                                              SIDELOAD_HOST_BLOCK_SIZE);
++        device_fd.reset(adb_connect(service, &error));
++        if (device_fd >= 0) {
++            fprintf(stderr,
++                    "adb: warning: recovery uses legacy sideload; install outcome is unavailable\n");
++        }
++    } else if (device_fd >= 0) {
++        install_result_available = true;
++    }
+     if (device_fd < 0) {
+         fprintf(stderr, "adb: sideload connection failed: %s\n", error.c_str());
+ 
+@@ -942,8 +955,13 @@ static int adb_sideload_install(const char* filename, bool rescue_mode) {
+                    static_cast<double>(xfer) / (sb.st_size ? sb.st_size : 1),
+                    static_cast<int>(strlen(filename) + 10), "");
+             if (strcmp(kMinadbdServicesExitFailure, buf) == 0) {
++                fprintf(stderr, "adb: recovery reported installation failure\n");
+                 return 1;
+             }
++            if (!install_result_available) {
++                fprintf(stderr,
++                        "adb: warning: transfer completed; verify the install result in recovery\n");
++            }
+             return 0;
+         }
+ 
+-- 
+2.43.0
+

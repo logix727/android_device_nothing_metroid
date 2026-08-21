@@ -1,0 +1,228 @@
+From e37118daa2ba496c6db14069bc304d412e470e61 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Fri, 21 Aug 2026 09:20:03 -0400
+Subject: [PATCH] recovery: report sideload install results to new hosts
+
+Change-Id: I060c34053ecf718fddef6029ddc4c6d5001d3054
+---
+ minadbd/README.md                 |  10 +++
+ minadbd/minadbd_services.cpp      |  27 +++++---
+ minadbd/minadbd_services_test.cpp | 105 +++++++++++++++++-------------
+ 3 files changed, 86 insertions(+), 56 deletions(-)
+
+diff --git a/minadbd/README.md b/minadbd/README.md
+index 9a195830..0911ab2a 100644
+--- a/minadbd/README.md
++++ b/minadbd/README.md
+@@ -22,3 +22,13 @@ active at any given time.
+       the comments in `bootable/recovery/install/adb_install.cpp` for the IPC protocol between
+       `recovery` and `minadbd`.
+   - Upon exiting `minadbd`, `recovery` restarts `adbd` if it was previously running.
++# Host sideload services
++
++`sideload-host:<size>:<block-size>` is the legacy transfer-only service. It
++returns `DONEDONE` after recovery completes, regardless of the package install
++result, for compatibility with older platform-tools.
++
++`sideload-host-v2:<size>:<block-size>` uses the same block-request protocol but
++returns recovery's authoritative result: `DONEDONE` for success and `FAILFAIL`
++for failure. New hosts try v2 first and fall back to the legacy service when the
++recovery does not implement it.
+diff --git a/minadbd/minadbd_services.cpp b/minadbd/minadbd_services.cpp
+index df562537..50561179 100644
+--- a/minadbd/minadbd_services.cpp
++++ b/minadbd/minadbd_services.cpp
+@@ -98,6 +98,7 @@ static bool WaitForCommandStatus(int fd, MinadbdCommandStatus* status) {
+ }
+ 
+ static MinadbdErrorCode RunAdbFuseSideload(int sfd, const std::string& args,
++                                           bool report_install_result,
+                                            MinadbdCommandStatus* status) {
+   auto pieces = android::base::Split(args, ":");
+   int64_t file_size;
+@@ -125,10 +126,9 @@ static MinadbdErrorCode RunAdbFuseSideload(int sfd, const std::string& args,
+     return kMinadbdMessageFormatError;
+   }
+ 
+-  // Signal host-side adb to stop. For sideload mode, we always send kMinadbdServicesExitSuccess
+-  // (i.e. "DONEDONE") regardless of the install result. For rescue mode, we send failure message on
+-  // install error.
+-  if (!rescue_mode || *status == MinadbdCommandStatus::kSuccess) {
++  // Legacy sideload-host reports transfer completion only. The opt-in v2 service and rescue mode
++  // report recovery's authoritative install result.
++  if ((!report_install_result && !rescue_mode) || *status == MinadbdCommandStatus::kSuccess) {
+     if (!android::base::WriteFully(sfd, kMinadbdServicesExitSuccess,
+                                    strlen(kMinadbdServicesExitSuccess))) {
+       return kMinadbdHostSocketIOError;
+@@ -172,10 +172,11 @@ static bool WaitForSocketClose(int fd, std::chrono::milliseconds timeout) {
+ }
+ 
+ // Sideload service always exits after serving an install command.
+-static void SideloadHostService(unique_fd sfd, const std::string& args) {
++static void SideloadHostService(unique_fd sfd, const std::string& args,
++                                bool report_install_result) {
+   using namespace std::chrono_literals;
+   MinadbdCommandStatus status;
+-  auto error = RunAdbFuseSideload(sfd.get(), args, &status);
++  auto error = RunAdbFuseSideload(sfd.get(), args, report_install_result, &status);
+   // No need to wait if the socket is already closed, meaning the other end
+   // already exited for some reason.
+   if (error != kMinadbdHostSocketIOError) {
+@@ -190,7 +191,8 @@ static void SideloadHostService(unique_fd sfd, const std::string& args) {
+ // Rescue service waits for the next command after an install command.
+ static void RescueInstallHostService(unique_fd sfd, const std::string& args) {
+   MinadbdCommandStatus status;
+-  if (auto result = RunAdbFuseSideload(sfd.get(), args, &status); result != kMinadbdSuccess) {
++  if (auto result = RunAdbFuseSideload(sfd.get(), args, true, &status);
++      result != kMinadbdSuccess) {
+     exit(result);
+   }
+ }
+@@ -349,11 +351,18 @@ unique_fd daemon_service_to_fd(std::string_view name, atransport* /* transport *
+     // This exit status causes recovery to print a special error message saying to use a newer adb
+     // (that supports sideload-host).
+     exit(kMinadbdAdbVersionError);
++  } else if (android::base::ConsumePrefix(&name, "sideload-host-v2:")) {
++    // sideload-host-v2:<file-size>:<block-size>; reports recovery's install result.
++    std::string args(name);
++    return create_service_thread(
++        "sideload-host-v2",
++        std::bind(SideloadHostService, std::placeholders::_1, args, true));
+   } else if (android::base::ConsumePrefix(&name, "sideload-host:")) {
+     // sideload-host:<file-size>:<block-size>
+     std::string args(name);
+-    return create_service_thread("sideload-host",
+-                                 std::bind(SideloadHostService, std::placeholders::_1, args));
++    return create_service_thread(
++        "sideload-host",
++        std::bind(SideloadHostService, std::placeholders::_1, args, false));
+   }
+   return unique_fd{};
+ }
+diff --git a/minadbd/minadbd_services_test.cpp b/minadbd/minadbd_services_test.cpp
+index b694a57d..be9f7d6c 100644
+--- a/minadbd/minadbd_services_test.cpp
++++ b/minadbd/minadbd_services_test.cpp
+@@ -112,6 +112,46 @@ class MinadbdServicesTest : public ::testing::Test {
+     sleep(EXIT_TIME_OUT);
+   }
+ 
++  void TestSideloadResult(const std::string& command, MinadbdCommandStatus status,
++                          const std::string& expected_result) {
++    std::vector<uint8_t> content(4096, 'a');
++    pid_t pid = fork();
++    if (pid == 0) {
++      WaitForFusePath();
++      android::base::unique_fd fd(TEMP_FAILURE_RETRY(open(package_path_.c_str(), O_RDONLY)));
++      if (fd == -1) {
++        StatExitFlagAndExitProcess(1);
++      }
++      std::vector<uint8_t> content_from_fuse(4096);
++      if (!android::base::ReadFully(fd, content_from_fuse.data(), content_from_fuse.size()) ||
++          content_from_fuse != content) {
++        StatExitFlagAndExitProcess(1);
++      }
++      StatExitFlagAndExitProcess(0);
++    }
++
++    unique_fd fd = daemon_service_to_fd(command, nullptr);
++    ASSERT_NE(-1, fd);
++    ReadAndCheckCommandMessage(recovery_socket_, MinadbdCommand::kInstall);
++
++    std::string adb_message(8, '\0');
++    ASSERT_TRUE(android::base::ReadFully(fd, adb_message.data(), adb_message.size()));
++    ASSERT_EQ(android::base::StringPrintf("%08u", 0), adb_message);
++    ASSERT_TRUE(android::base::WriteFully(fd, content.data(), content.size()));
++
++    int child_status;
++    ASSERT_EQ(pid, waitpid(pid, &child_status, 0));
++    ASSERT_TRUE(WIFEXITED(child_status));
++    ASSERT_EQ(0, WEXITSTATUS(child_status));
++
++    WriteMinadbdCommandStatus(status);
++    std::string result(expected_result.size(), '\0');
++    ASSERT_TRUE(android::base::ReadFully(fd, result.data(), result.size()));
++    ASSERT_EQ(expected_result, result);
++    fd.reset();
++    pause();
++  }
++
+   android::base::unique_fd minadbd_socket_;
+   android::base::unique_fd recovery_socket_;
+ 
+@@ -160,54 +200,25 @@ TEST_F(MinadbdServicesTest, SideloadHostService_wrong_command_format) {
+ }
+ 
+ TEST_F(MinadbdServicesTest, SideloadHostService_read_data_from_fuse) {
+-  auto test_body = [&]() {
+-    std::vector<uint8_t> content(4096, 'a');
+-    // Start a new process instead of a thread to read from the package mounted by FUSE. Because
+-    // the test may not exit and report failures correctly when the thread blocks by a syscall.
+-    pid_t pid = fork();
+-    if (pid == 0) {
+-      WaitForFusePath();
+-      android::base::unique_fd fd(TEMP_FAILURE_RETRY(open(package_path_.c_str(), O_RDONLY)));
+-      // Do not use assertion here because we want to stat the exit flag and exit the process.
+-      // Otherwise the test will wait for the time out instead of failing immediately.
+-      if (fd == -1) {
+-        PLOG(ERROR) << "Failed to open " << package_path_;
+-        StatExitFlagAndExitProcess(1);
+-      }
+-      std::vector<uint8_t> content_from_fuse(4096);
+-      if (!android::base::ReadFully(fd, content_from_fuse.data(), 4096)) {
+-        PLOG(ERROR) << "Failed to read from " << package_path_;
+-        StatExitFlagAndExitProcess(1);
+-      }
+-      if (content_from_fuse != content) {
+-        LOG(ERROR) << "Content read from fuse doesn't match with the expected value";
+-        StatExitFlagAndExitProcess(1);
+-      }
+-      StatExitFlagAndExitProcess(0);
+-    }
+-
+-    unique_fd fd = daemon_service_to_fd("sideload-host:4096:4096", nullptr);
+-    ASSERT_NE(-1, fd);
+-    ReadAndCheckCommandMessage(recovery_socket_, MinadbdCommand::kInstall);
+-
+-    // Mimic the response from adb host.
+-    std::string adb_message(8, '\0');
+-    ASSERT_TRUE(android::base::ReadFully(fd, adb_message.data(), 8));
+-    ASSERT_EQ(android::base::StringPrintf("%08u", 0), adb_message);
+-    ASSERT_TRUE(android::base::WriteFully(fd, content.data(), 4096));
+-
+-    // Check that we read the correct data from fuse.
+-    int child_status;
+-    waitpid(pid, &child_status, 0);
+-    ASSERT_TRUE(WIFEXITED(child_status));
+-    ASSERT_EQ(0, WEXITSTATUS(child_status));
++  ASSERT_EXIT(TestSideloadResult("sideload-host:4096:4096", MinadbdCommandStatus::kSuccess,
++                                "DONEDONE"),
++              ::testing::ExitedWithCode(kMinadbdSuccess), "");
++}
+ 
+-    WriteMinadbdCommandStatus(MinadbdCommandStatus::kSuccess);
++TEST_F(MinadbdServicesTest, SideloadHostV2Service_reports_success) {
++  ASSERT_EXIT(TestSideloadResult("sideload-host-v2:4096:4096", MinadbdCommandStatus::kSuccess,
++                                "DONEDONE"),
++              ::testing::ExitedWithCode(kMinadbdSuccess), "");
++}
+ 
+-    // TODO(xunchang) check if adb host-side receives "DONEDONE", there's a race condition between
+-    // receiving the message and exit of test body (by detached thread in minadbd service).
+-    exit(kMinadbdSuccess);
+-  };
++TEST_F(MinadbdServicesTest, SideloadHostV2Service_reports_failure) {
++  ASSERT_EXIT(TestSideloadResult("sideload-host-v2:4096:4096", MinadbdCommandStatus::kFailure,
++                                "FAILFAIL"),
++              ::testing::ExitedWithCode(kMinadbdSuccess), "");
++}
+ 
+-  ASSERT_EXIT(test_body(), ::testing::ExitedWithCode(kMinadbdSuccess), "");
++TEST_F(MinadbdServicesTest, LegacySideloadHostService_preserves_transfer_only_result) {
++  ASSERT_EXIT(TestSideloadResult("sideload-host:4096:4096", MinadbdCommandStatus::kFailure,
++                                "DONEDONE"),
++              ::testing::ExitedWithCode(kMinadbdSuccess), "");
+ }
+-- 
+2.43.0
+

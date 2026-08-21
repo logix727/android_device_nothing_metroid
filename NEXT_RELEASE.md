@@ -1,27 +1,17 @@
 # Next release
 
-## r44 current radio test seed
+## Accepted r47 and r48 scope
 
-r44 is installed coherently on slot B from
-`releases/candidate_20260819_195257_288867266_candidate/`; OTA SHA-256
-`7d6d83598ad1088f8bd1d0c712abcf158c2dbe4669e748ff95535fefccf465b8`.
-It runs the complete validated 260814 firmware generation, current-stock radio
-controls, stock data-status producer and automatic native eSIM mux. Two boots,
-merge, encryption, Enforcing, crash/pstore, data-status/QcRilHook startup and
-eSIM card-present/EID readiness pass. It is ready for external active-SIM and
-real-carrier-eSIM acceptance, but is not yet the accepted baseline.
+r47 is the accepted and live baseline on slot A from
+`releases/candidate_20260820_214832_213816480_candidate/`; OTA SHA-256
+`d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`.
+It passes two boots, encryption/Enforcing, active eSIM, automatic mode 26 and
+`ereseller`, IPv4/IPv6 data, `NR_NSA`, IMS call, boot-loaded TIPC and QCC closure.
 
-## r39 current-source candidate
-
-r39 is installed coherently on slot B from
-`releases/candidate_20260818_112412_146945461_candidate/`; OTA SHA-256
-`4bc472155f9ab9052086d5c55d14fed40b3ad0d1692cad85df88ef939e43fb7a`.
-It integrates current official APNs, preserves metroid carrier rows, and passes
-the manifest-derived focused preflight, full offline audit, update_engine
-`kSuccess`, snapshot merge, two coherent boots, invariant gates, and no-SIM radio
-recovery. It is not a new baseline: the maintainer device reports
-`ABSENT,ABSENT`. Physical-SIM/eSIM data, IMS, calls, and SMS acceptance on the
-required `...1.126608.2.134544.2` modem generation remains the promotion gate.
+r48 is restricted to MTR-028: versioned recovery/host ADB sideload-result
+reporting. It must not include speculative NFC, sensor-extension, haptic, CPUSS,
+thermal or camera changes. Historical release narrative below remains evidence,
+not current execution direction.
 
 Canonical issue backlog: [`BUGS.md`](BUGS.md).
 Canonical accepted baseline: [`BASELINE.md`](BASELINE.md).
@@ -29,20 +19,8 @@ Canonical hardware matrix: [`HARDWARE_ACCEPTANCE.md`](HARDWARE_ACCEPTANCE.md).
 
 ## Accepted baseline and live state
 
-r21 (`23.0-20260808-UNOFFICIAL-metroid`) remains the accepted baseline: encrypted
-userdata, SELinux Enforcing, root vbmeta flag `1`, empty crash buffer, no new
-tombstones, and two successful boots.
-
-The live device is r35 (`23.0-20260815-UNOFFICIAL-metroid`) on successful slot B,
-installed from the immutable snapshot
-`releases/candidate_20260815_192053_709386797_candidate/`; OTA SHA-256
-`d846533b49062d437d112fa3946be413471ab20b2ece9a3f601236e23cc6c7b6`.
-It is encrypted and Enforcing, has snapshot state `none`, preserves GApps, and
-passes two coherent boots with one system_server start and no new crash,
-tombstone, or pstore record. QTI/IMS startup passes; the APN checksum migration
-materialized all four carrier-ID 10028 rows and persisted across reboot. No
-physical SIM is present, and camera/USB/UDFPS matrices are incomplete, so r21
-remains the accepted baseline.
+r47 (`23.0-20260821-UNOFFICIAL-metroid`) is the accepted baseline and live state;
+see `BASELINE.md` and `release/20260821-r47-installed.md`.
 
 r35 also passes bounded installed checks for fresh UDFPS enrollment and four
 unlocks with no HAL death, NCM local IPv4 transport with `usb0` excluded from
