@@ -94,9 +94,11 @@ revisions:
 
 | Project | Revision |
 |---|---|
-| `device/nothing/metroid` | `57d09bcce0c1aa3f258c803b07dc55442728597e` |
+| `device/nothing/metroid` | `ece6095006051aa9feea39b6ed257808b0c04168` |
 | `vendor/nothing/metroid` | `62a5802800e0e31a75a6bd5b56e798ef42c9e1ec` (private) |
 | `kernel/nothing/sm8735` | `aeb23d327717f9f4820f1ba5b1436fd401089a36` |
+| `bootable/recovery` | `e37118daa2ba496c6db14069bc304d412e470e61` |
+| `packages/modules/adb` | `5468a11bced5023cff45c4d988994a30b684b732` |
 
 Post-r48 workflow/record commits are not part of the accepted OTA until the exact
 audited successor is installed and accepted.
