@@ -1,0 +1,40 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": ["MTR-028"],
+  "validation_parent": {
+    "artifact_sha256": "d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88",
+    "installed_record": "lineage/device/nothing/metroid/release/20260821-r47-installed.md",
+    "installed_record_revision": "7ee643a351d232df574af7278cb93bc35e7c4526",
+    "installed_record_sha256": "eaddc454a2db753bc77a3b0c32f6384ff34eca25e1c0bd428ca431a120677b1f",
+    "manifest": "releases/candidate_20260820_214832_213816480_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "b7549696e6bb9a34867d52834981263b3fd3b33d1d9a6825bd7b1f56783c595d",
+    "source_device_revision": "57d09bcce0c1aa3f258c803b07dc55442728597e",
+    "workspace_revision": "e12db12de39178e543845b35a2c4fabec10bb9d8"
+  },
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "storage-security-update"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-028": [
+      "patched host and recovery use sideload-host-v2 and report DONEDONE with host exit 0 only for a successful install",
+      "a deliberately rejected package returns FAILFAIL and host exits nonzero without changing the active slot",
+      "legacy host/recovery combinations retain transfer compatibility and print explicit outcome-unavailable warnings where applicable",
+      "successful r48 installation automatically selects the inactive slot, preserves encrypted userdata and GApps, and boots coherently twice"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
