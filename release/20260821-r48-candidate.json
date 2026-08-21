@@ -15,7 +15,8 @@
   },
   "classified_test_suites": [
     "platform-full-compatibility",
-    "storage-security-update"
+    "storage-security-update",
+    "usb"
   ],
   "full_compatibility": true,
   "issue_acceptance": {
