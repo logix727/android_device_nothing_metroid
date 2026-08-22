@@ -5,17 +5,15 @@ Start every task from `BASELINE.md` and `NEXT_RELEASE.md`.
 
 ## Installed baseline
 
-- Build: `23.0-20260808-UNOFFICIAL-metroid`
+- Build: `23.0-20260821-UNOFFICIAL-metroid` (r48, incremental `1787327311`)
 - OTA SHA-256:
-  `e26956f003ceea3923d847515e2943dc8bbf4505533cbae726d36bc167f968db`
-- Artifact: `releases/candidate_20260808_192539_leaudio-r21/`; not a public
-  release. `org.codeaurora.ims` runs as `vendor_qtelephony` with MMTEL bound on
-  both slots and no IMS/radio AVCs across two boots.
-- Accepted r21 state: slot A, boot complete across two boots, SELinux Enforcing,
-  encrypted data, slot marked successful. The current live device is coherent r35
-  on slot B, Enforcing and encrypted, but not accepted. Both modem slots use the
-  matching A16 stock modem build and MindTheGapps was separately supplied. See
-  `BASELINE.md` before changing either companion input.
+  `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`
+- Artifact: `releases/candidate_20260821_121653_317252161_candidate/`; accepted
+  private XDA test seed, not an official release.
+- Accepted r48 state: slot A, two boots, SELinux Enforcing, encrypted data,
+  boot-loaded TIPC, active Dark Star eSIM, automatic carrier data/NR_NSA, QCC
+  closure and empty pstore. Both modem slots use the required B4.1 260814 build
+  `...1.152387.2.170946.5`; MindTheGapps is a separate companion input.
 - Never describe a newer source change as working until it is built, audited,
   installed, and tested.
 
@@ -84,7 +82,7 @@ FBE, update_engine, and package removals as boot-critical.
 Before a boot-critical change joins a candidate:
 
 1. State the exact first divergence and why a non-boot-critical fix is insufficient.
-2. Diff stock, accepted r21, coherent r22, and proposed staged images.
+2. Diff stock, accepted r48, and proposed staged images.
 3. Prove boot image membership, init imports/services, ELF dependencies, VINTF,
    SELinux, AVB descriptors/flags/rollback indexes, page size, and partition type.
 4. Define recovery and rollback using already verified artifacts; do not rely on
@@ -182,16 +180,15 @@ Before sideloading, distributing a candidate, or making a functional claim:
 
 ## Current priorities
 
-1. Preserve installed r35 source/artifact identity and complete its acceptance-
-   only UDFPS, camera, USB, Play package-state, face, AudioFX and thermal rows
-   before spending another device write.
-2. Hold MTR-001/MTR-002 source work until a same-device stock control on the
-   matching modem generation and QMI/QXDM comparison establish the next data-path
-   divergence.
+1. Preserve accepted r48 source/artifact identity and complete acceptance-only
+   UDFPS, camera, USB, face, AudioFX and thermal rows before another device write.
+2. Reject physical-SIM/carrier evidence unless ROM and both modem slots pass the
+   checked-in r48 preflight. Do not edit APNs or radio source from mismatched
+   firmware logs.
 3. Keep MTR-027 externally blocked: distinguish package launch from Google's
    certification decision and do not spoof identity, attestation or AVB.
-4. Close evidence-ready MTR-011 and MTR-024 in safe dependency order; do not
-   change MTR-020 without metroid stock-backed evidence.
+4. Keep MTR-011/MTR-016 evidence-bound; MTR-020 and MTR-024 currently have no
+   eligible source edit.
 5. Execute physical-SIM, eSIM, OMAPI, LE Audio, and accessory matrices when the
    required hardware or credentials are available.
 6. Replace temporary carry patches with reviewed public forks/upstream changes,

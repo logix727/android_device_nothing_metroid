@@ -11,7 +11,11 @@ MANDATORY FIRMWARE PREFLIGHT
 
 The Lineage OTA updates Android OS partitions. It does not contain Nothing's
 proprietary modem, bootloader, DSP, trust-zone, Bluetooth or other stock firmware.
-Before testing, run:
+Preferred one-command check:
+
+  ./scripts/preflight-r48-carrier.sh
+
+Manual check:
 
   adb shell getprop gsm.version.baseband
 
@@ -23,6 +27,9 @@ If either entry differs, stop. Do not report carrier results and do not flash on
 modem. Return to official Nothing OS, update through the official B4.1 260814
 firmware path so the complete firmware set is installed coherently, verify both
 basebands, then install r48 again.
+
+The preflight also refuses the wrong ROM incremental, missing boot-time TIPC,
+wrong default network mode, disabled encryption, or Permissive SELinux.
 
 Validated changes:
 - boot-time TIPC/Qualcomm DSI cellular initialization;
