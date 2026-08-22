@@ -402,12 +402,22 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `0x1004` failure and does not by itself prove IMS will register.
 - Acceptance remaining: establish a valid subscription first, then VoLTE/VoWiFi,
   IMS SMS, incoming/outgoing audio, and LTE/Wi-Fi handover.
+- Tele2 Sweden evidence (r47 external): carrier ID 1696 registers LTE/NR, data and
+  SMS pass, VOPS is available, but IMS remains unregistered (`4001/4002`) and
+  calls fall back to CS before network cause 39 / vendor cause 252. Current
+  Lineage APNs omit stock's carrier-scoped `internet.tele2.se`, IMS and XCAP
+  profiles, and metroid CarrierConfig omits the Nothing-consumed `Tele2 VOLTE`
+  IMS user-agent policy.
+- Tele2 source fix: restore the exact stock carrier-ID 1696 APN family, enable
+  carrier VoLTE, and set the stock Nothing Tele2 IMS UA. Module/schema staging
+  passes; real Tele2 IMS/call acceptance is external and pending.
 
 ### MTR-003: stock-backed eSIM provisioning
 
 - Severity: high
 - Status: closed on accepted r47/r48 for real Dark Star profile download,
-  activation, reboot persistence and service
+  activation, reboot persistence and service; physical-SIM2 mux defect fixed in
+  source, external acceptance pending
 - Impact: applications were presented an eUICC hardware feature for which no
   LPA/EuiccService or eUICC binder backend existed, so discovery, download,
   activation, deletion, and settings could not work.
@@ -513,6 +523,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   provisioning/LPA/APDU/transport path but cannot test profile management or
   packet data. Use a matching SGP.26 test-card/SM-DP+ pair for lab management;
   use a provisioned commercial SIM/profile for MTR-001/MTR-002 radio acceptance.
+- Physical-SIM2 divergence (r47 external): the partner app automatically forced
+  empty slot 1 to proprietary eSIM mode on boot/slot events. QTI confirms request
+  value `0` selects pSIM and `1` selects eSIM; slot 1 cannot expose both modes
+  simultaneously. Remove the one-way boot heuristic and provide an explicit,
+  confirmed user selector with warnings and restart requirement. The selector APK
+  renders on r48 without changing the active profile; real pSIM2/eSIM switch
+  acceptance remains external.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC

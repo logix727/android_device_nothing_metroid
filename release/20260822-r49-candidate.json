@@ -1,0 +1,41 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": ["MTR-002", "MTR-003"],
+  "validation_parent": {
+    "artifact_sha256": "5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581",
+    "installed_record": "lineage/device/nothing/metroid/release/20260821-r48-installed.md",
+    "installed_record_revision": "59ecfc33c48882917ef9c4dc60718ab2ff926c2a",
+    "installed_record_sha256": "863d84432204fca944f1fa932e54b886e931fdfc027593ccd49a81f134821e59",
+    "manifest": "releases/candidate_20260821_121653_317252161_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "82a3ec0a1a6161911a1016a6dc6f17a58b4a8c266e6e3928436280135f324aee",
+    "source_device_revision": "ece6095006051aa9feea39b6ed257808b0c04168",
+    "workspace_revision": "bd015d18d55097856708da539af90d8da9d4c7bb"
+  },
+  "classified_test_suites": ["radio-esim-secure-element"],
+  "full_compatibility": false,
+  "issue_acceptance": {
+    "MTR-002": [
+      "Tele2 carrier ID 1696 selects internet.tele2.se and creates its IMS profile",
+      "IMS registers and incoming/outgoing Tele2 calls and audio pass without CS fallback",
+      "Tele2 data, 5G and SMS remain working"
+    ],
+    "MTR-003": [
+      "SIM 2 mode selector explicitly switches slot 1 between physical SIM and eSIM without an automatic boot override",
+      "physical SIM2 becomes visible after selecting physical mode and restart",
+      "active eSIM profile is preserved and becomes usable again after selecting eSIM mode and restart"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
