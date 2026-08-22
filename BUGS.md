@@ -24,9 +24,9 @@ permission; it must never be committed to this public repository.
 | State | Issues |
 |---|---|
 | Active fixes | MTR-011, MTR-016 |
-| Installed fixes needing focused acceptance | MTR-003, MTR-009, MTR-010, MTR-012, MTR-018, MTR-019, MTR-022, MTR-023, MTR-029 |
+| Installed fixes needing focused acceptance | MTR-009, MTR-010, MTR-012, MTR-018, MTR-019, MTR-022, MTR-023, MTR-029 |
 | Evidence/test gaps without eligible source edit | MTR-005, MTR-020, MTR-024 |
-| External hardware/carrier/policy acceptance | MTR-001/MTR-002 other carriers, MTR-027, OMAPI |
+| External hardware/carrier/policy acceptance | MTR-001/MTR-002 other carriers, MTR-027, MTR-030, OMAPI |
 | Closed defects / recurring gates | MTR-003, MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-017, MTR-021, MTR-026, MTR-028 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
@@ -1236,6 +1236,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   an absent/unresolved launcher and `UNCERTIFIED-BLOCKED` only after a valid
   launch reaches Google's policy activity. Do not clear data or remove updates
   as part of the initial test.
+- r48 package-layer repair (2026-08-22): the ROM update had left only updated
+  `/data/app` Phonesky/GMS while product/system-ext Google bases and policy files
+  were absent. Phonesky therefore crashed in `ClassicApplication.onCreate()` with
+  `SecurityException` for missing privileged `MANAGE_USERS`. Re-sideloading the
+  pinned MindTheGapps archive restored the system bases and privileged grant.
+  Phonesky now launches successfully and reaches Google's
+  `UncertifiedDeviceActivity`. This closes the local startup defect and confirms
+  the remaining result is external policy.
 
 ### MTR-028: recovery ADB sideload progress does not report install completion
 
@@ -1312,6 +1320,26 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: two coherent boots, property `0`, ten ordered FHD30/FHD60/UHD30
   Aperture cycles with rear/front/rear routing and finalized H.264/AAC clips,
   stable camera services, and no new crash, tombstone, AVC, or pstore record.
+
+### MTR-030: active eSIM profile cannot be disabled or erased
+
+- Severity: medium; carrier credential management
+- Status: confirmed card/LPA operation failure; source fix not yet eligible
+- Impact: Settings cannot turn off or erase the active US Mobile profile.
+- Reproduction on r48: `Use this SIM -> Turn off` and `Erase eSIM` both fail;
+  the profile remains active and intact.
+- First failing operation: Google LPA correctly invokes `DisableProfile` before
+  switch/delete and retries twice. The eUICC returns operation 11 result 5,
+  GSMA `catBusy` (`0x080B05`). APDU transport itself succeeds with `SW=9000`,
+  and no delete command is issued after disable fails.
+- Ruled out: Settings coordinates/confirmation, EID/card routing, APDU transport,
+  reboot, Google-LPA package enablement, and secure-element access.
+- Safety: do not loop erase, reset all eSIMs, clear LPA data, or change the slot-1
+  physical/eSIM mux while this profile is active. Failed attempts do not remove
+  the credential.
+- Next evidence: compare the same profile/card on official Nothing OS or obtain a
+  vendor trace showing why the CAT session remains busy. A broad framework retry
+  loop is not eligible from current evidence.
 - r44 acceptance: property `0` is installed; ten ordered Aperture cycles pass
   rear/front/rear routing and true parsed 30/60/30 fps H.264/AAC finalization.
   Provider/cameraserver/Nothing camera PIDs remain stable and crash, Mapper5,
