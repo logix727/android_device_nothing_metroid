@@ -530,6 +530,10 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   confirmed user selector with warnings and restart requirement. The selector APK
   renders on r48 without changing the active profile; real pSIM2/eSIM switch
   acceptance remains external.
+- r49 local mux acceptance: QTI accepts both pSIM (`0`) and eSIM (`1`) requests;
+  rebooted physical mode hides the eUICC and exposes an empty physical slot 1,
+  while switching back and rebooting restores the same active US Mobile profile
+  intact. An inserted physical-SIM2 service test remains external.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
