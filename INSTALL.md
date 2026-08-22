@@ -29,6 +29,22 @@ Never disable AVB verification or manually force the OTA target slot.
 Historical instructions under `release/` are retained only as development
 records and are not current installation guidance.
 
+## Automated upgrades versus first installs
+
+- Existing coherent Lineage installations should use the normal Android
+  `update_engine` path (`scripts/apply-ota-adb.sh` or Lineage Updater). This is
+  host-driven and preserves GApps through `addon.d-v2/backuptool_ab` without
+  recovery UI.
+- First install, rollback, or any ROM sideload performed from recovery still
+  requires rebooting into the newly selected slot's recovery before installing
+  GApps. Upstream `sideload-auto-reboot` installs one package and boots Android;
+  it cannot safely chain ROM plus GApps.
+- Unsigned third-party GApps require recovery signature confirmation. Do not
+  bypass verification or embed a maintainer ADB key in public recovery.
+- A fully autonomous recovery flow requires a dedicated trusted add-on key and a
+  versioned noninteractive rescue/install protocol. Until then, recovery installs
+  are assisted and normal upgrades are the autonomous path.
+
 ## Bug reports
 
 Include the exact OTA SHA-256, firmware, install type, reproduction steps, and

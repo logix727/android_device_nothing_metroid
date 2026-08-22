@@ -1,27 +1,177 @@
-From ee6de027eddd0736c826d87cf453cd39f0caca76 Mon Sep 17 00:00:00 2001
-From: Your Name <your.email@example.com>
-Date: Sat, 15 Aug 2026 00:23:31 -0400
-Subject: [PATCH] apns: restore Nothing US carrier profiles
+From 90b37a638d747f2c5c45dc650be01b8f258ad17b Mon Sep 17 00:00:00 2001
+From: Metroid Maintainer <maintainer@localhost>
+Date: Sat, 22 Aug 2026 19:27:39 -0400
+Subject: [PATCH] apns: add metroid carrier profiles
 
-Change-Id: I4bb0aef1d12456aeabfe37aef9e1e6d688ba165a
+Change-Id: I2b155220792e7aee5be529ed400c60eea7e8cdde
 ---
- US.xml | 182 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 181 insertions(+), 1 deletion(-)
+ SE.xml |  76 +++++++++++++-
+ US.xml | 316 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 388 insertions(+), 4 deletions(-)
 
+diff --git a/SE.xml b/SE.xml
+index 4592524..ab51c70 100644
+--- a/SE.xml
++++ b/SE.xml
+@@ -546,19 +546,52 @@
+     <apn
+         mcc="240"
+         mnc="02"
+-        carrier="3 SE"
++        carrier="3"
+         apn="data.tre.se"
+-        type="default,supl,mms"
++        carrier_id="1691"
++        mmsc="http://mms.tre.se"
++        mmsport="8799"
++        mmsproxy="mmsproxy.tre.se"
++        network_type_bitmask="1|2|3|4|5|6|7|8|9|10|12|13|14|15|17|20"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="default,ia,supl,mms"
+     />
+     <apn
+         mcc="240"
+         mnc="02"
+-        carrier="3 SE MMS"
+-        apn="data.tre.se"
++        carrier="3 MMS iWLAN"
++        apn="services"
++        carrier_id="1691"
+         mmsc="http://mms.tre.se"
+         mmsport="8799"
+         mmsproxy="mmsproxy.tre.se"
++        network_type_bitmask="18"
++        protocol="IPV4V6"
+         type="mms"
++        user_visible="false"
++    />
++    <apn
++        mcc="240"
++        mnc="02"
++        carrier="3 IMS"
++        apn="ims"
++        carrier_id="1691"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="ims"
++        user_visible="false"
++    />
++    <apn
++        mcc="240"
++        mnc="02"
++        carrier="3 Ut"
++        apn="services"
++        carrier_id="1691"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="xcap"
++        user_visible="false"
+     />
+     <apn
+         mcc="240"
+@@ -676,6 +709,41 @@
+         type="default,supl"
+         user=""
+     />
++    <apn
++        mcc="240"
++        mnc="07"
++        carrier="Tele2 Internet"
++        carrier_id="1696"
++        apn="internet.tele2.se"
++        type="default,ia,supl,mms"
++        mmsc="http://mmsc.tele2.se"
++        mmsproxy="mmsproxy.tele2.se"
++        mmsport="8080"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++    />
++    <apn
++        mcc="240"
++        mnc="07"
++        carrier="Tele2 IMS"
++        carrier_id="1696"
++        apn="ims"
++        type="ims"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        user_visible="false"
++    />
++    <apn
++        mcc="240"
++        mnc="07"
++        carrier="Tele2 XCAP"
++        carrier_id="1696"
++        apn="HOS"
++        type="xcap"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        user_visible="false"
++    />
+     <apn
+         mcc="240"
+         mnc="07"
 diff --git a/US.xml b/US.xml
-index ea46b99..c9da208 100644
+index 1802652..43ee53a 100644
 --- a/US.xml
 +++ b/US.xml
-@@ -1385,7 +1385,7 @@
-         mnc="280"
-         carrier="ATT 5G SA IMS"
-         apn="ims"
--        bearer_bitmask="3|8|9|10|13|15|18|20"
-+        network_type_bitmask="3|8|9|10|13|15|18|20"
-         carrier_id="10028"
-         protocol="IPV4V6"
+@@ -1358,6 +1358,54 @@
          roaming_protocol="IPV4V6"
-@@ -1487,6 +1487,7 @@
+         type="default,supl,mms"
+     />
++    <apn
++        mcc="310"
++        mnc="280"
++        carrier="ATT 5G SA Default"
++        apn="nrphone"
++        carrier_id="10028"
++        mmsc="http://mmsc.mobile.att.net"
++        mmsport="80"
++        mmsproxy="proxy.mobile.att.net"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="default,mms,supl,fota"
++        user_editable="false"
++    />
++    <apn
++        mcc="310"
++        mnc="280"
++        carrier="ATT 5G SA Hotspot"
++        apn="nrhotspot"
++        carrier_id="10028"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="dun"
++        user_visible="false"
++    />
++    <apn
++        mcc="310"
++        mnc="280"
++        carrier="ATT 5G SA IMS"
++        apn="ims"
++        network_type_bitmask="3|8|9|10|13|15|18|20"
++        carrier_id="10028"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="ims"
++        user_visible="false"
++    />
++    <apn
++        mcc="310"
++        mnc="280"
++        carrier="ATT 5G SA XCAP"
++        apn="nrphone"
++        carrier_id="10028"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="xcap"
++        user_visible="false"
++    />
+     <apn
+         mcc="310"
+         mnc="280"
+@@ -1442,6 +1490,7 @@
          carrier="ATT IMS"
          apn="ims"
          carrier_id="10021"
@@ -29,7 +179,7 @@ index ea46b99..c9da208 100644
          mvno_match_data="53FF"
          mvno_type="gid"
          protocol="IPV4V6"
-@@ -1494,6 +1495,17 @@
+@@ -1449,6 +1498,17 @@
          type="ims"
          user_visible="false"
      />
@@ -47,7 +197,102 @@ index ea46b99..c9da208 100644
      <apn
          mcc="310"
          mnc="280"
-@@ -4978,4 +4990,172 @@
+@@ -4699,6 +4759,94 @@
+         roaming_protocol="IPV4V6"
+         type="default,mms,dun,hipri,fota"
+     />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="cox"
++        apn="CdmaNai"
++        bearer="6"
++        carrier_enabled="false"
++        mmsc="http://mms.cox.net/cox/mms.php"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="mms"
++    />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="Cox IMS"
++        apn="VZWIMS"
++        bearer="13"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="ims,ia"
++    />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="Cox IMS"
++        apn="VZWIMS"
++        bearer="14"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="ims,ia"
++    />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="Cox FOTA"
++        apn="VZWADMIN"
++        bearer="13"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="fota"
++    />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="Cox FOTA"
++        apn="VZWADMIN"
++        bearer="14"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="fota"
++    />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="Cox"
++        apn="VZWINTERNET"
++        bearer="13"
++        mmsc="http://mms.cox.net/cox/mms.php"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="default,mms,dun,supl"
++    />
++    <apn
++        mcc="311"
++        mnc="600"
++        carrier="Cox"
++        apn="VZWINTERNET"
++        bearer="14"
++        mmsc="http://mms.cox.net/cox/mms.php"
++        mvno_type="spn"
++        mvno_match_data="cox"
++        protocol="IPV4V6"
++        roaming_protocol="IPV4V6"
++        type="default,mms,dun,supl"
++    />
+     <apn
+         mcc="311"
+         mnc="660"
+@@ -4838,4 +4986,172 @@
          roaming_protocol="IPV4V6"
          type="mms"
      />
@@ -222,3 +467,4 @@ index ea46b99..c9da208 100644
  </apns>
 -- 
 2.43.0
+
