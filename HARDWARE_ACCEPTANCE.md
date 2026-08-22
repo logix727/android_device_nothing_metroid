@@ -10,20 +10,21 @@ actually been exercised.
 | Status | Meaning |
 |---|---|
 | PASS | The real operation passed on the named build with retained evidence. |
+| INHERITED | A named accepted parent passed and the child changed no owning source, dependency, firmware or companion input. |
 | PARTIAL | A bounded subset passed; the row names the missing modes. |
 | FAIL | A real operation has a reproduced defect. |
 | BLOCKED | Required hardware, credentials, carrier service, or physical action is unavailable. |
 | UNKNOWN | No functional result. Enumeration, a Binder service, or absence of a bug is not a pass. |
 | N/A | The inventory shows that the device does not expose this hardware. |
 
-Rows without a specific r47 result are not accepted-release claims. Older live
-observations remain diagnostic evidence only.
+Rows without a specific r48 result or a valid named `INHERITED` parent are not
+accepted-release claims. Older live observations remain diagnostic evidence only.
 
 ## Tested configurations
 
 | Name | Build / slot | State |
 |---|---|---|
-| Accepted baseline / live state | r47 `23.0-20260821`, OTA `d928fd4b7d1cf83d47159dda0fe902c8476ed9ab94fb9ec86633a1f286641b88`, slot A | Enforcing, encrypted, two boots, boot-loaded TIPC, active eSIM, automatic carrier data/NR_NSA, QCC clean; accepted |
+| Accepted baseline / live state | r48 `23.0-20260821`, OTA `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`, slot A | Enforcing, encrypted, two boots, boot-loaded TIPC, active eSIM, automatic carrier data/NR_NSA, QCC clean; accepted |
 
 Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
 and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public

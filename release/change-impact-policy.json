@@ -4,12 +4,7 @@
     "artifact-slot-companion-identity",
     "avb-encryption-selinux",
     "boot-crash-pstore",
-    "display-touch-unlock",
-    "wifi-transport",
-    "adb-transfer",
-    "speaker-smoke",
-    "rear-camera-smoke",
-    "charging-suspend-smoke"
+    "display-touch-unlock"
   ],
   "issue_suites": {
     "MTR-001": ["radio-esim-secure-element"],

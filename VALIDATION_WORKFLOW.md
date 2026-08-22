@@ -173,10 +173,33 @@ Every installed candidate gets one small invariant suite:
    progress near 47 percent or its terminal-token warning is not an install result.
 3. Encrypted userdata, SELinux Enforcing, one system_server, clean crash buffer,
    no new tombstone/pstore, and no boot-critical AVC.
-4. Display/touch/unlock sanity and ADB reconnect with a transfer hash.
-5. Wi-Fi association plus real transport.
-6. Short speaker playback and one rear-camera preview/still capture.
-7. Basic battery/charging state and one short unplugged suspend/resume.
+4. Display/touch/unlock sanity and enough ADB control to retain the evidence.
+
+Wi-Fi transport, ADB transfer hashes, speaker playback, camera capture,
+battery/charging and suspend are not universal release rituals. Run them only
+when selected by the change-impact policy, when an unexplained invariant failure
+could involve them, or at a scheduled compatibility-baseline milestone.
+
+### Acceptance inheritance
+
+An accepted hardware result is inherited by a child candidate without repeating
+the physical operation when all of these are true:
+
+1. The installed parent and exact accepted operation/evidence are immutable and
+   named in the candidate record.
+2. The planner selects no suite for that subsystem and no changed path owns or
+   feeds its framework, app, HAL, vendor binary/config, kernel/DT/module, SELinux,
+   firmware, or companion input.
+3. The candidate is not a broad platform compatibility baseline and has no
+   unexplained boot, crash, tombstone, pstore, AVC, service, or hardware-state
+   regression that could invalidate the result.
+4. The release record labels the result `INHERITED` and names the parent build;
+   it must not claim the operation was freshly exercised.
+
+Inheritance is transitive only through accepted installed records. A diagnostic,
+rejected, uninstalled, mismatched-firmware, or partially tested build cannot be
+an inheritance parent. Any source-vector or companion uncertainty fails closed
+to a fresh operation.
 
 Then run the union of matrices affected by the candidate. Do not rerun every
 hardware row for every narrow change. Run the full available hardware matrix at
@@ -189,10 +212,10 @@ The maintained change-impact planner derives those affected matrices from the
 sealed installed parent's Repo manifest and the proposed target manifest. Future
 candidate records use stable `classified_test_suites`; handwritten test prose,
 mutable `current`/`latest` links, and unrelated scheduled acceptance cannot widen
-or narrow the derived union. Audio, camera, Bluetooth, USB, and other full
-matrices run only when their source vector changed, their issue is included, or
-the planner marks a broad compatibility baseline. The invariant speaker and rear
-camera operations remain short smoke checks, not full subsystem matrices.
+or narrow the derived union. Audio, camera, Bluetooth, USB, charging, suspend,
+Wi-Fi and other matrices run only when their source vector changed, their issue
+is included, an unexplained failure implicates them, or the planner marks a broad
+compatibility baseline.
 
 Run the planner-selected focused targets and static gates once with
 `tools/maintenance/run_validation_plan.py`. Its manifest-bound receipt is a
