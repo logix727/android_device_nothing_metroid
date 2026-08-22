@@ -40,8 +40,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-001: QTI radio extension services are rejected by VINTF
 
 - Severity: critical
-- Status: r35 APN checksum migration installed and validated; physical-SIM and
-  carrier acceptance pending
+- Status: base defect closed on accepted r48; additional carriers remain
+  firmware-gated acceptance
 - Impact: IMS, IWLAN, QTI call-audio control, vendor radio configuration, SAP,
   and advanced UICC/data paths cannot register.
 - Evidence (base): two-boot traces show servicemanager rejecting the listed QTI
@@ -292,12 +292,17 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   trace.
 - Acceptance: present UICC/subscription, calls, SMS, data, IMS, IWLAN, call-audio,
   DSDS, airplane-mode, and suspend tests on the documented modem generation.
+- r47/r48 accepted result: with both modem slots on required build
+  `...1.152387.2.170946.5`, Dark Star automatically selects `ereseller`, registers
+  LTE/NR_NSA, establishes IPv4/IPv6 data, and passes IMS call, SMS and MMS.
+  Regular-AT&T external logs from old modem `...1.114407.2.116758.2` are rejected
+  by the checked-in preflight and do not reopen the source defect.
 
 ### MTR-002: Android IMS implementation and carrier acceptance
 
 - Severity: critical
-- Status: r35 installed with IMS process/service startup validated; carrier IMS
-  acceptance pending
+- Status: base defect and Dark Star VoLTE closed on accepted r47/r48; additional
+  carrier/VoWiFi/DSDS acceptance remains
 - Impact: VoLTE, VoWiFi, IMS SMS, supplementary services, IMS handover, and IMS
   emergency MMTEL cannot work.
 - Evidence (base): the installed package/service audit finds no IMS implementation;
@@ -401,8 +406,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-003: stock-backed eSIM provisioning
 
 - Severity: high
-- Status: installed on r17; provisioning UI accepted through QR scanner, real
-  profile download/activation pending
+- Status: closed on accepted r47/r48 for real Dark Star profile download,
+  activation, reboot persistence and service
 - Impact: applications were presented an eUICC hardware feature for which no
   LPA/EuiccService or eUICC binder backend existed, so discovery, download,
   activation, deletion, and settings could not work.
@@ -770,7 +775,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-015: QCC location assistance stack is incomplete
 
 - Severity: medium
-- Status: source fixed; built-not-installed
+- Status: infrastructure closed on accepted r47/r48; outdoor TTFF remains an
+  acceptance-only row
 - Impact: GNSS fixes work, but assistance/correction behavior can degrade during
   cold starts or network transitions; XTRA retries an unavailable QCC service.
 - Evidence: the QCC vendor service is absent while the location process remains
@@ -778,9 +784,11 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Source: `vendor/nothing/metroid/proprietary/vendor/etc/init/init.qccvendor.rc:17-21`
 - Fix direction: restore the coherent vendor/system QCC stack and declarations,
   or remove the clients and dangling RCs together.
-- Source fix: restore the exact stock QCC APK, system/vendor AIDL services,
-  libraries, init/VINTF declarations and compatibility-matrix instance. Focused
-  QCC builds and `check-vintf-all` pass; installed behavior remains untested.
+- Source fix: exact stock QCC APK, system/vendor AIDL services, libraries,
+  init/VINTF declarations, compatibility-matrix instance, system-ext JNI
+  dependency and certificate-bound `vendor_qcc_app` policy are installed.
+- r47/r48 acceptance: QCC and both AIDL services remain alive across two boots
+  with no linker/JNI crash, AVC, ANR or retry loop.
 - Acceptance: no retry loop; cold/warm TTFF and raw measurements with network
   on/off and screen-off GNSS.
 
