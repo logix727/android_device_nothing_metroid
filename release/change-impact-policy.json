@@ -52,6 +52,42 @@
       "reason": "maintainer documentation only"
     },
     {
+      "id": "maintainer-preflight-tools",
+      "project": "device/nothing/metroid",
+      "path": "scripts/preflight-*",
+      "risk": "R0",
+      "blast_radius": "none",
+      "subsystems": [],
+      "suites": [],
+      "build_targets": [],
+      "static_gates": [],
+      "reason": "host-side tester eligibility checks"
+    },
+    {
+      "id": "radio-euicc-partner",
+      "project": "device/nothing/metroid",
+      "path": "euiccpartner/*",
+      "risk": "R2",
+      "blast_radius": "narrow",
+      "subsystems": ["radio"],
+      "suites": ["radio-esim-secure-element"],
+      "build_targets": ["MetroidEuiccPartner"],
+      "static_gates": ["fresh-kati-staging"],
+      "reason": "device-scoped physical-SIM/eSIM mux integration"
+    },
+    {
+      "id": "radio-carrier-overlay",
+      "project": "device/nothing/metroid",
+      "path": "overlay/metroid/CarrierConfigOverlayMetroid/*",
+      "risk": "R2",
+      "blast_radius": "narrow",
+      "subsystems": ["radio"],
+      "suites": ["radio-esim-secure-element"],
+      "build_targets": ["CarrierConfigOverlayMetroid"],
+      "static_gates": ["fresh-kati-staging"],
+      "reason": "device carrier IMS and data policy"
+    },
+    {
       "id": "release-records",
       "project": "device/nothing/metroid",
       "path": "release/*",
