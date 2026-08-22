@@ -1,4 +1,14 @@
 <resources>
+    <string name="app_name">SIM 2 mode</string>
+    <string name="sim_mode_title">Choose SIM 2 mode</string>
+    <string name="sim_mode_message">The second physical SIM and eSIM share one hardware slot and cannot be active at the same time.</string>
+    <string name="sim_mode_physical">Physical SIM 2</string>
+    <string name="sim_mode_esim">eSIM</string>
+    <string name="sim_mode_confirm_title">Switch SIM hardware mode?</string>
+    <string name="sim_mode_physical_warning">This disables eSIM service and enables the second physical SIM after restart. Disable any active eSIM profile first.</string>
+    <string name="sim_mode_esim_warning">This disables the second physical SIM and enables eSIM service after restart.</string>
+    <string name="sim_mode_switch">Switch</string>
+    <string name="sim_mode_restart">Restart the phone to apply the SIM mode.</string>
     <string name="sim_slot_mappings_json" translatable="false">
         { sim-slot-mappings:[ { devices:[metroid], esim-slot-ids:[1], psim-slot-ids:[0] } ] }
     </string>
