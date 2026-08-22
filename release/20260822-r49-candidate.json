@@ -13,8 +13,12 @@
     "source_device_revision": "ece6095006051aa9feea39b6ed257808b0c04168",
     "workspace_revision": "bd015d18d55097856708da539af90d8da9d4c7bb"
   },
-  "classified_test_suites": ["radio-esim-secure-element"],
-  "full_compatibility": false,
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "radio-esim-secure-element",
+    "storage-security-update"
+  ],
+  "full_compatibility": true,
   "issue_acceptance": {
     "MTR-002": [
       "Tele2 carrier ID 1696 selects internet.tele2.se and creates its IMS profile",
