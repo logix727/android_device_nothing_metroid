@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.euicc.partner">
+    package="com.android.euicc.partner"
+    android:versionCode="50"
+    android:versionName="50">
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
 
     <application
+        android:allowBackup="false"
         android:hasCode="true"
         android:label="@string/app_name">
         <activity

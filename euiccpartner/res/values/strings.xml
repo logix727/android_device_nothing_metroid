@@ -8,7 +8,12 @@
     <string name="sim_mode_physical_warning">This disables eSIM service and enables the second physical SIM after restart. Disable any active eSIM profile first.</string>
     <string name="sim_mode_esim_warning">This disables the second physical SIM and enables eSIM service after restart.</string>
     <string name="sim_mode_switch">Switch</string>
-    <string name="sim_mode_restart">Restart the phone to apply the SIM mode.</string>
+    <string name="sim_mode_request_sent">SIM mode request accepted. Restart the phone, then verify the selected SIM appears.</string>
+    <string name="sim_mode_blocked_title">SIM mode cannot be changed</string>
+    <string name="sim_mode_blocked_active_esim">An eSIM profile is active. Turn it off before enabling physical SIM 2.</string>
+    <string name="sim_mode_blocked_active_psim">Physical SIM 2 is active. Remove or disable it before enabling eSIM mode.</string>
+    <string name="sim_mode_blocked_admin">Only the device owner can change SIM hardware mode.</string>
+    <string name="sim_mode_manage_esims">Manage eSIMs</string>
     <string name="sim_slot_mappings_json" translatable="false">
         { sim-slot-mappings:[ { devices:[metroid], esim-slot-ids:[1], psim-slot-ids:[0] } ] }
     </string>
