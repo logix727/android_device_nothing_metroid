@@ -1,10 +1,11 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and coherent live state: 2026-08-21
+Last audited against accepted baseline and coherent live state: 2026-08-22
 
 Accepted build: `23.0-20260821-UNOFFICIAL-metroid` (r48)
 
-Live device: accepted r48, coherent slot A
+Live device: installed r49 external-test candidate, coherent slot B; r48 remains
+the accepted public baseline
 
 Accepted OTA SHA-256:
 `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`
@@ -23,11 +24,11 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-011, MTR-016 |
-| Installed fixes needing focused acceptance | MTR-009, MTR-010, MTR-012, MTR-018, MTR-019, MTR-022, MTR-023, MTR-029 |
-| Evidence/test gaps without eligible source edit | MTR-005, MTR-020, MTR-024 |
-| External hardware/carrier/policy acceptance | MTR-001/MTR-002 other carriers, MTR-027, MTR-030, OMAPI |
-| Closed defects / recurring gates | MTR-003, MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-017, MTR-021, MTR-026, MTR-028 |
+| Active fixes | MTR-019 RNDIS evidence; SIM mux safety fix built/live-proven but not in r49 |
+| Installed fixes needing focused acceptance | MTR-002 Tele2, MTR-003 inserted SIM2, MTR-009, MTR-010, MTR-012, MTR-018, MTR-019 HAL restart, MTR-023, MTR-025 |
+| Evidence/test gaps without eligible source edit | MTR-005, MTR-011, MTR-024, MTR-031 |
+| External hardware/carrier/policy acceptance | MTR-001 other carriers, MTR-027, OMAPI |
+| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-016, MTR-017, MTR-020, MTR-021, MTR-022, MTR-026, MTR-028, MTR-029, MTR-030 |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -591,6 +592,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   record, or new tombstone, but retained framework thermal status was 0. The
   history also retained contradictory `+plugged +charging` state bits alongside
   `plug=none`; do not use those stale bits as evidence that a charger was present.
+- Evidence-matrix audit (2026-08-22): r48 packages the stock Thermal HAL and
+  enabled `sltntc`; its shell-zone producer, VINTF path, metroid thermal DTS and
+  cooling inventory match the validated stock/NothingOSS topology. Framework
+  thermal status is derived from live `TYPE_SKIN`, not retained battery
+  temperature, so the unsynchronized 48-49 C battery history plus later status 0
+  does not establish a new divergence. Keep this acceptance-only and use a
+  bounded unplugged transition capture rather than another source edit.
 - Acceptance: live `TYPE_SKIN`, non-NaN headroom, controlled thermal-status and
   cooling transitions, display mitigation, and charging interaction.
 
@@ -720,14 +728,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-011: standard Android haptic capabilities are degraded
 
 - Severity: medium
-- Status: confirmed
+- Status: confirmed functional degradation; stock-runtime evidence required
+  before a source edit
 - Impact: applications receive fallback pulses or no output for standard effects
   even though the proprietary RichTap path initializes.
 - Evidence: the Vibrator AIDL service advertises no prebaked effects and
   zero-duration primitives; `TEXTURE_TICK` produces no output.
-- Source: `vendor/qcom/opensource/vibrator/aidl/HapticsPolicy.xml:43-55`
-- Cause: no prebaked effects are advertised and all primitives report zero
-  duration; `TEXTURE_TICK` is dropped as unsupported.
+- Runtime boundary: the proprietary Vibrator AIDL HAL reports no supported
+  prebaked effects, omits compose capability, and returns zero-duration
+  primitives; framework consequently treats the primitives as unsupported and
+  falls back where possible.
 - Evidence boundary: packaged stock policy/configuration defines effects and
   compositions, but the proprietary running HAL publishes none. Obtain exact
   stock runtime capabilities and operation output before changing HAL, XML,
@@ -736,6 +746,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   the stable HAL and AW8693x kernel path. This proves output plumbing only; it
   does not establish advertised capability completeness, perceived parity, or a
   source fix.
+- Evidence-matrix audit (2026-08-22): r48 contains the stock policy/configuration,
+  RC/VINTF, RichTap assets, AW8693x firmware and matching metroid kernel/DTS
+  support. The packaged policy already lists effects 0-5 and composition, while
+  the running proprietary HAL publishes none. The open-source Qualcomm vibrator
+  implementation named by earlier notes is not the shipped service, and no
+  Lineage framework suppression was found. No Lineage-vs-stock first divergence
+  exists until exact stock runtime capabilities, durations and physical output
+  are captured on the same operation.
 - Fix direction: map framework effects/compositions onto a working vendor path,
   or advertise only real capabilities with explicit fallbacks.
 - Acceptance: every advertised effect, primitive, composition, amplitude level,
@@ -816,7 +834,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-016: OEM sensor-extension service is disabled and undeclared
 
 - Severity: medium
-- Status: confirmed integration defect
+- Status: closed as non-defect integration difference; no consumer or user-visible
+  failure
 - Impact: normal SSC sensors work, but Nothing-specific sensor/display/UDFPS
   coordination APIs are unavailable.
 - Evidence: `vendor.noth.hardware.sensor.sensor_extension.ISensorExtension/default`
@@ -826,6 +845,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   proven legitimate consumer and the stock framework consumer may be proprietary.
   Verify consumer identity and binary/ABI equivalence before removing `disabled`
   or adding a stable-HAL fragment.
+- Evidence-matrix audit (2026-08-22): the deterministic packaging difference is
+  that Lineage's RC adds `disabled` while stock starts and declares the AIDL
+  instance. Normal sensors use the independent standard multihal and continue to
+  operate. Active AOSP/Lineage/device source contains no consumer; stock policy
+  and its proprietary `nt-services.jar` make a stock-only consumer plausible but
+  do not prove one. Provider binary/ABI parity with the validated stock input is
+  also unverified. Do not advertise an unserved stable HAL merely for stock
+  manifest parity.
 - Fix direction: restore only after identifying actual framework consumers and
   validating the intended stock binary and standalone fragment.
 - Acceptance: extension API, pocket/posture/orientation, UDFPS/display
@@ -903,8 +930,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: r44 ADB/MTP/NCM pass; AIDL gadget-HAL restart source fix pending install;
-  RNDIS data-plane failure remains separately open
+- Status: r44 ADB/MTP/NCM pass; AIDL gadget-HAL restart fix is installed on r48
+  but untested; RNDIS data-plane failure remains separately open
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
 - First divergence: stock-derived vendor init created `ncm.0` while the selected
   QTI gadget HAL links `ncm.gs6`.
@@ -968,6 +995,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   handling, reconnect and one current-function reapply, matching `UsbPortAidl`.
   `services.usb` and `FrameworksServicesTests` compile; installed acceptance is
   deferred to the next coherent candidate.
+- Evidence-matrix audit (2026-08-22): accepted r48's sealed `frameworks/base`
+  revision contains this Binder-death/reconnect patch, so no build or install is
+  required to test it. Restart the HAL on r48 and require Binder replacement,
+  one current-function replay, and successful NCM/MTP/RNDIS/default switching.
+  For RNDIS, stock and r48 agree on `gsi.rndis`, IPA classification, kernel
+  configuration and tuna DTS; no source divergence is established after
+  enumeration and `TetheredState`. Capture host/phone DHCP, `rndis0` counters and
+  RNDIS IPA/GSI lifecycle before editing RC, properties, kernel or DTS.
 
 ### MTR-020: optional CPUSS sleep-residency debugfs counters are absent
 
@@ -1098,7 +1133,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-024: ST21 NFC transport repeatedly returns `ENOTCONN`
 
 - Severity: medium
-- Status: probable runtime defect
+- Status: unresolved diagnostic symptom; no user-visible failure or eligible edit
 - Impact: tag polling and initialization pass, but payment, HCE, and off-host
   reliability remain at risk during NFC power transitions.
 - Evidence: repeated NFC power-transition traces return `-107` (`ENOTCONN`) from
@@ -1119,6 +1154,13 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   sequences, followed by successful callbacks. This accepts toggle stability but
   confirms the transport symptom persists; tag, HCE, payment, suspend and charger
   transitions plus synchronized stock timing remain required before source work.
+- Evidence-matrix audit (2026-08-22): stock and Lineage agree on the ST HAL
+  configuration, init/VINTF path, device permissions and Sun NFC DTS; current and
+  later NothingOSS trees retain the same I2C address, GPIOs and pinctrl. AOSP,
+  Lineage and CLO use the same power-substate flow. Because each retained `-107`
+  is followed by a valid response and success callback, it is not yet a confirmed
+  defect. Only synchronized stock timing plus tag/HCE/off-host operations can
+  distinguish benign close/open behavior from a Lineage-only transport failure.
 - Fix direction: reproduce against synchronized Lineage/stock transition traces.
 - Acceptance: 100 toggles plus tag, HCE, payment, suspend, and charger-transition
   loops with no user-visible failure or recurring transport error.
@@ -1325,7 +1367,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   Aperture cycles with rear/front/rear routing and finalized H.264/AAC clips,
   stable camera services, and no new crash, tombstone, AVC, or pstore record.
 
-### MTR-030: active eSIM profile cannot be disabled or erased
+### MTR-031: active eSIM profile cannot be disabled or erased
 
 - Severity: medium; carrier credential management
 - Status: confirmed card/LPA operation failure; source fix not yet eligible
@@ -1336,18 +1378,22 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   switch/delete and retries twice. The eUICC returns operation 11 result 5,
   GSMA `catBusy` (`0x080B05`). APDU transport itself succeeds with `SW=9000`,
   and no delete command is issued after disable fails.
+- Evidence-matrix audit (2026-08-22): Settings and framework route the request
+  correctly, active-profile deletion is required to disable first, and APDU
+  transport accepts `SW=9000`. Result 5 is parsed from the eUICC's ES10c
+  `DisableProfile` response and maps to `catBusy`; operation 11 is the framework's
+  label for that card operation. No Lineage-vs-stock divergence is established
+  in Settings, Euicc framework, LPA selection, card routing or transport.
 - Ruled out: Settings coordinates/confirmation, EID/card routing, APDU transport,
   reboot, Google-LPA package enablement, and secure-element access.
 - Safety: do not loop erase, reset all eSIMs, clear LPA data, or change the slot-1
   physical/eSIM mux while this profile is active. Failed attempts do not remove
   the credential.
-- Next evidence: compare the same profile/card on official Nothing OS or obtain a
-  vendor trace showing why the CAT session remains busy. A broad framework retry
-  loop is not eligible from current evidence.
-- r44 acceptance: property `0` is installed; ten ordered Aperture cycles pass
-  rear/front/rear routing and true parsed 30/60/30 fps H.264/AAC finalization.
-  Provider/cameraserver/Nothing camera PIDs remain stable and crash, Mapper5,
-  GWP-ASan, tombstone, AVC and pstore inventories remain empty. MTR-029 is closed.
+- Next evidence: on coherent official Nothing OS with the same card/profile and
+  matching modem, attempt exactly one disable, never erase. If stock also returns
+  `catBusy`, classify it as a card/modem/vendor blocker. If stock succeeds,
+  compare the first sequencing difference before proposing a framework or vendor
+  change. A broad retry loop is not eligible from current evidence.
 
 ## Acceptance gaps
 

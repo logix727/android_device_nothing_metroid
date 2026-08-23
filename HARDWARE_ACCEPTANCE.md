@@ -17,14 +17,16 @@ actually been exercised.
 | UNKNOWN | No functional result. Enumeration, a Binder service, or absence of a bug is not a pass. |
 | N/A | The inventory shows that the device does not expose this hardware. |
 
-Rows without a specific r48 result or a valid named `INHERITED` parent are not
-accepted-release claims. Older live observations remain diagnostic evidence only.
+Rows without a specific accepted result or a valid named `INHERITED` parent are
+not accepted-release claims. r49 results below are installed diagnostic evidence
+until external Tele2 and inserted-SIM2 gates pass.
 
 ## Tested configurations
 
 | Name | Build / slot | State |
 |---|---|---|
 | Accepted baseline / live state | r48 `23.0-20260821`, OTA `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`, slot A | Enforcing, encrypted, two boots, boot-loaded TIPC, active eSIM, automatic carrier data/NR_NSA, QCC clean; accepted |
+| Installed external-test state | r49 `23.0-20260822`, OTA `aa58c5accbade7b491a595398cba028cf90b49f0dafcbcd87ad046f47866351e`, slot B | eSIM/physical-SIM2 mux round-trip and eSIM restoration pass; Tele2 calls and inserted SIM2 remain external gates |
 
 Private live evidence is under `diagnostics/hardware_acceptance_20260809_r22/`
 and `diagnostics/hardware_acceptance_20260811_coherent_r22_camera/`. Public
@@ -143,7 +145,8 @@ No pressure/barometer sensor is exposed.
 | Cellular voice/SMS/MMS/data | BLOCKED | r44 diagnostic PASS for LTE HOME, bidirectional SMS, one 14-second VoLTE call, a firewalled 28-byte TX/28-byte RX IPv4 probe, and a 166-byte self-MMS with successful outbound and inbound provider rows. | Install the automatic APN/TIPC/default-RAT candidate and repeat without manual APN/module/ATEL steps; add IPv6/DNS and an external MMS peer. |
 | US multi-carrier SIMs | BLOCKED | Dark Star diagnostic pass after selecting carrier-ID 2575 `ereseller`, live-loading matching TIPC and restoring stock mode 26 after replacement initialized GSM-only. QTI basic 5G, Android `NR_NSA`, and SystemUI 5G display pass; allocated NR bearer unproven. | Prove zero-touch Dark Star on the next candidate; test other networks independently only when required credentials are available. |
 | VoLTE/VoWiFi/emergency/DSDS | BLOCKED | r44 diagnostic VoLTE pass: framework selected `ImsPhone`, the Dark Star call reached ACTIVE in about one second and ended cleanly. IMS SMS timed out once and correctly fell back to CS; inbound SMS passed after ATEL-ready recovery. | Repeat from an untouched boot on the next candidate; test inbound call/audio, IMS SMS, emergency UI, Wi-Fi Calling and DSDS separately. |
-| eSIM UI/QR path | PARTIAL | Real Dark Star profile download/enable/reboot passes; disable/delete fails on r48 because the eUICC returns GSMA `catBusy` after LPA retries | MTR-030: compare same profile/card on official Nothing OS; do not repeat destructive erase attempts. |
+| eSIM UI/QR path | PARTIAL | Real Dark Star profile download/enable/reboot passes; disable/delete fails because the eUICC returns GSMA `catBusy` after LPA retries | MTR-031: compare same profile/card on official Nothing OS; do not repeat destructive erase attempts. |
+| SIM2/eSIM hardware mux | Slot 1 supports physical SIM2 or eSIM, not both | r49 PASS locally for both QTI requests and rebooted mode transitions; same eSIM profile restores intact | Inserted physical-SIM2 subscription/data/SMS/call test remains external. |
 | OMAPI/UICC secure element | BLOCKED | BLOCKED | Physical SIM/reader and applet. |
 
 ## Wi-Fi, Bluetooth, NFC and UWB
