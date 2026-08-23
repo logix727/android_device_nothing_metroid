@@ -15,6 +15,22 @@
         </interface>
     </hal>
     <hal format="aidl" optional="true">
+        <name>vendor.qti.hardware.camera.offlinecamera</name>
+        <version>1-2</version>
+        <interface>
+            <name>IOfflineCameraService</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="aidl" optional="true">
+        <name>com.nothing.camera.postproc</name>
+        <version>1</version>
+        <interface>
+            <name>IPostProcService</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="aidl" optional="true">
         <name>vendor.noth.hardware.camera</name>
         <version>1</version>
         <interface>

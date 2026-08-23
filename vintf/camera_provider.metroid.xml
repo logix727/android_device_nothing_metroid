@@ -9,4 +9,14 @@
         <version>1</version>
         <fqname>INtCamService/default</fqname>
     </hal>
+    <hal format="aidl">
+        <name>vendor.qti.hardware.camera.offlinecamera</name>
+        <version>2</version>
+        <fqname>IOfflineCameraService/default</fqname>
+    </hal>
+    <hal format="aidl">
+        <name>com.nothing.camera.postproc</name>
+        <version>1</version>
+        <fqname>IPostProcService/default</fqname>
+    </hal>
 </manifest>
