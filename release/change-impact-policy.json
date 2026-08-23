@@ -36,7 +36,8 @@
     "MTR-027": [],
     "MTR-028": ["storage-security-update"],
     "MTR-029": ["camera"],
-    "MTR-030": ["radio-esim-secure-element"]
+    "MTR-030": ["radio-esim-secure-element"],
+    "MTR-031": ["radio-esim-secure-element"]
   },
   "rules": [
     {
@@ -98,6 +99,30 @@
       "build_targets": [],
       "static_gates": [],
       "reason": "release metadata only"
+    },
+    {
+      "id": "carry-provenance",
+      "project": "device/nothing/metroid",
+      "path": "patches/*",
+      "risk": "R0",
+      "blast_radius": "none",
+      "subsystems": [],
+      "suites": [],
+      "build_targets": [],
+      "static_gates": [],
+      "reason": "reproducible carry metadata; functional projects are classified separately"
+    },
+    {
+      "id": "kernel-usb-dwc3",
+      "project": "kernel/nothing/sm8735",
+      "path": "drivers/usb/dwc3/*",
+      "risk": "R3",
+      "blast_radius": "narrow",
+      "subsystems": ["usb", "update"],
+      "suites": ["usb", "storage-security-update"],
+      "build_targets": [],
+      "static_gates": ["fresh-kati-staging"],
+      "reason": "boot-critical DWC3 and GSI endpoint implementation"
     },
     {
       "id": "workspace-maintainer-docs",
