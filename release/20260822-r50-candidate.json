@@ -6,7 +6,7 @@
   "validation_parent": {
     "artifact_sha256": "aa58c5accbade7b491a595398cba028cf90b49f0dafcbcd87ad046f47866351e",
     "installed_record": "lineage/device/nothing/metroid/release/20260822-r49-installed.md",
-    "installed_record_revision": "3f9630ce7b6878e65227905042293149398a3fa9",
+    "installed_record_revision": "9d3242fd1273590487b32ac24295a64d200411ca",
     "installed_record_sha256": "9343dfcc98d87e71a9a20e4a32ce8355ffe61ac6dcc6ad59f566d1d4a6785ff5",
     "manifest": "releases/candidate_20260822_165844_662569193_candidate/source/repo-manifest.xml",
     "manifest_sha256": "098a8cd217198a160c51c81decaafa79a362dd081a2afe1a149f8df59d8a6159",
