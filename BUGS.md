@@ -930,8 +930,8 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-019: USB NCM function name disagrees with gadget HAL
 
 - Severity: medium
-- Status: r44 ADB/MTP/NCM pass; AIDL gadget-HAL restart fix is installed on r48
-  but untested; RNDIS data-plane failure remains separately open
+- Status: NCM closed; RNDIS kernel fix built-not-installed; gadget-HAL restart
+  acceptance remains
 - Impact: NCM and NCM+ADB requests cannot link or enumerate.
 - First divergence: stock-derived vendor init created `ncm.0` while the selected
   QTI gadget HAL links `ncm.gs6`.
@@ -1003,6 +1003,23 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   configuration and tuna DTS; no source divergence is established after
   enumeration and `TetheredState`. Capture host/phone DHCP, `rndis0` counters and
   RNDIS IPA/GSI lifecycle before editing RC, properties, kernel or DTS.
+- r49 RNDIS reproduction: RNDIS-only enumerates as `05c6:9024`; Linux binds
+  `rndis_host`; Android creates `rndis0`, enters `TetheredState`, assigns
+  `10.98.103.140/24`, starts dnsmasq and configures IPA offload/routes. Host DHCP
+  receives no packets and all host TX frames error.
+- First RNDIS divergence: the shipped Google GKI uses rewritten endpoint-resource
+  allocation and resets non-control resources on SET_CONFIGURATION, while the
+  metroid vendor `dwc3-msm.ko` configures GSI endpoints without issuing
+  `SETTRANSFRESOURCE`. `STARTXFER` therefore returns DWC3 NO_RESOURCE as `-EINVAL`;
+  `rndis_ipa` missing-pipe messages are downstream.
+- Source fix: port NothingOSS's atomic GSI companion change: define
+  `DWC3_EP_RESOURCE_ALLOCATED`, allocate one transfer resource after GSI endpoint
+  configuration, and avoid duplicate allocation. Full Kleaf vendor-module/KMI
+  build passes. Only `dwc3-msm.ko` changes; `usb_f_gsi.ko`, `ipam.ko`, DTB and
+  DTBO remain byte-identical.
+- Acceptance: boot/KMI plus RNDIS and RNDIS+ADB DHCP, bidirectional local traffic,
+  upstream/DNS, counters, reconnect, gadget-HAL restart, and NCM/MTP/ADB regression
+  with no STARTXFER/IPA/pstore error.
 
 ### MTR-020: optional CPUSS sleep-residency debugfs counters are absent
 
