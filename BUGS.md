@@ -1602,6 +1602,26 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   stable radio processes, and unchanged data/IMS/SMS/call behavior. Service
   absence remains explicit and must not be reported as functional registration.
 
+### MTR-037: camera offline and Nothing post-processing services are undeclared
+
+- Severity: high camera feature and provider-stability defect
+- Status: source-fixed; coherent install and camera acceptance remain
+- Reproduction on accepted r48 with physical-SIM tester logs: the stock camera
+  provider attempts to register
+  `vendor.qti.hardware.camera.offlinecamera.IOfflineCameraService/default` and
+  `com.nothing.camera.postproc.IPostProcService/default`. Servicemanager rejects
+  both as undeclared; the provider retries ten times and abandons registration.
+- First deterministic divergence: r48 packages the stock-identical provider RC
+  and serving binaries, but `camera_provider.metroid.xml` declares only the main
+  QTI provider and `vendor.noth.hardware.camera`. Verified stock B4.1 ships both
+  missing stable-AIDL fragments and matching framework matrix entries.
+- Source resolution: device commit `e473bc4` adds only the two stock-exact
+  declarations and device-matrix contracts. `check-vintf-all` passes.
+- Acceptance: both Binder services register without retry/AVC/crash; Aperture
+  preview, still, finalized video, all physical lenses, logical zoom, recording
+  zoom, FHD60, UHD30 and a third-party Camera2 client pass with stable provider
+  PID and no new tombstone.
+
 ## Acceptance gaps
 
 These are not active bug claims:
