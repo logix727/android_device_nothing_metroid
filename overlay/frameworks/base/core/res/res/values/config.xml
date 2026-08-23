@@ -23,6 +23,12 @@
     <bool name="config_device_vt_available">true</bool>
     <bool name="config_device_wfc_ims_available">true</bool>
 
+    <!-- Qualcomm's IWLAN service supplies the WLAN data, registration, and
+         qualified-network implementations backed by the modem IIWlan HALs. -->
+    <string name="config_wlan_data_service_package" translatable="false">vendor.qti.iwlan</string>
+    <string name="config_wlan_network_service_package" translatable="false">vendor.qti.iwlan</string>
+    <string name="config_qualified_networks_service_package" translatable="false">vendor.qti.iwlan</string>
+
     <!-- Stock NothingOS lux-to-backlight mapping. -->
     <bool name="config_automatic_brightness_available">true</bool>
     <integer-array name="config_autoBrightnessLevels">

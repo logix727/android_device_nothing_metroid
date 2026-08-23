@@ -9,6 +9,13 @@ vintf_fragment {
     vendor: true,
 }
 
+// Stock CACertService hosts the stable AIDL consumed by xtra-daemon.
+vintf_fragment {
+    name: "cacert.metroid.xml",
+    src: "cacert.metroid.xml",
+    vendor: true,
+}
+
 // audio: AGM/PAL/PALEventNotifier declarations (served by audiohalservice.qti blob).
 // IListenSoundModel deliberately OMITTED — not served in this build (AGENTS.md warning #1).
 vintf_fragment {

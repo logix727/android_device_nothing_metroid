@@ -30,6 +30,10 @@ system_ext/lib64/vendor.qti.qccsyshal_aidl-V1-ndk.so
 system_ext/lib64/vendor.qti.qccvndhal_aidl-V1-ndk.so
 vendor/etc/vintf/manifest/vendor.qti.qccvndhal_aidl-service.xml
 
+# Qualcomm cellular and assisted-location services
+vendor/app/CACertService/CACertService.apk;PRESIGNED
+vendor/app/IWlanService/IWlanService.apk;PRESIGNED
+
 system_ext/apex/com.android.compos.apex
 system_ext/apex/com.android.vndk.v34.apex
 system_ext/etc/aconfig/flag.info
