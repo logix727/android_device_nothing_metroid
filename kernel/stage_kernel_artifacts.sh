@@ -39,6 +39,72 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 DEVICE="$(dirname "$HERE")"
 KWS="${1:-$(cd "$DEVICE/../../../.." && pwd)/kernelws}"
 OUT="${2:-$HERE/out}"
+VERIFY_ONLY=false
+if [[ ${1:-} == --verify-only ]]; then
+    VERIFY_ONLY=true
+    KWS="$(cd "$DEVICE/../../../.." && pwd)/kernelws"
+    OUT="$HERE/out"
+fi
+MANIFEST="$OUT/stage-manifest.json"
+
+verify_manifest() {
+    python3 - "$MANIFEST" "$KWS/msm-kernel" "$HERE" <<'PYEOF'
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+manifest_path = Path(sys.argv[1])
+kernel = Path(sys.argv[2])
+device_kernel = Path(sys.argv[3])
+
+def sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+def tree_sha256(root):
+    digest = hashlib.sha256()
+    for path in sorted(p for p in root.rglob("*") if p.is_file() and p != manifest_path):
+        relative = path.relative_to(root).as_posix()
+        digest.update(relative.encode())
+        digest.update(b"\0")
+        digest.update(sha256(path).encode())
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+if not manifest_path.is_file():
+    raise SystemExit(f"missing kernel stage manifest: {manifest_path}")
+data = json.loads(manifest_path.read_text(encoding="utf-8"))
+expected = {
+    "schema_version": 1,
+    "kernel_commit": subprocess.check_output(
+        ["git", "-C", str(kernel), "rev-parse", "HEAD"], text=True).strip(),
+    "kernel_tree": subprocess.check_output(
+        ["git", "-C", str(kernel), "rev-parse", "HEAD^{tree}"], text=True).strip(),
+    "target_list_sha256": sha256(device_kernel / "vendor-module-targets.txt"),
+    "staging_script_sha256": sha256(device_kernel / "stage_kernel_artifacts.sh"),
+    "dwc3_msm_sha256": sha256(manifest_path.parent / "vendor_dlkm/dwc3-msm.ko"),
+    "dtb_sha256": sha256(manifest_path.parent / "dtb.img"),
+    "dtbo_sha256": sha256(manifest_path.parent / "dtbo.img"),
+    "staged_tree_sha256": tree_sha256(manifest_path.parent),
+}
+if data != expected:
+    for key, value in expected.items():
+        if data.get(key) != value:
+            print(f"kernel stage mismatch: {key}: {data.get(key)!r} != {value!r}", file=sys.stderr)
+    raise SystemExit(1)
+print(f"kernel stage verified: {expected['kernel_commit']}")
+PYEOF
+}
+
+if [[ "$VERIFY_ONLY" == true ]]; then
+    verify_manifest
+    exit 0
+fi
 
 STRIP="$KWS/prebuilts/clang/host/linux-x86/clang-r510928/bin/llvm-strip"
 # The module set to reproduce, and the curated load-order/blocklist files that go with it. Both
@@ -278,3 +344,48 @@ echo "   vendor_dlkm : $(ls "$OUT/vendor_dlkm"/*.ko | wc -l) modules"
 echo "   system_dlkm : $(ls "$OUT/system_dlkm"/*.ko | wc -l) modules"
 echo "   dtb.img     : $(stat -c%s "$OUT/dtb.img") bytes"
 echo "   dtbo.img    : $(stat -c%s "$OUT/dtbo.img") bytes"
+
+python3 - "$MANIFEST" "$KWS/msm-kernel" "$HERE" <<'PYEOF'
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+manifest_path = Path(sys.argv[1])
+kernel = Path(sys.argv[2])
+device_kernel = Path(sys.argv[3])
+
+def sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+def tree_sha256(root):
+    digest = hashlib.sha256()
+    for path in sorted(p for p in root.rglob("*") if p.is_file() and p != manifest_path):
+        relative = path.relative_to(root).as_posix()
+        digest.update(relative.encode())
+        digest.update(b"\0")
+        digest.update(sha256(path).encode())
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+data = {
+    "schema_version": 1,
+    "kernel_commit": subprocess.check_output(
+        ["git", "-C", str(kernel), "rev-parse", "HEAD"], text=True).strip(),
+    "kernel_tree": subprocess.check_output(
+        ["git", "-C", str(kernel), "rev-parse", "HEAD^{tree}"], text=True).strip(),
+    "target_list_sha256": sha256(device_kernel / "vendor-module-targets.txt"),
+    "staging_script_sha256": sha256(device_kernel / "stage_kernel_artifacts.sh"),
+    "dwc3_msm_sha256": sha256(manifest_path.parent / "vendor_dlkm/dwc3-msm.ko"),
+    "dtb_sha256": sha256(manifest_path.parent / "dtb.img"),
+    "dtbo_sha256": sha256(manifest_path.parent / "dtbo.img"),
+    "staged_tree_sha256": tree_sha256(manifest_path.parent),
+}
+manifest_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PYEOF
+verify_manifest
