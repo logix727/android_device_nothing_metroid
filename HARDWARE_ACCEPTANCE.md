@@ -202,7 +202,7 @@ No pressure/barometer sensor is exposed.
 | Short deep suspend | PASS on prior accepted evidence | INCONCLUSIVE on r35: 14m26s USB-powered screen-off no-SIM idle retained boot/system_server and clean crash/tombstone/pstore/fatal/SSR gates, but powered ADB cannot prove deep suspend | Repeat unplugged with ADB disconnected and compare suspend/SoC counters. |
 | Long idle drain | UNKNOWN | UNKNOWN | 8-hour unplugged screen-off test with subsystem wake accounting. |
 | CPUSS residency accounting | N/A: optional Qualcomm debugfs interface, not a functional compatibility requirement | No stock-vs-Lineage divergence established | Reopen only if matching stock runtime proves counters bind and advance. |
-| Crash/tombstone health | PASS: empty crash buffer, no new tombstone | PASS diagnostic: three coherent-r22 boots produced zero GMS fatalities and no new tombstone; MTR-026 cleared | Repeat on the next promotable installed candidate. |
+| Crash/tombstone health | PASS: empty crash buffer, no new tombstone | FAIL on coherent r50: no new native tombstone or pstore, but proprietary GMS repeatedly crashes on Password Checkup `SERVICE_INVALID` with both updated and pinned-base GMS; MTR-026 has no eligible Lineage fix | Require two controlled boots with a clean crash buffer; reject promotion if MTR-026 repeats. |
 | Hardware keystore / TEE / StrongBox | UNKNOWN | UNKNOWN | Key generation, attestation, authentication binding, reboot persistence and deletion. |
 | Removable storage | N/A: no removable-storage slot exposed | N/A | None. USB OTG storage is covered separately. |
 | SIM tray mechanics/hotplug | BLOCKED | BLOCKED | Physical SIM insertion/removal and tray-slot mapping. |
@@ -218,8 +218,9 @@ No pressure/barometer sensor is exposed.
 
 ## Immediate closure order
 
-1. Preserve the cleared MTR-026 crash gate and externally blocked MTR-027
-   certification gate on every promotable successor candidate.
+1. Keep MTR-026 as a blocking Google add-on compatibility gate and MTR-027 as an
+   externally blocked certification gate; require a clean crash buffer on every
+   promotable successor candidate.
 2. Run the safety-critical unplugged thermal/charging matrix and unplugged suspend.
 3. Complete installed-system Aperture routing, lens, zoom, flash and EIS acceptance.
 4. Localize physical-SIM UICC/subscription failure, then fix UDFPS ordering,

@@ -5,8 +5,10 @@ The tested state combines a ROM OTA, separately sideloaded Google add-on, and
 separately flashed matching stock modem firmware.
 
 This records the accepted public r48 release. The current maintainer device runs
-r49 (`1787430715`) on slot B as a locally accepted external-test candidate; r49
-does not replace the public baseline until Tele2 and inserted-SIM2 gates pass.
+rejected r50 (`1787452985`) on slot A for diagnostic closure. r50 booted
+coherently and preserved the active eSIM, but does not replace r48 because stale
+kernel staging omitted its RNDIS fix. r49 remains the locally accepted external-
+test candidate pending Tele2 and inserted-SIM2 gates.
 The accepted public build runs
 `23.0-20260821-UNOFFICIAL-metroid` (incremental `1787327311`) on successful slot
 A from `releases/candidate_20260821_121653_317252161_candidate/`; OTA SHA-256

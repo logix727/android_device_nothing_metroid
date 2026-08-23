@@ -172,7 +172,9 @@ Every installed candidate gets one small invariant suite:
    completion, slot success, snapshot merge, first boot, and second boot. Host
    progress near 47 percent or its terminal-token warning is not an install result.
 3. Encrypted userdata, SELinux Enforcing, one system_server, clean crash buffer,
-   no new tombstone/pstore, and no boot-critical AVC.
+   no new tombstone/pstore, and no boot-critical AVC. A named external companion
+   failure remains visible and rejects promotion; it is not waived or converted
+   into a ROM source defect without a confirmed divergence.
 4. Display/touch/unlock sanity and enough ADB control to retain the evidence.
 
 Wi-Fi transport, ADB transfer hashes, speaker playback, camera capture,

@@ -2,11 +2,18 @@
 
 ## Accepted r48 and next scope
 
-r48 is the accepted and live baseline on slot A from
+r48 is the accepted public baseline from
 `releases/candidate_20260821_121653_317252161_candidate/`; OTA SHA-256
 `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`.
 It passes two boots, encryption/Enforcing, active eSIM, automatic mode 26 and
 `ereseller`, IPv4/IPv6 data, `NR_NSA`, IMS call, boot-loaded TIPC and QCC closure.
+
+The maintainer device currently runs rejected r50 (`1787452985`) on slot A. Its
+SIM-mux safety guard passes, but stale kernel staging packaged the pre-fix
+`dwc3-msm.ko`, so RNDIS failed and the artifact must not be promoted. r51 is the
+isolated MTR-019 correction: source-bound kernel staging must match the installed
+module before RNDIS and adjacent USB acceptance. Tele2 and inserted physical-SIM2
+remain external r49/r51 acceptance, not reasons for speculative radio edits.
 
 Next source work must not include speculative NFC, sensor-extension, haptic,
 CPUSS, thermal or camera changes. Historical release narrative below remains
@@ -382,11 +389,12 @@ guesses.
    DSDS, airplane mode, and suspend on the documented modem generation.
 6. Complete r35 UDFPS repetitions, camera finalization, and USB adjacent-mode
    regressions, then complete MTR-023 and perceptible AudioFX acceptance.
-7. Preserve MTR-026 as a cleared recurring crash gate. For MTR-027, first record
-   whether Phonesky is stopped and launcher-resolvable; r35 required package-state
-   normalization before a crash-free launch reached Google's uncertified-device
-   activity. Keep certification externally blocked. Test official per-device
-   registration only as storefront access, never as ROM certification.
+7. Treat MTR-026 as a reopened promotion blocker and require two controlled boots
+   with a clean crash buffer. For MTR-027, first record whether Phonesky is stopped
+   and launcher-resolvable; r35 required package-state normalization before a
+   crash-free launch reached Google's uncertified-device activity. Keep
+   certification externally blocked. Test official per-device registration only
+   as storefront access, never as ROM certification.
 8. Validate the patched host ADB's 0-to-100 unique-transfer display on the next
    already-planned recovery sideload; record recovery's result independently.
 9. Complete installed-system Aperture acceptance from the canonical hardware matrix.

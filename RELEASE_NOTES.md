@@ -87,9 +87,12 @@ r21 remains the accepted baseline unchanged.
 
 - Live device: coherent r22 `23.0-20260809-UNOFFICIAL-metroid`, slot B,
   encrypted and SELinux Enforcing; not accepted.
-- MTR-026: coherent-r22 crash gate cleared across three retained boots. The four
-  Password Checkup fatalities were confined to an operator-created mixed
-  r21-`init_boot`/r22-images diagnostic state.
+- MTR-026 historical conclusion: three coherent-r22 boots had empty crash
+  buffers, so the four observed Password Checkup fatalities were attributed to
+  an operator-created mixed r21-`init_boot`/r22-images diagnostic state. Later
+  evidence corrected that conclusion: the retained r22 stability capture and
+  coherent r50 both contain the same intermittent proprietary GMS private-API
+  failure. See `BUGS.md`; promotion remains blocked with no eligible Lineage fix.
 - MTR-027: Google blocks the Play Store storefront as Play Protect uncertified.
   This remains an external policy gate; no certification or bypass is claimed.
 - r23 (`e262e83ee6ce1ddb7536ed9924db8382058b1bf2cf8c368896690b9a62456ca5`)

@@ -1,11 +1,11 @@
 # Metroid bug backlog
 
-Last audited against accepted baseline and coherent live state: 2026-08-22
+Last audited against accepted baseline and coherent live state: 2026-08-23
 
 Accepted build: `23.0-20260821-UNOFFICIAL-metroid` (r48)
 
-Live device: installed r49 external-test candidate, coherent slot B; r48 remains
-the accepted public baseline
+Live device: rejected r50 diagnostic candidate, coherent slot A; r48 remains the
+accepted public baseline and r49 is the latest distributed external-test seed
 
 Accepted OTA SHA-256:
 `5e79b012fb8063b09f4a3fde48b5241470c6b2fb55b0acf0d39bc334fd66d581`
@@ -24,11 +24,12 @@ permission; it must never be committed to this public repository.
 
 | State | Issues |
 |---|---|
-| Active fixes | MTR-019 RNDIS evidence; SIM mux safety fix built/live-proven but not in r49 |
+| Active fixes | MTR-013 media-quality AVC; MTR-019 RNDIS; MTR-034 CACert; MTR-035 IWLAN; MTR-036 ntphone context |
 | Installed fixes needing focused acceptance | MTR-002 Tele2, MTR-003 inserted SIM2, MTR-009, MTR-010, MTR-012, MTR-018, MTR-019 HAL restart, MTR-023, MTR-025 |
 | Evidence/test gaps without eligible source edit | MTR-005, MTR-011, MTR-024, MTR-031 |
-| External hardware/carrier/policy acceptance | MTR-001 other carriers, MTR-027, OMAPI |
-| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-016, MTR-017, MTR-020, MTR-021, MTR-022, MTR-026, MTR-028, MTR-029, MTR-030 |
+| External hardware/carrier/policy acceptance | MTR-001 other carriers, MTR-027, MTR-033 random reboots, OMAPI |
+| Closed defects / recurring gates | MTR-004, MTR-006, MTR-007, MTR-008, MTR-013, MTR-014, MTR-015, MTR-016, MTR-017, MTR-020, MTR-021, MTR-022, MTR-028, MTR-029, MTR-030 |
+| External add-on compatibility | MTR-026 GMS Password Checkup private API; MTR-032 updated-GMS sign-in |
 
 Before editing any active issue, complete its evidence matrix: reproduce on the
 installed build; compare the Nothing stock dump/configuration; inspect relevant
@@ -535,6 +536,16 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   rebooted physical mode hides the eUICC and exposes an empty physical slot 1,
   while switching back and rebooting restores the same active US Mobile profile
   intact. An inserted physical-SIM2 service test remains external.
+- Android topology: stock and Lineage expose two logical modems under DSDS, not
+  three concurrent slots. SIM1 is physical; logical slot 1 is a hardware mux
+  between physical SIM2 and eSIM. AOSP slot/port mapping and MEP APIs do not
+  select this proprietary QTI electrical mode, so the explicit metroid selector
+  remains device-scoped and MEP must not be advertised.
+- r50 safety result: while an embedded subscription was active, selecting
+  physical SIM2 was refused and no QTI mode request was emitted. This validates
+  the active-profile guard even though r50 was independently rejected for stale
+  USB kernel staging. No source edit is eligible without an inserted-SIM2
+  functional failure.
 - Historical external result: an already-provisioned removable eUICC is detected
   with an EID and its active profile reaches LTE registration plus bidirectional
   SMS. This validates active-profile radio use, not native profile download: eUICC
@@ -780,7 +791,7 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 ### MTR-013: media quality lookup loops and produces continuous AVCs
 
 - Severity: medium
-- Status: resolved on installed r5
+- Status: reopened on coherent r50; minimal SELinux fix ready
 - Impact: every codec session repeatedly looks up an absent service, logs
   `Media Quality Service not found`, and generates SELinux denials.
 - Evidence: repeated codec tests log `Media Quality Service not found` and a
@@ -791,6 +802,14 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `media_quality` as a declared VINTF HAL. Do not add policy for the absent service.
 - Resolution (r5): repeated codec creation produces no invalid `media_quality`
   VINTF lookup or associated servicemanager denial.
+- r50 regression evidence: the nonblocking `checkService("media_quality")` carry
+  remains installed, but policy does not permit `mediaserver` to find the
+  labeled optional service. A 26-minute capture contains 49 identical
+  `mediaserver -> media_quality_service:service_manager find` AVCs. The service
+  is intentionally absent; no VINTF or fake-server change is eligible.
+- Current first divergence: `MediaCodec.cpp` performs the optional lookup while
+  `system/sepolicy/private/mediaserver.te` omits the matching one-service find
+  permission. Add only that permission and verify the staged CIL delta is exact.
 - Acceptance: repeated AVC/HEVC playback and recording with no lookup loop, AVC,
   or codec regression.
 
@@ -1017,6 +1036,12 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   configuration, and avoid duplicate allocation. Full Kleaf vendor-module/KMI
   build passes. Only `dwc3-msm.ko` changes; `usb_f_gsi.ko`, `ipam.ko`, DTB and
   DTBO remain byte-identical.
+- Installed probe: corrected deterministic staging installs fixed hash
+  `edeec3294de9...b029d68` in vendor_boot. Settings-enabled RNDIS reaches
+  `TetheredState` with `lastError=0`; host DHCP assigns `10.107.163.75/24`, five
+  local pings and five upstream IPv4 pings pass, DNS resolves, and no
+  `NO_RESOURCE`, `STARTXFER`, IPA-connect or missing-pipe error occurs. RNDIS+ADB,
+  reconnect and gadget-HAL restart regressions remain before closure.
 - Acceptance: boot/KMI plus RNDIS and RNDIS+ADB DHCP, bidirectional local traffic,
   upstream/DNS, counters, reconnect, gadget-HAL restart, and NCM/MTP/ADB regression
   with no STARTXFER/IPA/pstore error.
@@ -1220,19 +1245,33 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
 - Acceptance: effect open/close, playback, client death, reboot persistence, and
   no bind failures.
 
-### MTR-026: GMS Password Checkup mixed-state crash gate
+### MTR-026: GMS Password Checkup private-API crash gate
 
-- Severity: high release gate
-- Status: cleared on coherent r22; recurring candidate gate
+- Severity: high release gate; external Google add-on compatibility
+- Status: reopened on coherent r50; blocks promotion with no eligible Lineage fix
 - Evidence: four GMS Password Checkup fatalities occurred only when r22
   system/vendor/product were booted with r21 slot-A `init_boot`.
 - Coherent result: three retained coherent-r22 boots on slot B produced zero GMS
   fatalities, no new tombstone or Dropbox crash, preserved the Google account,
   and kept GMS and Play Store processes healthy.
-- First deterministic divergence: operator-created boot-chain skew, not a
-  coherent ROM, GApps, or preserved-data defect.
-- Acceptance: repeat the two-boot crash-hygiene gate on every promotable
-  successor candidate.
+- Historical correction: retained `hardware_acceptance_20260809_r22/stability.txt`
+  contains the same `PasswordCheckup.ZERO_PARTY_API` `SERVICE_INVALID` fatality
+  on GMS 26.30.61. The later empty-buffer repeat boots prove the crash is
+  intermittent, not that it is exclusive to the mixed boot-chain state.
+- r50 result: coherent r50 produced repeated identical fatalities on GMS
+  26.33.30 while its product GMS base, Google permission/sysconfig files and both
+  credential-provider privileged grants were present. A reversible rollback to
+  the pinned MindTheGapps base 25.15.32 followed by a coherent boot reproduced
+  the same private-API failure. The exact updated split set was then restored.
+- First deterministic boundary: proprietary GMS requests a private Password
+  Checkup API that reports `SERVICE_INVALID`. The failure spans multiple GMS
+  versions and coherent ROM generations; no Lineage framework, package-policy,
+  boot-chain, kernel or SIM divergence has been established.
+- Policy: do not patch GMS, weaken credential permissions, spoof certification,
+  or pin an old GMS version. Track this separately from ROM-owned defects and
+  MTR-027 certification, but do not waive it: a promotable successor must pass
+  two controlled boots with a clean crash buffer. If the signature repeats, the
+  candidate is rejected while MTR-026 remains externally blocked.
 
 ### MTR-030: QTI phone crashes on radio state change
 
@@ -1411,6 +1450,157 @@ change gets one focused validation cycle. Do not iterate by flashing guesses.
   `catBusy`, classify it as a card/modem/vendor blocker. If stock succeeds,
   compare the first sequencing difference before proposing a framework or vendor
   change. A broad retry loop is not eligible from current evidence.
+
+### MTR-032: updated GMS account flow remains at Checking info
+
+- Severity: high Google add-on compatibility; account and storefront access
+- Status: account sign-in and storefront entry pass after official-base recovery;
+  app install and reboot persistence remain
+- Reproduction on coherent r50: both the retained account-recovery flow and a
+  clean add-account request remain in GMS `MinuteMaidActivity` at **Checking
+  info** with validated Wi-Fi and cellular networks, a healthy WebView renderer,
+  correct wall clock and complete MindTheGapps package/policy inventory.
+- Account-state precursor: the post-registration reset cleared GMS and GSF data
+  while a framework Google account existed. AccountManager retained the account
+  but recorded its password/long-lived credential being cleared; Play Store and
+  sync adapters then received `BAD_AUTHENTICATION` with `Long live credential not
+  available`. Removing that orphaned account through Settings was necessary but
+  did not make the active GMS update advance.
+- First deterministic divergence: active Google Play services 26.33.30 remains
+  at `MinuteMaidActivity`, while a reversible rollback to the exact official
+  MindTheGapps base 25.15.32 advances through **Sign in with ease** to the real
+  Google email/phone credential form on the same unchanged ROM, network,
+  WebView, GSF and Play Store state.
+- Installed recovery result: the user completed sign-in privately through the
+  official base flow. Google Play services subsequently updated to 26.33.30,
+  the account remained registered, and Play Store 52.7.34 launched signed in
+  with a populated storefront and no launch crash. This accepts sign-in and
+  storefront entry only; one app operation and reboot persistence remain.
+- Boundary: this is separate from MTR-027 certification and MTR-026 Password
+  Checkup. Reaching credential entry does not prove account completion,
+  storefront access, certification or Play Integrity. No Lineage framework,
+  kernel, device-tree or radio source edit is eligible from this result.
+- Resolution state: keep the official base for the user-controlled sign-in
+  attempt; never enter or retain credentials in maintainer logs. Do not clear
+  GMS/GSF data with an account present. Updated-GMS compatibility requires a
+  Google-side successor or a newly measured source/policy divergence; do not
+  patch GMS, spoof identity or pin a package as a certification bypass.
+- Acceptance: user completes sign-in privately, the account persists across
+  reboot, Play Store launches, one small app operation succeeds, and crash logs
+  are evaluated separately from MTR-027's certification result.
+
+### MTR-033: tester reports of spontaneous reboot on distributed builds
+
+- Severity: P0 boot-stability and data-integrity gate
+- Status: P0 confirmed; first stock-final probe rejected, IPI trace probe built
+- Cross-device reproduction: accepted r48 with a physical AT&T SIM reset after
+  approximately 37 minutes while entering screen-off idle. Rejected r50 with a
+  T-Mobile eSIM reset five times at 190-191-second intervals immediately after
+  DeviceIdle reached `PM: suspend entry (s2idle)`. The reset is independent of
+  physical/eSIM topology and carrier data setup.
+- Reset classification: the local PMIC history records `HARD_RESET`, `PS_HOLD`
+  and `WARM_RESET`; Android has no shutdown sequence, `sys.powerctl`, modem SSR,
+  thermal event or userspace crash. The tester's next boot found
+  `console-ramoops-0`. This is a full AP/guest reset at the suspend boundary, not
+  a SystemUI, system_server, radio or orderly reboot.
+- First deterministic divergence: the r48-r50 `qcom_wdt_core.ko` is byte
+  identical and predates Qualcomm/Nothing's suspend fixes. Its suspend callback
+  deletes the watchdog pet timer but, with wakeup mode enabled, disables the
+  Gunyah watchdog only for hibernation. Stock B4.1 and upstream commits
+  `de06bc12a008` and `c4d33e4f024` also handle `PM_SUSPEND_MEM` and
+  `PM_SUSPEND_TO_IDLE`, then restore bark/bite timing on resume.
+- Source resolution: kernel commit `dbdaa943202f` applies the exact stock-final
+  suspend/resume conditions. All 86 maintained kernel targets build. Fresh
+  staging changes only `qcom_wdt_core.ko`; Image, DTBO, `gh_virt_wdt.ko`, all
+  vendor_dlkm modules, load order and KMI metadata remain unchanged.
+- Causal control: on the failing installed kernel, changing only the active
+  Gunyah watchdog `wakeup_enable` from `1` to `0` allowed 240 seconds asleep with
+  unchanged boot ID/count, beyond the deterministic reset boundary.
+- Rejected probe 1: slot A booted an audited `vendor_boot.img` containing the
+  stock-final module with normal `wakeup_enable=1`. It appeared to pass 390
+  seconds asleep and three short forced-idle cycles, but real-world use produced
+  three more abrupt resets. Two retained attempts terminate at userspace
+  freezing; the approximately 31-second terminal-to-next-kernel gap matches the
+  original watchdog reset class. Commit `dbdaa943202f` is necessary parity but
+  not sufficient closure.
+- Rejected probe 2: an early PM-notifier diagnostic attempted to quiesce the
+  watchdog before the process freezer. Its synchronous Gunyah status call did
+  not return, leaving the device frozen at unlock after an `rtcwake` probe. The
+  exact r50 vendor_boot was restored and the diagnostic was reverted by kernel
+  commit `b164b37f3ac9`.
+- Current first unresolved boundary: the watchdog pet kthread is already
+  `PF_NOFREEZE`, but its configured all-CPU health check uses synchronous
+  `smp_call_function_single(..., wait=1)` immediately before each hypervisor
+  pet. If a CPU enters/offlines during the freezer transition, the pet thread can
+  stop before the 11-second bark and 14-second bite. No public Qualcomm follow-up
+  fixes this race; disabling IPI diagnostics is not eligible until an unmatched
+  call is captured.
+- Current evidence probe: kernel commit `bc5d6bbf2b75` adds progress-only traces
+  around each CPU IPI and hypervisor pet without changing policy or timing. Its
+  two affected module targets build and source-bound staging passes. It is not
+  yet installed.
+- Stable device state: exact r50 vendor_boot restored, screen held awake, and
+  Gunyah `wakeup_enable=0` applied as a temporary runtime safety mitigation while
+  the phone remains under maintainer control. This is not a release fix.
+- Acceptance: 24-hour attended/idle mixed use plus an eight-hour unplugged
+  screen-off run on the eventual candidate, with no unexpected boot-ID/count,
+  pstore, watchdog, SSR, panic or thermal-reset delta.
+
+### MTR-034: GNSS CACert AIDL is declared but has no server
+
+- Severity: high location-assistance reliability and log-storm defect
+- Status: confirmed source defect; private package restoration ready
+- Reproduction on coherent r50: `xtra-daemon` requests
+  `vendor.qti.hardware.cacertaidlservice.IService/default` approximately once per
+  second. The retained sweep contains 2,589 retries and 208 explicit failed lazy
+  starts; the service and serving package are absent.
+- First divergence: metroid declares the stable AIDL and ships its requester,
+  client library, UID metadata and stock SELinux client/server policy, but omits
+  stock's sole APK-hosted server. Stock and Qualcomm references ship the complete
+  atomic set.
+- Minimal fix: add only the generation-matched, user-extracted CACertService APK
+  through the private vendor project. Retain the existing metroid declaration;
+  do not install a duplicate stock VINTF fragment or expose certificate content.
+- Acceptance: two boots, correct package/UID/domain and AIDL registration, zero
+  retry storm or AVC/crash, service restart recovery, secure XTRA over Wi-Fi and
+  cellular, and outdoor cold/warm assisted-GNSS TTFF.
+
+### MTR-035: Android IWLAN framework services have no binding package
+
+- Severity: high VoWiFi/IWLAN infrastructure defect
+- Status: confirmed latent source defect; carrier acceptance remains external
+- Reproduction on coherent r50: both-slot AccessNetworksManager,
+  DataServiceManager and NetworkRegistrationManager report that no WLAN binding
+  package can be found. Modem-side `IIWlan/slot1/slot2` registers, but no Android
+  IWLAN data, network or qualified-networks service exists.
+- First divergence: stock ships `IWlanService.apk`; metroid omits it and leaves
+  all three framework package-selection resources empty. Cellular data and VoLTE
+  use independent WWAN paths and continue to work.
+- Minimal fix: restore the exact user-extracted `vendor.qti.iwlan` APK privately
+  and set the three metroid framework resources to that package. AOSP Iwlan is
+  not proven compatible with Qualcomm's QNS/`IIWlan` architecture.
+- Acceptance: both-slot framework bindings, qualified-network updates, no
+  crash/AVC, carrier-enabled ePDG tunnel, VoWiFi registration/call/SMS, Wi-Fi to
+  LTE handover, airplane recovery and DSDS regression. Carrier policy and
+  entitlement remain separate external gates.
+
+### MTR-036: Nothing telephony Binder name has no service context
+
+- Severity: low radio integration and SELinux hygiene
+- Status: confirmed policy defect; producer restoration is not eligible
+- Reproduction on coherent r50: stock `qcrilmsgtunnel` in `com.qti.phone` reaches
+  `ServiceManager.getService("nothing.radio.ntphone")`, but servicemanager labels
+  the name `default_android_service` and denies `vendor_qtelephony` find. The
+  process remains stable and cellular data, SMS and IMS continue to work.
+- First divergence: stock maps `nothing.radio.ntphone` to `radio_service`; the
+  metroid service-context file omits that exact mapping even though existing
+  policy already allows `vendor_qtelephony` to find `radio_service`.
+- Minimal fix: add only the stock-exact service-context mapping. Do not import
+  stock's broad telephony factory or create a partial Binder stub: the server is
+  not instantiated in Lineage, and no user-visible dependency is established.
+- Acceptance: no matching AVC across RRC transitions and ten airplane cycles,
+  stable radio processes, and unchanged data/IMS/SMS/call behavior. Service
+  absence remains explicit and must not be reported as functional registration.
 
 ## Acceptance gaps
 
