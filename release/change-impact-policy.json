@@ -37,7 +37,13 @@
     "MTR-028": ["storage-security-update"],
     "MTR-029": ["camera"],
     "MTR-030": ["radio-esim-secure-element"],
-    "MTR-031": ["radio-esim-secure-element"]
+    "MTR-031": ["radio-esim-secure-element"],
+    "MTR-032": ["platform-full-compatibility"],
+    "MTR-033": ["power-thermal-suspend", "storage-security-update"],
+    "MTR-034": ["location"],
+    "MTR-035": ["radio-esim-secure-element"],
+    "MTR-036": ["radio-esim-secure-element"],
+    "MTR-037": ["camera"]
   },
   "rules": [
     {
