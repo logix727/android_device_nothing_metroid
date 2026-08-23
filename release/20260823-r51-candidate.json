@@ -1,0 +1,40 @@
+{
+  "schema_version": 3,
+  "record_type": "frozen-candidate",
+  "status": "frozen",
+  "issues": ["MTR-019"],
+  "validation_parent": {
+    "artifact_sha256": "7e0bf8e361f4abf40cdc4b1b7a35b430b183fdaaba79d7b19a9a553cf61448e9",
+    "installed_record": "lineage/device/nothing/metroid/release/20260823-r50-installed.md",
+    "installed_record_revision": "b97d277cebf8b55630ff88da30d9664e7898fa62",
+    "installed_record_sha256": "d9cf9ee6a8e983cc85710200fed36efd8560486c751ae2ad6a7d639e2c7d09d2",
+    "manifest": "releases/candidate_20260822_230925_233387908_candidate/source/repo-manifest.xml",
+    "manifest_sha256": "09b86bacf99545c82414a4978bd7345521f1e332405403979b5c8ecea27d56b5",
+    "source_device_revision": "66591ea61d8924ea87d7739becfc8839ff001fa2",
+    "workspace_revision": "dd1d3124afdb55b53532520dd039d774260d1042"
+  },
+  "classified_test_suites": [
+    "platform-full-compatibility",
+    "storage-security-update",
+    "usb"
+  ],
+  "full_compatibility": true,
+  "issue_acceptance": {
+    "MTR-019": [
+      "installed dwc3-msm module hash matches the source-bound kernel stage manifest",
+      "RNDIS and RNDIS plus ADB obtain DHCP and pass local/upstream traffic without DWC3 NO_RESOURCE",
+      "RNDIS reconnect, gadget-HAL restart, NCM, MTP and ADB regression pass"
+    ]
+  },
+  "scheduled_acceptance": [],
+  "companion_inputs": {
+    "gapps": {
+      "file": "MindTheGapps-16.0.0-arm64-20260409_073023.zip",
+      "sha256": "a6ff8b8c31f7ccd0a9f2fd651fa4438a8e39a5f63b95be246ea1f98982af2c28"
+    },
+    "modem": {
+      "build": "MPSS.DE.7.0-02698-PAKALA_GEN_PACK-1.152387.2.170946.5",
+      "sha256": "35f2476e03a3f3353c1db999b88a075ffd30ebb0f006e3498c96b1d6e27ed0a3"
+    }
+  }
+}
