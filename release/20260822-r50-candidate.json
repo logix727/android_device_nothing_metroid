@@ -14,11 +14,12 @@
     "workspace_revision": "77f3c1976f687cecd9de3102fdd9538967959a99"
   },
   "classified_test_suites": [
+    "platform-full-compatibility",
     "radio-esim-secure-element",
     "storage-security-update",
     "usb"
   ],
-  "full_compatibility": false,
+  "full_compatibility": true,
   "issue_acceptance": {
     "MTR-003": [
       "SIM mux selector refuses physical mode while an embedded subscription is active and emits no QTI request",
