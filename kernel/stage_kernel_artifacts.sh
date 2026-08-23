@@ -80,7 +80,7 @@ if not manifest_path.is_file():
     raise SystemExit(f"missing kernel stage manifest: {manifest_path}")
 data = json.loads(manifest_path.read_text(encoding="utf-8"))
 expected = {
-    "schema_version": 1,
+    "schema_version": 2,
     "kernel_commit": subprocess.check_output(
         ["git", "-C", str(kernel), "rev-parse", "HEAD"], text=True).strip(),
     "kernel_tree": subprocess.check_output(
@@ -88,6 +88,8 @@ expected = {
     "target_list_sha256": sha256(device_kernel / "vendor-module-targets.txt"),
     "staging_script_sha256": sha256(device_kernel / "stage_kernel_artifacts.sh"),
     "dwc3_msm_sha256": sha256(manifest_path.parent / "vendor_dlkm/dwc3-msm.ko"),
+    "qcom_wdt_core_sha256": sha256(manifest_path.parent / "vendor_ramdisk/qcom_wdt_core.ko"),
+    "gh_virt_wdt_sha256": sha256(manifest_path.parent / "vendor_ramdisk/gh_virt_wdt.ko"),
     "dtb_sha256": sha256(manifest_path.parent / "dtb.img"),
     "dtbo_sha256": sha256(manifest_path.parent / "dtbo.img"),
     "staged_tree_sha256": tree_sha256(manifest_path.parent),
@@ -136,9 +138,13 @@ mkdir -p "$OUT/vendor_dlkm" "$OUT/system_dlkm"
 declare -A KO
 while IFS= read -r f; do
     n="$(basename "$f")"
-    [[ -n "${KO[$n]:-}" ]] || KO["$n"]="$f"
-done < <(find "$KWS/bazel-bin/vendor" \
-              "$KWS/bazel-bin/msm-kernel/sun_perf" \
+    if [[ -z "${KO[$n]:-}" ]]; then
+        KO["$n"]="$f"
+    elif ! cmp -s "${KO[$n]}" "$f"; then
+        echo ":: ignoring divergent copied module $n in favor of canonical ${KO[$n]}" >&2
+    fi
+done < <(find "$KWS/bazel-bin/msm-kernel/sun_perf" \
+              "$KWS/bazel-bin/vendor" \
               "$KWS/bazel-bin/common/kernel_aarch64" \
               -name '*.ko' -not -path '*/unstripped/*' -not -path '*runfiles*' 2>/dev/null)
 echo ":: kernel build produced ${#KO[@]} distinct modules"
@@ -374,7 +380,7 @@ def tree_sha256(root):
     return digest.hexdigest()
 
 data = {
-    "schema_version": 1,
+    "schema_version": 2,
     "kernel_commit": subprocess.check_output(
         ["git", "-C", str(kernel), "rev-parse", "HEAD"], text=True).strip(),
     "kernel_tree": subprocess.check_output(
@@ -382,6 +388,8 @@ data = {
     "target_list_sha256": sha256(device_kernel / "vendor-module-targets.txt"),
     "staging_script_sha256": sha256(device_kernel / "stage_kernel_artifacts.sh"),
     "dwc3_msm_sha256": sha256(manifest_path.parent / "vendor_dlkm/dwc3-msm.ko"),
+    "qcom_wdt_core_sha256": sha256(manifest_path.parent / "vendor_ramdisk/qcom_wdt_core.ko"),
+    "gh_virt_wdt_sha256": sha256(manifest_path.parent / "vendor_ramdisk/gh_virt_wdt.ko"),
     "dtb_sha256": sha256(manifest_path.parent / "dtb.img"),
     "dtbo_sha256": sha256(manifest_path.parent / "dtbo.img"),
     "staged_tree_sha256": tree_sha256(manifest_path.parent),
