@@ -1,0 +1,24 @@
+From d17b9eedfd6819366c187ba45143ff9ba117a859 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 23 Aug 2026 17:13:44 -0400
+Subject: [PATCH] mediaserver: allow optional media quality lookup
+
+Change-Id: I2f4e872af6594961b022c902921144f0dcba0c5a
+---
+ private/mediaserver.te | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/private/mediaserver.te b/private/mediaserver.te
+index dbba2f1..74225b5 100644
+--- a/private/mediaserver.te
++++ b/private/mediaserver.te
+@@ -110,6 +110,7 @@ allow mediaserver batterystats_service:service_manager find;
+ allow mediaserver drmserver_service:service_manager find;
+ allow mediaserver mediaextractor_service:service_manager find;
+ allow mediaserver mediametrics_service:service_manager find;
++allow mediaserver media_quality_service:service_manager find;
+ allow mediaserver media_session_service:service_manager find;
+ allow mediaserver package_native_service:service_manager find;
+ allow mediaserver permission_service:service_manager find;
+-- 
+2.43.0
